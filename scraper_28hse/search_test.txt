@@ -1,0 +1,7 @@
+Items found: 15
+Item 0: title=灣仔名廈極罕筍盤500呎3房巨廳單位（遠眺迷人鑽景）, href=https://www.28hse.com/buy/apartment/property-3743476
+  district_area: 灣仔利文樓|中層  A室
+Item 1: title=️低密度️四房,工人房,連車位,歡迎睇完大膽還價傾, href=https://www.28hse.com/buy/apartment/property-3897117
+  district_area: 粉嶺豪峰嶺|1座 高層 B室
+Item 2: title=業主換校網出九龍 割愛靚裝修贈有緣人 約多四五個單位出黎比較埋啦, href=https://www.28hse.com/buy/apartment/property-3897093
+  district_area: 屯門華都花園|3座 中層  B室

@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模組3：配對物業 | AI風水樓盤匹配</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; padding: 20px; color: #333; }
+.container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
+.subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
+.module-badge { display: inline-block; background: #28a745; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+.nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
+.nav a:hover { background: #667eea; color: white; }
+.nav a.active { background: #667eea; color: white; }
+.form-group { margin-bottom: 16px; }
+label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
+input, select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; }
+input:focus, select:focus { outline: none; border-color: #667eea; }
+.btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-secondary { background: #f0f0f0; color: #444; }
+.btn-secondary:hover { background: #e0e0e0; }
+.section-title { font-size: 18px; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #667eea; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .three-col { grid-template-columns: 1fr; } }
+.listing-card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+.listing-card:hover { border-color: #667eea; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
+.listing-title { font-size: 16px; font-weight: 600; color: #1a1a2e; }
+.listing-meta { font-size: 13px; color: #666; margin-top: 4px; }
+.listing-price { font-size: 18px; font-weight: 700; color: #e74c3c; margin-top: 8px; }
+.listing-score { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 600; margin-top: 8px; }
+.score-high { background: #d4edda; color: #155724; }
+.score-mid { background: #d1ecf1; color: #0c5460; }
+.score-low { background: #fff3cd; color: #856404; }
+.loading { text-align: center; padding: 40px; color: #666; }
+.spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.result-section { margin-top: 24px; padding: 24px; background: #f8f9fa; border-radius: 12px; }
+#step1 { display: block; }
+#step2 { display: none; }
+#step3 { display: none; }
+#step4 { display: none; }
+.filter-section { background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+.call-buy-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 12px; padding: 20px; margin-top: 20px; }
+.call-buy-box h3 { color: #856404; margin-bottom: 8px; }
+.call-buy-box p { color: #856404; font-size: 14px; }
+.market-card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s; }
+.market-card:hover { border-color: #667eea; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
+.data-warning { color: #856404; font-size: 12px; background: #fff3cd; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+.hidden { display: none; }
+.goal-item { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.goal-item select { flex: 1; }
+.goal-item .priority-select { width: 100px; }
+.goal-item .remove-btn { background: #f8d7da; color: #721c24; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
+.coming-soon-badge { display: inline-block; background: #e0e0e0; color: #666; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+.checkbox-group { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.checkbox-item input { width: auto; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>AI風水樓盤匹配系統 <span class="module-badge">模組3</span></h1>
+<p class="subtitle">配對物業 — 輸入個人資料，系統從樓盤數據庫匹配最適合您的具體物業</p>
+
+<div class="nav">
+<a href="index.html">模組1：自測住所</a>
+<a href="module2.html">模組2：配對屋苑</a>
+<a href="module3.html" class="active">模組3：配對物業</a>
+</div>
+
+<div id="step1">
+<div class="section-title">👤 個人資料</div>
+<form id="profileForm">
+<div class="two-col">
+<div class="form-group"><label>出生日期</label><input type="date" id="birthDate" required value="1978-05-26"></div>
+<div class="form-group"><label>出生時間</label><input type="time" id="birthTime" value="12:00"></div>
+</div>
+<div class="two-col">
+<div class="form-group"><label>出生地</label><input type="text" id="birthPlace" value="香港" placeholder="例如：香港"></div>
+<div class="form-group"><label>性別</label>
+<select id="gender"><option value="男" selected>男</option><option value="女">女</option></select>
+</div>
+</div>
+<div class="form-group">
+<label>職業</label>
+<select id="userJob">
+<option value="">請選擇職業（可選）</option>
+<option value="金融/銀行/投資">金融/銀行/投資</option>
+<option value="法律/司法">法律/司法</option>
+<option value="軍警/安保">軍警/安保</option>
+<option value="外科/牙科醫生">外科/牙科醫生</option>
+<option value="機械/工程/製造">機械/工程/製造</option>
+<option value="教育/文化/出版">教育/文化/出版</option>
+<option value="醫療/中醫/藥材">醫療/中醫/藥材</option>
+<option value="設計/藝術/創意">設計/藝術/創意</option>
+<option value="園藝/農業/林業">園藝/農業/林業</option>
+<option value="物流/運輸/航運">物流/運輸/航運</option>
+<option value="旅遊/酒店/服務">旅遊/酒店/服務</option>
+<option value="餐飲/飲食/食品">餐飲/飲食/食品</option>
+<option value="傳媒/廣告/公關">傳媒/廣告/公關</option>
+<option value="科技/IT/電子">科技/IT/電子</option>
+<option value="能源/電力/化工">能源/電力/化工</option>
+<option value="演藝/娛樂/媒體">演藝/娛樂/媒體</option>
+<option value="房地產/建築/裝修">房地產/建築/裝修</option>
+<option value="會計/行政/文職">會計/行政/文職</option>
+<option value="管理/顧問/策劃">管理/顧問/策劃</option>
+</select>
+</div>
+
+<div class="section-title">同住人設定（雙人模式）<span class="coming-soon-badge">可選</span></div>
+<div class="form-group">
+<div class="checkbox-item">
+<input type="checkbox" id="cohabitantEnabled">
+<label for="cohabitantEnabled" style="display:inline; margin:0;">啟用同住人雙人分析</label>
+</div>
+</div>
+<div id="cohabitantSection" class="hidden">
+<div class="two-col">
+<div class="form-group"><label>同住人性別</label><select id="cohabitantGender"><option value="女">女</option><option value="男">男</option></select></div>
+<div class="form-group"><label>同住人出生日期</label><input type="date" id="cohabitantBirthDate" value="1980-03-15"></div>
+</div>
+<div class="two-col">
+<div class="form-group"><label>同住人出生時間</label><input type="time" id="cohabitantBirthTime" value="12:00"></div>
+<div class="form-group"><label>同住人職業</label>
+<select id="cohabitantUserJob">
+<option value="">請選擇職業（可選）</option>
+<option value="金融/銀行/投資">金融/銀行/投資</option>
+<option value="法律/司法">法律/司法</option>
+<option value="軍警/安保">軍警/安保</option>
+<option value="外科/牙科醫生">外科/牙科醫生</option>
+<option value="機械/工程/製造">機械/工程/製造</option>
+<option value="教育/文化/出版">教育/文化/出版</option>
+<option value="醫療/中醫/藥材">醫療/中醫/藥材</option>
+<option value="設計/藝術/創意">設計/藝術/創意</option>
+<option value="園藝/農業/林業">園藝/農業/林業</option>
+<option value="物流/運輸/航運">物流/運輸/航運</option>
+<option value="旅遊/酒店/服務">旅遊/酒店/服務</option>
+<option value="餐飲/飲食/食品">餐飲/飲食/食品</option>
+<option value="傳媒/廣告/公關">傳媒/廣告/公關</option>
+<option value="科技/IT/電子">科技/IT/電子</option>
+<option value="能源/電力/化工">能源/電力/化工</option>
+<option value="演藝/娛樂/媒體">演藝/娛樂/媒體</option>
+<option value="房地產/建築/裝修">房地產/建築/裝修</option>
+<option value="會計/行政/文職">會計/行政/文職</option>
+<option value="管理/顧問/策劃">管理/顧問/策劃</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label>同住人比例</label>
+<select id="cohabitantWeightRatio">
+<option value="0.5">50/50 平均</option>
+<option value="0.7">70/30（主居住者70%）</option>
+<option value="0.3">30/70（同住人70%）</option>
+</select>
+</div>
+</div>
+
+<div class="form-group">
+<label>購房目標（最多3個，可設優先級）</label>
+<div id="goalsContainer">
+<div class="goal-item">
+<select class="goal-select"><option value="財富" selected>財富</option><option value="健康">健康</option><option value="事業">事業</option><option value="桃花">桃花</option><option value="家庭和睦">家庭和睦</option></select>
+<select class="priority-select"><option value="1">主</option><option value="2">次</option><option value="3">第三</option></select>
+<button type="button" class="remove-btn" onclick="removeGoal(this)" disabled>✕</button>
+</div>
+</div>
+<button type="button" class="btn btn-secondary" id="addGoalBtn" onclick="addGoal()" style="margin-top:8px">+ 添加目標</button>
+<p id="goalWarning" style="color:#dc3545; font-size:12px; margin-top:4px; display:none;">已達最多3個目標上限</p>
+</div>
+
+<div class="filter-section">
+<div class="section-title" style="font-size:14px; margin-bottom:12px;">🔍 物業偏好篩選（可選）</div>
+<div class="three-col">
+<div class="form-group"><label>價格區間（萬）</label>
+<div class="two-col" style="gap:8px">
+<input type="number" id="priceMin" placeholder="最低">
+<input type="number" id="priceMax" placeholder="最高">
+</div>
+</div>
+<div class="form-group"><label>區域</label>
+<select id="districtFilter">
+<option value="">全部區域</option>
+<option value="中西區">中西區</option>
+<option value="灣仔區">灣仔區</option>
+<option value="東區">東區</option>
+<option value="南區">南區</option>
+<option value="油尖旺區">油尖旺區</option>
+<option value="深水埗區">深水埗區</option>
+<option value="九龍城區">九龍城區</option>
+<option value="黃大仙區">黃大仙區</option>
+<option value="觀塘區">觀塘區</option>
+<option value="荃灣區">荃灣區</option>
+<option value="葵青區">葵青區</option>
+<option value="沙田區">沙田區</option>
+<option value="大埔區">大埔區</option>
+<option value="北區">北區</option>
+<option value="西貢區">西貢區</option>
+<option value="元朗區">元朗區</option>
+<option value="屯門區">屯門區</option>
+<option value="離島區">離島區</option>
+</select>
+</div>
+<div class="form-group"><label>坐向</label>
+<select id="facingFilter">
+<option value="">全部坐向</option>
+<option value="子山午向">子山午向（正南）</option>
+<option value="午山子向">午山子向（正北）</option>
+<option value="丁山癸向">丁山癸向（正北）</option>
+<option value="丑山未向">丑山未向（東北）</option>
+<option value="乾山巽向">乾山巽向（西北）</option>
+<option value="亥山巳向">亥山巳向（西北）</option>
+<option value="卯山酉向">卯山酉向（東向）</option>
+<option value="乙山辛向">乙山辛向（東向）</option>
+</select>
+</div>
+</div>
+<div class="two-col">
+<div class="form-group"><label>最低樓層</label><input type="number" id="floorMin" placeholder="例如：5"></div>
+<div class="form-group"><label>最高樓層</label><input type="number" id="floorMax" placeholder="例如：30"></div>
+</div>
+</div>
+
+<button type="submit" class="btn">🔍 開始匹配物業</button>
+</form>
+</div>
+
+<div id="step2">
+<div class="section-title">🏠 匹配物業結果</div>
+<div id="loading" class="loading" style="display:none">
+<div class="spinner"></div>
+<p>正在計算所有物業匹配度...</p>
+</div>
+<div id="listingList"></div>
+</div>
+
+<div id="step3">
+<div class="section-title">📊 物業詳細評估</div>
+<div id="listingDetail"></div>
+</div>
+
+<div id="step4">
+<div class="section-title">📢 叫買市場</div>
+<div id="callBuyList"></div>
+</div>
+</div>
+
+<script>
+const API_SEARCH_URL = 'http://localhost:8001/api/search-properties';
+const API_MARKET_URL = 'http://localhost:8001/api/market-list';
+const API_EVAL_URL = 'http://localhost:8001/api/evaluate-from-db';
+let userProfile = {};
+let currentListings = [];
+
+function toggleCohabitant() {
+    const enabled = document.getElementById('cohabitantEnabled').checked;
+    document.getElementById('cohabitantSection').classList.toggle('hidden', !enabled);
+}
+document.getElementById('cohabitantEnabled').addEventListener('change', toggleCohabitant);
+
+function clearGoals() { document.getElementById('goalsContainer').innerHTML = ''; }
+function addGoal(goalVal, priorityVal) {
+    const container = document.getElementById('goalsContainer');
+    const items = container.querySelectorAll('.goal-item');
+    if (items.length >= 3) { document.getElementById('goalWarning').style.display = 'block'; return; }
+    document.getElementById('goalWarning').style.display = 'none';
+    const div = document.createElement('div'); div.className = 'goal-item';
+    div.innerHTML = `<select class="goal-select"><option value="財富">財富</option><option value="健康">健康</option><option value="事業">事業</option><option value="桃花">桃花</option><option value="家庭和睦">家庭和睦</option></select><select class="priority-select"><option value="1">主</option><option value="2">次</option><option value="3">第三</option></select><button type="button" class="remove-btn" onclick="removeGoal(this)">✕</button>`;
+    container.appendChild(div);
+    if (goalVal) { div.querySelector('.goal-select').value = goalVal; div.querySelector('.priority-select').value = priorityVal || 1; }
+    updateAddGoalBtn();
+}
+function removeGoal(btn) {
+    const container = document.getElementById('goalsContainer');
+    if (container.querySelectorAll('.goal-item').length <= 1) return;
+    btn.parentElement.remove(); document.getElementById('goalWarning').style.display = 'none'; updateAddGoalBtn();
+}
+function updateAddGoalBtn() {
+    const items = document.getElementById('goalsContainer').querySelectorAll('.goal-item');
+    document.getElementById('addGoalBtn').disabled = items.length >= 3;
+}
+function getGoals() {
+    const items = document.querySelectorAll('.goal-item');
+    const goals = [];
+    items.forEach(item => { goals.push({ goal: item.querySelector('.goal-select').value, priority: parseInt(item.querySelector('.priority-select').value) }); });
+    return goals;
+}
+
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    userProfile = {
+        birthDate: document.getElementById('birthDate').value,
+        birthTime: document.getElementById('birthTime').value,
+        birthPlace: document.getElementById('birthPlace').value,
+        gender: document.getElementById('gender').value,
+        userJob: document.getElementById('userJob').value,
+        goals: getGoals(),
+        cohabitantEnabled: document.getElementById('cohabitantEnabled').checked,
+        cohabitantGender: document.getElementById('cohabitantGender').value,
+        cohabitantBirthDate: document.getElementById('cohabitantBirthDate').value,
+        cohabitantBirthTime: document.getElementById('cohabitantBirthTime').value,
+        cohabitantUserJob: document.getElementById('cohabitantUserJob').value,
+        cohabitantWeightRatio: document.getElementById('cohabitantWeightRatio').value,
+        priceMin: document.getElementById('priceMin').value,
+        priceMax: document.getElementById('priceMax').value,
+        district: document.getElementById('districtFilter').value,
+        facing: document.getElementById('facingFilter').value,
+        floorMin: document.getElementById('floorMin').value,
+        floorMax: document.getElementById('floorMax').value
+    };
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('loading').style.display = 'block';
+    await runMatching();
+});
+
+async function runMatching() {
+    const payload = {
+        user_profile: {
+            eval_year: 2026,
+            user_gender: userProfile.gender,
+            birth_date: userProfile.birthDate,
+            birth_time: userProfile.birthTime || null,
+            birth_place: userProfile.birthPlace || null,
+            user_job: userProfile.userJob || null,
+            goals: userProfile.goals,
+            cohabitant_enabled: userProfile.cohabitantEnabled,
+            cohabitant_gender: userProfile.cohabitantEnabled ? userProfile.cohabitantGender : null,
+            cohabitant_birth_date: userProfile.cohabitantEnabled ? userProfile.cohabitantBirthDate : null,
+            cohabitant_birth_time: userProfile.cohabitantEnabled ? userProfile.cohabitantBirthTime : null,
+            cohabitant_user_job: userProfile.cohabitantEnabled ? userProfile.cohabitantUserJob : null,
+            cohabitant_weight_ratio: userProfile.cohabitantEnabled ? parseFloat(userProfile.cohabitantWeightRatio) : 0.5,
+            household_weight_mode: userProfile.cohabitantEnabled ? 'couple' : 'single'
+        },
+        filters: {
+            price_min: userProfile.priceMin ? parseInt(userProfile.priceMin) : null,
+            price_max: userProfile.priceMax ? parseInt(userProfile.priceMax) : null,
+            districts: userProfile.district ? [userProfile.district] : null,
+            facings: userProfile.facing ? [userProfile.facing] : null,
+            floor_min: userProfile.floorMin ? parseInt(userProfile.floorMin) : null,
+            floor_max: userProfile.floorMax ? parseInt(userProfile.floorMax) : null
+        },
+        top_n: 15
+    };
+    try {
+        const resp = await fetch(API_SEARCH_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (data.status === 'success') {
+            currentListings = data.top_results || [];
+            const callBuy = data.call_buy_market || {};
+            renderListingList(currentListings, callBuy);
+        } else {
+            throw new Error(data.message || '匹配失敗');
+        }
+    } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('listingList').innerHTML = `<div style="color:#dc3545;padding:20px">❌ ${e.message}</div>`;
+    }
+}
+
+function renderListingList(results, callBuyMarket) {
+    document.getElementById('loading').style.display = 'none';
+    let html = '';
+    if (callBuyMarket && callBuyMarket.triggered) {
+        html += `<div class="call-buy-box">
+<h3>📢 叫買市場提示</h3>
+<p>${callBuyMarket.message || '目前篩選條件下無高分匹配物業。'}</p>
+<p style="margin-top:12px; font-size:13px">您可以瀏覽「叫買市場」查看所有物業，或放寬篩選條件。</p>
+<button class="btn" onclick="showMarket()" style="margin-top:12px">📋 瀏覽叫買市場</button>
+</div>`;
+    }
+    html += '<div style="margin-top:16px">';
+    if (results.length === 0) {
+        html += '<p style="color:#666;text-align:center">暫無匹配物業</p>';
+    } else {
+        html += '<p style="color:#666;margin-bottom:12px">為您推薦以下最適合的物業：</p>';
+        results.forEach((r, i) => {
+            const sclass = r.final_score >= 70 ? 'score-high' : (r.final_score >= 45 ? 'score-mid' : 'score-low');
+            html += `<div class="listing-card" onclick="showDetail(${i})">
+<div class="listing-title">${i+1}. ${r.title}</div>
+<div class="listing-meta">${r.estate} | ${r.district} | ${r.facing} | ${r.rooms} | ${r.build_area ? r.build_area+'呎' : ''}</div>
+<div class="listing-price">${r.price_raw}</div>
+<div class="listing-score ${sclass}">${r.final_score}分</div>
+</div>`;
+        });
+    }
+    html += '</div>';
+    document.getElementById('listingList').innerHTML = html;
+    window.matchResults = results;
+}
+
+function showDetail(idx) {
+    const r = window.matchResults[idx];
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+    const m = r.match_result || r.match || r;
+    let html = `<div class="result-section">
+<h2 style="margin-bottom:16px">${r.title}</h2>
+<div style="font-size:48px;font-weight:700;color:#667eea;text-align:center">${m.final_score || r.final_score}<span style="font-size:20px">/100</span></div>
+<p style="text-align:center;color:#666;margin-top:8px">${m.rating || r.rating}</p>
+<div style="margin-top:16px">
+<p><strong>屋苑：</strong>${r.estate}</p>
+<p><strong>地區：</strong>${r.district}</p>
+<p><strong>坐向：</strong>${r.facing}</p>
+<p><strong>價格：</strong>${r.price_raw}</p>
+<p><strong>面積：</strong>${r.build_area ? r.build_area+'呎' : 'N/A'} / ${r.usable_area ? r.usable_area+'呎' : 'N/A'}</p>
+<p><strong>房數：</strong>${r.rooms}</p>
+<p><strong>樓層：</strong>${r.unit_info}</p>
+<p><strong>建造年份：</strong>${r.year_built || 'N/A'}</p>
+<p><strong>代理：</strong>${r.agent || 'N/A'}</p>
+</div>
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">📋 分項得分</div>`;
+    const sb = m.score_breakdown || r.score_breakdown || {};
+    for (const [k, v] of Object.entries(sb)) {
+        html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee"><span>${k}</span><strong>${v}</strong></div>`;
+    }
+    html += `</div>
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">📝 AI分析</div>
+<p style="color:#444;font-size:14px;line-height:1.8">${m.ai_rationale || r.rationale}</p>
+</div>
+<button class="btn btn-secondary" onclick="backToList()" style="margin-top:20px">⬅️ 返回列表</button>
+</div>`;
+    document.getElementById('listingDetail').innerHTML = html;
+}
+
+function backToList() {
+    document.getElementById('step3').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+}
+
+async function showMarket() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step4').style.display = 'block';
+    const el = document.getElementById('callBuyList');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div><p>正在加載叫買市場...</p></div>';
+    try {
+        const resp = await fetch(API_MARKET_URL);
+        const data = await resp.json();
+        if (data.status === 'success') {
+            let html = '<div style="margin-top:16px">';
+            html += `<p style="color:#666;margin-bottom:12px">共 ${data.total} 個物業，您可以選擇一個進行自測：</p>`;
+            data.listings.forEach((l, i) => {
+                const warning = l.data_note ? `<span class="data-warning">${l.data_note}</span>` : '';
+                html += `<div class="market-card" onclick="runSelfTest('${l.id}')">
+<div class="listing-title">${l.title}</div>
+<div class="listing-meta">${l.estate} | ${l.district} | ${l.facing} | ${l.price_raw}</div>
+<div style="margin-top:8px">${warning}</div>
+</div>`;
+            });
+            html += '</div>';
+            el.innerHTML = html;
+        } else {
+            throw new Error('加載失敗');
+        }
+    } catch (e) {
+        el.innerHTML = `<div style="color:#dc3545;padding:20px">❌ ${e.message}</div>`;
+    }
+}
+
+async function runSelfTest(propertyId) {
+    const payload = {
+        user_profile: {
+            eval_year: 2026,
+            user_gender: userProfile.gender,
+            birth_date: userProfile.birthDate,
+            birth_time: userProfile.birthTime || null,
+            birth_place: userProfile.birthPlace || null,
+            user_job: userProfile.userJob || null,
+            goals: userProfile.goals,
+            cohabitant_enabled: userProfile.cohabitantEnabled,
+            cohabitant_gender: userProfile.cohabitantEnabled ? userProfile.cohabitantGender : null,
+            cohabitant_birth_date: userProfile.cohabitantEnabled ? userProfile.cohabitantBirthDate : null,
+            cohabitant_birth_time: userProfile.cohabitantEnabled ? userProfile.cohabitantBirthTime : null,
+            cohabitant_user_job: userProfile.cohabitantEnabled ? userProfile.cohabitantUserJob : null,
+            cohabitant_weight_ratio: userProfile.cohabitantEnabled ? parseFloat(userProfile.cohabitantWeightRatio) : 0.5,
+            household_weight_mode: userProfile.cohabitantEnabled ? 'couple' : 'single'
+        },
+        property_id: propertyId
+    };
+    try {
+        const resp = await fetch(API_EVAL_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (data.status === 'success') {
+            document.getElementById('step4').style.display = 'none';
+            document.getElementById('step3').style.display = 'block';
+            const m = data.match_result;
+            const p = data.property || {};
+            let html = `<div class="result-section">
+<h2 style="margin-bottom:16px">自測結果：${p.title || ''}</h2>
+<div style="font-size:48px;font-weight:700;color:#667eea;text-align:center">${m.final_score}<span style="font-size:20px">/100</span></div>
+<p style="text-align:center;color:#666;margin-top:8px">${m.rating}</p>
+<div style="margin-top:16px">
+<p><strong>屋苑：</strong>${p.estate || ''}</p>
+<p><strong>地區：</strong>${p.district || ''}</p>
+<p><strong>坐向：</strong>${p.facing || ''}</p>
+<p><strong>價格：</strong>${p.price_raw || ''}</p>
+<p><strong>建造年份：</strong>${p.year_built || ''}</p>
+<p><strong>樓層：</strong>${p.unit_info || ''}</p>
+</div>
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">📋 分項得分</div>`;
+            for (const [k, v] of Object.entries(m.score_breakdown || {})) {
+                html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee"><span>${k}</span><strong>${v}</strong></div>`;
+            }
+            html += `</div>
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">📝 AI分析</div>
+<p style="color:#444;font-size:14px;line-height:1.8">${m.ai_rationale}</p>
+</div>
+<button class="btn btn-secondary" onclick="document.getElementById('step3').style.display='none';document.getElementById('step4').style.display='block';" style="margin-top:20px">⬅️ 返回叫買市場</button>
+</div>`;
+            document.getElementById('listingDetail').innerHTML = html;
+        } else {
+            throw new Error(data.message || '自測失敗');
+        }
+    } catch (e) {
+        alert('自測失敗：' + e.message);
+    }
+}
+</script>
+</body>
+</html>

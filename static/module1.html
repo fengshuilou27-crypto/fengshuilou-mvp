@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模組1：自測現有住所 | AI風水樓盤匹配</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh; padding: 20px; color: #333;
+        }
+        .container {
+            max-width: 900px; margin: 0 auto; background: white;
+            border-radius: 16px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
+        .module-badge { display: inline-block; background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+        .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
+        .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
+        .nav a:hover { background: #667eea; color: white; }
+        .nav a.active { background: #667eea; color: white; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
+        input, select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s; }
+        input:focus, select:focus { outline: none; border-color: #667eea; }
+        .btn {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .result-section { margin-top: 24px; padding: 24px; background: #f8f9fa; border-radius: 12px; }
+        .score-display { text-align: center; margin-bottom: 24px; padding: 24px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .score-number { font-size: 72px; font-weight: 700; color: #667eea; line-height: 1; }
+        .score-label { font-size: 14px; color: #666; margin-top: 4px; }
+        .score-gauge { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; margin-top: 16px; overflow: hidden; }
+        .score-gauge-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+        .gauge-excellent { background: #28a745; } .gauge-good { background: #17a2b8; }
+        .gauge-average { background: #ffc107; } .gauge-poor { background: #dc3545; }
+        .rating-badge { display: inline-block; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 12px; }
+        .rating-excellent { background: #d4edda; color: #155724; }
+        .rating-good { background: #d1ecf1; color: #0c5460; }
+        .rating-average { background: #fff3cd; color: #856404; }
+        .rating-poor { background: #f8d7da; color: #721c24; }
+        .section-title { font-size: 18px; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #667eea; }
+        .breakdown-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .breakdown-item:last-child { border-bottom: none; }
+        .flag-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; }
+        .flag-red { background: #f8d7da; color: #721c24; }
+        .flag-yellow { background: #fff3cd; color: #856404; }
+        .flag-green { background: #d4edda; color: #155724; }
+        .remedy-item { padding: 8px 12px; background: white; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #667eea; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>AI風水樓盤匹配系統 <span class="module-badge">模組1</span></h1>
+    <p class="subtitle">自測現有住所 — 輸入您的個人資料與現有住所，獲得風水評估報告</p>
+    
+    <div class="nav">
+        <a href="module1.html" class="active">模組1：自測住所</a>
+        <a href="module2.html">模組2：配對屋苑</a>
+        <a href="module3.html">模組3：配對物業</a>
+    </div>
+
+    <form id="evaluateForm">
+        <div class="section-title">👤 個人資料</div>
+        <div class="two-col">
+            <div class="form-group">
+                <label>出生日期</label>
+                <input type="date" id="birthDate" required value="1978-05-26">
+            </div>
+            <div class="form-group">
+                <label>出生時間</label>
+                <input type="time" id="birthTime" value="12:00">
+            </div>
+        </div>
+        <div class="two-col">
+            <div class="form-group">
+                <label>出生地</label>
+                <input type="text" id="birthPlace" placeholder="例如：香港" value="香港">
+            </div>
+            <div class="form-group">
+                <label>性別</label>
+                <select id="gender">
+                    <option value="男" selected>男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="two-col">
+            <div class="form-group">
+                <label>目標</label>
+                <select id="goal">
+                    <option value="事業">事業</option>
+                    <option value="財運" selected>財運</option>
+                    <option value="健康">健康</option>
+                    <option value="桃花">桃花</option>
+                    <option value="家庭和睦">家庭和睦</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>同住人比例</label>
+                <select id="householdRatio">
+                    <option value="single" selected>單人（100%個人）</option>
+                    <option value="couple">二人（50/50）</option>
+                    <option value="family">家庭（綜合）</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top:24px">🏠 現有住所資料</div>
+        <div class="two-col">
+            <div class="form-group">
+                <label>建築年份</label>
+                <input type="number" id="buildingYear" min="1900" max="2030" value="2020" required>
+            </div>
+            <div class="form-group">
+                <label>坐向</label>
+                <select id="buildingFacing">
+                    <option value="子山午向">子山午向（正南）</option>
+                    <option value="丑山未向">丑山未向</option>
+                    <option value="乾山巽向" selected>乾山巽向（西北/東南）</option>
+                    <option value="卯山酉向">卯山酉向（東/西）</option>
+                    <option value="午山子向">午山子向（正北）</option>
+                    <option value="辰山戌向">辰山戌向</option>
+                    <option value="巽山乾向">巽山乾向（東南/西北）</option>
+                    <option value="坤山艮向">坤山艮向</option>
+                    <option value="甲山庚向">甲山庚向</option>
+                    <option value="艮山坤向">艮山坤向</option>
+                    <option value="壬山丙向">壬山丙向</option>
+                </select>
+            </div>
+        </div>
+        <div class="two-col">
+            <div class="form-group">
+                <label>樓層</label>
+                <input type="number" id="floorNumber" min="1" max="100" value="10" required>
+            </div>
+            <div class="form-group">
+                <label>職業</label>
+                <input type="text" id="job" placeholder="例如：保險業" value="保險業">
+            </div>
+        </div>
+        <div class="two-col">
+            <div class="form-group">
+                <label>北側是否有水</label>
+                <select id="northWater">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>南側是否有山</label>
+                <select id="southMountain">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>已知煞氣（多選，逗號分隔）</label>
+            <input type="text" id="detectedShas" placeholder="例如：天斬煞,壁刀煞">
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">🔮 生成評估報告</button>
+    </form>
+
+    <div id="loading" class="loading" style="display:none">
+        <div class="spinner"></div>
+        <p>正在計算風水匹配度...</p>
+    </div>
+
+    <div id="result" style="display:none"></div>
+</div>
+
+<script>
+const API_URL = 'http://localhost:8001/api/evaluate';
+
+function getGaugeClass(score) {
+    if (score >= 85) return 'gauge-excellent';
+    if (score >= 70) return 'gauge-good';
+    if (score >= 45) return 'gauge-average';
+    return 'gauge-poor';
+}
+function getRatingClass(score) {
+    if (score >= 85) return 'rating-excellent';
+    if (score >= 70) return 'rating-good';
+    if (score >= 45) return 'rating-average';
+    return 'rating-poor';
+}
+function getRatingText(score) {
+    if (score >= 85) return '★★★★★ 高分區間';
+    if (score >= 70) return '★★★★☆ 中高分區間';
+    if (score >= 60) return '★★★☆☆ 中分區間';
+    if (score >= 45) return '★★☆☆☆ 中低分區間';
+    if (score >= 30) return '★☆☆☆☆ 低分區間';
+    return '☆☆☆☆☆ 極低分區間';
+}
+
+document.getElementById('evaluateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = '計算中...';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('result').style.display = 'none';
+
+    const shas = document.getElementById('detectedShas').value
+        .split(',').map(s => s.trim()).filter(s => s);
+
+    const payload = {
+        request_meta: {
+            eval_year: 2026,
+            user_gender: document.getElementById('gender').value,
+            birth_date: document.getElementById('birthDate').value,
+            birth_time: document.getElementById('birthTime').value || null,
+            user_job: document.getElementById('job').value || null,
+            floor_preference: null,
+            household_weight_mode: document.getElementById('householdRatio').value,
+            building_year: parseInt(document.getElementById('buildingYear').value),
+            building_facing: document.getElementById('buildingFacing').value,
+            floor_number: parseInt(document.getElementById('floorNumber').value),
+            goal: document.getElementById('goal').value,
+            north_has_water: document.getElementById('northWater').value === 'true',
+            south_has_mountain: document.getElementById('southMountain').value === 'true',
+            detected_shas: shas
+        }
+    };
+
+    try {
+        const resp = await fetch(API_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (data.status !== 'success') throw new Error(data.message || '評估失敗');
+        renderResult(data.match_result);
+    } catch (err) {
+        document.getElementById('result').innerHTML = `<div class="result-section"><p style="color:#dc3545">❌ ${err.message}</p><p style="color:#666;font-size:13px">請確認後端服務已啟動：python ai-fengshui-mvp/app.py</p></div>`;
+        document.getElementById('result').style.display = 'block';
+    } finally {
+        btn.disabled = false; btn.textContent = '🔮 生成評估報告';
+        document.getElementById('loading').style.display = 'none';
+    }
+});
+
+function renderResult(match) {
+    const gclass = getGaugeClass(match.final_score);
+    const rclass = getRatingClass(match.final_score);
+    const rtext = getRatingText(match.final_score);
+    let flagsHtml = '';
+    if (match.flags) {
+        const active = Object.entries(match.flags).filter(([_,v]) => v);
+        if (active.length) {
+            flagsHtml = '<div class="section-title">⚠️ 風險標記</div>' + active.map(([k,v]) => {
+                const color = k.includes('green') ? 'flag-green' : (k.includes('red') ? 'flag-red' : 'flag-yellow');
+                return `<div class="flag-item ${color}">${k}: ${v}</div>`;
+            }).join('');
+        }
+    }
+    let remediesHtml = '';
+    if (match.recommended_remedies?.length) {
+        remediesHtml = '<div class="section-title">💡 化解建議</div>' + match.recommended_remedies.map(r =>
+            `<div class="remedy-item"><strong>${r.item}</strong> — ${r.purpose}（成本: ${r.cost}）</div>`
+        ).join('');
+    }
+    let breakdownHtml = '';
+    if (match.score_breakdown) {
+        breakdownHtml = '<div class="section-title">📋 分項得分</div>' + Object.entries(match.score_breakdown).map(([k,v]) =>
+            `<div class="breakdown-item"><span>${k}</span><strong>${v}</strong></div>`
+        ).join('');
+    }
+
+    document.getElementById('result').innerHTML = `
+        <div class="result-section">
+            <div class="score-display">
+                <div class="score-number">${match.final_score}</div>
+                <div class="score-label">/ 100 匹配總分</div>
+                <div class="score-gauge"><div class="score-gauge-fill ${gclass}" style="width:${match.final_score}%"></div></div>
+                <div class="rating-badge ${rclass}">${rtext}</div>
+                <p style="margin-top:12px;color:#666;font-size:13px">置信度: ${(match.confidence*100).toFixed(0)}%</p>
+            </div>
+            ${breakdownHtml}
+            ${flagsHtml}
+            ${remediesHtml}
+            <div class="section-title">📝 AI 分析</div>
+            <p style="color:#444;font-size:14px;line-height:1.8">${match.ai_rationale}</p>
+        </div>
+    `;
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>

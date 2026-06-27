@@ -1,0 +1,7 @@
+{
+  "buildCommand": "docker build -t fengshuilou .",
+  "startCommand": "docker run -p 8000:8000 fengshuilou",
+  "healthCheckPath": "/health",
+  "env": "docker",
+  "plan": "free"
+}

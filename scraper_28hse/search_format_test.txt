@@ -1,0 +1,21 @@
+URL: https://www.28hse.com/buy?search=海之戀
+  Items: 15
+  Title: 灣仔名廈極罕筍盤500呎3房巨廳單位（遠眺迷人鑽景）
+  District: 灣仔利文樓|中層  A室
+  Title: ️低密度️四房,工人房,連車位,歡迎睇完大膽還價傾
+  District: 粉嶺豪峰嶺|1座 高層 B室
+
+URL: https://www.28hse.com/buy?search=%E6%B5%B7%E4%B9%8B%E6%88%80
+  Items: 15
+  Title: 灣仔名廈極罕筍盤500呎3房巨廳單位（遠眺迷人鑽景）
+  District: 灣仔利文樓|中層  A室
+  Title: ️低密度️四房,工人房,連車位,歡迎睇完大膽還價傾
+  District: 粉嶺豪峰嶺|1座 高層 B室
+
+URL: https://www.28hse.com/buy?search=海之戀&estate=海之戀
+  Items: 15
+  Title: 灣仔名廈極罕筍盤500呎3房巨廳單位（遠眺迷人鑽景）
+  District: 灣仔利文樓|中層  A室
+  Title: ️低密度️四房,工人房,連車位,歡迎睇完大膽還價傾
+  District: 粉嶺豪峰嶺|1座 高層 B室
+

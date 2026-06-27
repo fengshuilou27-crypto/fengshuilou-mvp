@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FXTI 五行人格測評 - AI風水樓盤匹配系統</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 26px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
+        .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+        .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
+        .nav a:hover { background: #667eea; color: white; }
+        .nav a.active { background: #e74c3c; color: white; }
+        .version-badge { display: inline-block; background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
+        input, select {
+            width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s;
+        }
+        input:focus, select:focus { outline: none; border-color: #667eea; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+        .btn {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: #f0f0f0; color: #444; }
+
+        .quiz-section { margin-top: 24px; }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #667eea;
+        }
+        .question-number {
+            font-size: 12px; color: #667eea; font-weight: 600; margin-bottom: 8px;
+        }
+        .question-text {
+            font-size: 15px; color: #333; font-weight: 500; margin-bottom: 12px;
+        }
+        .option {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: #444;
+        }
+        .option:hover { border-color: #667eea; background: #f0f4ff; }
+        .option.selected { border-color: #667eea; background: #667eea; color: white; }
+
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .progress-bar {
+            width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; margin-bottom: 20px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .hidden { display: none; }
+        .intro-text {
+            text-align: center; color: #666; font-size: 14px; line-height: 1.7;
+            margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px;
+        }
+        .intro-text strong { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FXTI 五行人格測評 <span class="version-badge">Module 4</span></h1>
+        <p class="subtitle">先天八字 + 後天問卷 · 15種角色原型 · 專屬風水建議</p>
+
+        <div class="nav">
+            <a href="../index.html">模組1-3</a>
+            <a href="index.html" class="active">FXTI測評</a>
+            <a href="result.html">測評結果</a>
+        </div>
+
+        <div id="introSection">
+            <div class="intro-text">
+                <strong>FXTI（Five Elements Type Indicator）</strong> 結合你的出生八字與10道情境問卷，
+                分析你的五行能量分布，判定專屬角色原型，並提供個人化風水建議。<br><br>
+                測試約需 <strong>3分鐘</strong>，請根據你的真實感受作答。
+            </div>
+        </div>
+
+        <form id="fxtiForm">
+            <h3 style="margin-bottom: 16px; color: #333; font-size: 16px;">📋 基本資料</h3>
+            <div class="two-col">
+                <div class="form-group">
+                    <label>出生年份</label>
+                    <input type="number" name="birth_year" value="1990" min="1900" max="2030" required>
+                </div>
+                <div class="form-group">
+                    <label>出生月份</label>
+                    <input type="number" name="birth_month" value="5" min="1" max="12" required>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label>出生日期</label>
+                    <input type="number" name="birth_day" value="15" min="1" max="31" required>
+                </div>
+                <div class="form-group">
+                    <label>出生時辰（可選，0-23）</label>
+                    <input type="number" name="birth_hour" value="12" min="0" max="23">
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label>性別</label>
+                    <select name="gender">
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>職業（可選）</label>
+                    <input type="text" name="occupation" placeholder="例如：工程師">
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="quiz-section" id="quizSection">
+                <!-- Questions will be injected here -->
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn" style="margin-top: 24px;">提交測評</button>
+        </form>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>正在分析五行能量...</p>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            { q: "當你面對一個重要決定時，你通常會怎麼做？", opts: ["仔細分析利弊，列出優缺點再做決定", "聽取多方意見，尋求創新解決方案", "跟隨直覺，靜待時機成熟", "果斷行動，先做再說", "徵求信任的人的意見，穩妥為上"] },
+            { q: "在團隊合作中，你通常扮演什麼角色？", opts: ["制定規則和標準，確保效率", "提出新點子，推動改變", "協調各方，化解衝突", "帶領大家，鼓舞士氣", "默默支持，穩定後方"] },
+            { q: "描述一下你理想的生活環境？", opts: ["簡潔有序，功能分區明確", "充滿綠植，自然光充足", "臨近水源，寧靜悠遠", "明亮開闊，色彩鮮豔", "溫馨踏實，有歸屬感"] },
+            { q: "當遇到挫折時，你的反應是？", opts: ["冷靜分析原因，調整策略", "從挫折中學習，重新出發", "順勢而為，等待時機轉變", "愈挫愈勇，立刻反擊", "接受現實，慢慢恢復"] },
+            { q: "你與朋友相處的方式是？", opts: ["重質不重量，深交幾個知己", "喜歡結交不同領域的朋友", "善於傾聽，給予情感支持", "熱情主動，常常是聚會靈魂", "忠誠可靠，長期維繫關係"] },
+            { q: "你選擇工作/居住地的首要考量是？", opts: ["發展機會和競爭力", "創意空間和成長潛力", "生活品質和環境氛圍", "社交機會和娛樂活動", "安全感和生活穩定性"] },
+            { q: "描述你的日常時間管理風格？", opts: ["精確規劃，按表操課", "彈性安排，隨機應變", "順其自然，不強求", "多線並進，充滿活力", "規律作息，穩定節奏"] },
+            { q: "你對金錢的態度是？", opts: ["理性投資，追求回報", "願意為學習和體驗花錢", "不特別在意，夠用就好", "喜歡消費，享受當下", "穩健儲蓄，未雨綢繆"] },
+            { q: "當別人與你意見不同時，你會？", opts: ["用邏輯說服對方", "尊重差異，尋求共識", "避免爭執，順應對方", "熱烈辯論，堅持己見", "包容接納，和而不同"] },
+            { q: "你認為自己最大的優勢是？", opts: ["分析能力和執行力", "創造力和適應力", "洞察力和同理心", "領導力和感染力", "耐心和可靠性"] }
+        ];
+
+        let answers = new Array(10).fill(-1);
+
+        function renderQuestions() {
+            const container = document.getElementById('quizSection');
+            container.innerHTML = '<h3 style="margin-bottom: 16px; color: #333; font-size: 16px;">📝 情境問卷（10題）</h3>';
+
+            QUESTIONS.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="question-number">問題 ${idx + 1} / 10</div>
+                    <div class="question-text">${item.q}</div>
+                    <div class="options" data-idx="${idx}">
+                        ${item.opts.map((opt, oidx) => `
+                            <div class="option" data-oidx="${oidx}">${opt}</div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Bind click events
+            document.querySelectorAll('.options').forEach(optsGroup => {
+                optsGroup.querySelectorAll('.option').forEach(opt => {
+                    opt.addEventListener('click', function() {
+                        const qIdx = parseInt(optsGroup.dataset.idx);
+                        const oIdx = parseInt(this.dataset.oidx);
+                        answers[qIdx] = oIdx;
+
+                        // Visual update
+                        optsGroup.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                        this.classList.add('selected');
+
+                        updateProgress();
+                    });
+                });
+            });
+        }
+
+        function updateProgress() {
+            const answered = answers.filter(a => a >= 0).length;
+            const pct = (answered / 10) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+
+        document.getElementById('fxtiForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (answers.includes(-1)) {
+                alert('請回答所有10道問題');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+
+            submitBtn.disabled = true;
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(this);
+            const data = {
+                birth_year: parseInt(formData.get('birth_year')),
+                birth_month: parseInt(formData.get('birth_month')),
+                birth_day: parseInt(formData.get('birth_day')),
+                birth_hour: parseInt(formData.get('birth_hour')) || null,
+                gender: formData.get('gender'),
+                occupation: formData.get('occupation') || null,
+                answers: answers
+            };
+
+            try {
+                const response = await fetch('/api/fxti/calculate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    // Store result in localStorage for result page
+                    localStorage.setItem('fxti_result', JSON.stringify(result.data));
+                    // Redirect to result page
+                    window.location.href = 'result.html?id=' + result.data.id;
+                } else {
+                    throw new Error(result.message || '計算失敗');
+                }
+            } catch (err) {
+                alert('分析時出現錯誤：' + err.message);
+            } finally {
+                submitBtn.disabled = false;
+                loading.classList.add('hidden');
+            }
+        });
+
+        renderQuestions();
+    </script>
+</body>
+</html>

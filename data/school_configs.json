@@ -1,0 +1,125 @@
+{
+  "version": "1.0",
+  "schools": {
+    "default": {
+      "name": "通用版（玄空飛星主導）",
+      "description": "標準六維評分，適用大多數風水流派",
+      "dimensions": {
+        "flying_star": {
+          "weight": 30,
+          "max_raw_score": 40,
+          "algorithm": "standard_xuankong",
+          "label": "飛星",
+          "required": true
+        },
+        "bazi": {
+          "weight": 20,
+          "max_raw_score": 20,
+          "algorithm": "standard_bazi",
+          "label": "八字",
+          "required": true,
+          "sub_modules": []
+        },
+        "bagua": {
+          "weight": 15,
+          "max_raw_score": 10,
+          "algorithm": "standard_bazhai",
+          "label": "八宅",
+          "required": true
+        },
+        "zero_main_god": {
+          "weight": 10,
+          "max_raw_score": 10,
+          "algorithm": "binary_lingzhengshen",
+          "label": "零正神",
+          "required": true
+        },
+        "waishantou": {
+          "weight": 10,
+          "max_raw_score": 10,
+          "algorithm": "standard_waishantou",
+          "label": "外巒頭",
+          "required": false
+        },
+        "location": {
+          "weight": 10,
+          "max_raw_score": 10,
+          "algorithm": "fixed_location",
+          "label": "區位",
+          "required": true
+        },
+        "goal": {
+          "weight": 15,
+          "max_raw_score": 15,
+          "algorithm": "standard_goal",
+          "label": "目標",
+          "required": true
+        }
+      }
+    },
+    "hanwu": {
+      "name": "漢五派三元地理",
+      "description": "袁伍鳳博士漢五派風水體系，強調生命磁向與龍脈氣局",
+      "dimensions": {
+        "flying_star": {
+          "weight": 5,
+          "max_raw_score": 40,
+          "algorithm": "basic_nine_palace",
+          "label": "飛星",
+          "required": true
+        },
+        "bazi": {
+          "weight": 20,
+          "max_raw_score": 20,
+          "algorithm": "standard_bazi",
+          "label": "八字",
+          "required": true,
+          "sub_modules": ["life_magnetic_direction"]
+        },
+        "bagua": {
+          "weight": 15,
+          "max_raw_score": 10,
+          "algorithm": "standard_bazhai",
+          "label": "八宅",
+          "required": true
+        },
+        "zero_main_god": {
+          "weight": 10,
+          "max_raw_score": 10,
+          "algorithm": "multi_level_lingzhengshen",
+          "label": "零正神",
+          "required": true
+        },
+        "waishantou": {
+          "weight": 20,
+          "max_raw_score": 10,
+          "algorithm": "hanwu_longmai_qi",
+          "label": "外巒頭",
+          "required": true,
+          "sub_modules": ["dragon_vein", "building_qi"]
+        },
+        "location": {
+          "weight": 10,
+          "max_raw_score": 10,
+          "algorithm": "fixed_location",
+          "label": "區位",
+          "required": true
+        },
+        "goal": {
+          "weight": 15,
+          "max_raw_score": 15,
+          "algorithm": "standard_goal",
+          "label": "目標",
+          "required": true
+        },
+        "life_magnetic_direction": {
+          "weight": 15,
+          "max_raw_score": 15,
+          "algorithm": "life_magnetic_lookup",
+          "label": "生命磁向",
+          "required": true
+        }
+      }
+    }
+  }
+}

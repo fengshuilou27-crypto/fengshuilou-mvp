@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FXTI 測評結果 - AI風水樓盤匹配系統</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+        .nav a { padding: 8px 16px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; font-size: 14px; transition: all 0.2s; }
+        .nav a:hover { background: #667eea; }
+        .nav a.active { background: #e74c3c; }
+
+        /* Result Card */
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .result-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .result-type {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+        .result-title {
+            font-size: 18px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .result-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #f0f0f0;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* Element Bars */
+        .element-section {
+            margin: 24px 0;
+        }
+        .element-section h3 {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 12px;
+        }
+        .element-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .element-label {
+            width: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+        }
+        .element-track {
+            flex: 1;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 12px;
+        }
+        .element-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 11px;
+            color: white;
+            font-weight: 600;
+        }
+        .element-value {
+            width: 45px;
+            font-size: 13px;
+            color: #666;
+            text-align: right;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .info-card h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .info-card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .trait-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Share Card */
+        .share-section {
+            margin-top: 24px;
+        }
+        .share-card-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .share-card {
+            width: 400px;
+            height: 600px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-sizing: border-box;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .share-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -30%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(102,126,234,0.15) 0%, transparent 60%);
+        }
+        .card-logo {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 2px;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+            position: relative;
+        }
+        .card-type {
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #fff 0%, #a8b2d1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            position: relative;
+        }
+        .card-title {
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 24px;
+            font-weight: 500;
+            position: relative;
+        }
+        .card-elements {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .card-el {
+            text-align: center;
+        }
+        .card-el-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 4px;
+        }
+        .card-el-track {
+            width: 28px;
+            height: 70px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-el-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 14px 14px;
+            transition: height 1s ease;
+        }
+        .card-el-value {
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .card-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .card-trait {
+            background: rgba(255,255,255,0.12);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.85);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-quote {
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            position: relative;
+        }
+        .card-footer {
+            position: absolute;
+            bottom: 32px;
+            left: 32px;
+            right: 32px;
+            text-align: center;
+        }
+        .card-url {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 12px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #444;
+        }
+
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .hidden { display: none; }
+
+        @media (max-width: 600px) {
+            .share-card { width: 100%; height: auto; aspect-ratio: 2/3; }
+            .result-type { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="../index.html">模組1-3</a>
+            <a href="index.html">FXTI測評</a>
+            <a href="result.html" class="active">測評結果</a>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>正在載入結果...</p>
+        </div>
+
+        <div id="resultContent" class="hidden">
+            <!-- Result Card -->
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-type" id="resultType">...</div>
+                    <div class="result-title" id="resultTitle">...</div>
+                    <div class="result-badge" id="resultBadge">...</div>
+                </div>
+
+                <div class="element-section">
+                    <h3>🔥 五行能量分布</h3>
+                    <div id="elementBars"></div>
+                </div>
+
+                <div class="traits" id="traitsContainer"></div>
+
+                <div class="info-card">
+                    <h4>角色描述</h4>
+                    <p id="resultDescription">...</p>
+                </div>
+
+                <div class="info-card" style="border-left-color: #e74c3c;">
+                    <h4>核心矛盾</h4>
+                    <p id="resultContradiction">...</p>
+                </div>
+
+                <div class="info-card" style="border-left-color: #28a745;">
+                    <h4>風水建議</h4>
+                    <p id="resultFengshui">...</p>
+                </div>
+
+                <a href="index.html" class="btn" style="margin-top: 20px;">重新測評</a>
+                <button class="btn btn-secondary" id="relationshipBtn" style="margin-top: 12px;">雙人關係分析</button>
+            </div>
+
+            <!-- Share Card Section -->
+            <div class="share-section">
+                <div class="result-card">
+                    <h3 style="text-align: center; margin-bottom: 16px;">📤 分享卡</h3>
+                    <div class="share-card-wrapper">
+                        <div id="shareCard" class="share-card">
+                            <div class="card-logo">FXTI 五行人格測評</div>
+                            <div class="card-type" id="cardType">...</div>
+                            <div class="card-title" id="cardTitle">...</div>
+                            <div class="card-elements" id="cardElements"></div>
+                            <div class="card-traits" id="cardTraits"></div>
+                            <div class="card-quote" id="cardQuote">...</div>
+                            <div class="card-footer">
+                                <div class="card-url">掃描測試你的五行人格 · fxti.fengshui</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="downloadBtn" class="btn">下載分享卡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script>
+        const WUXING_COLORS = {
+            '金': '#C0C0C0',
+            '木': '#32CD32',
+            '水': '#00BFFF',
+            '火': '#FF6347',
+            '土': '#FFD700'
+        };
+
+        let resultData = null;
+
+        async function loadResult() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            // Try localStorage first
+            const stored = localStorage.getItem('fxti_result');
+            if (stored) {
+                resultData = JSON.parse(stored);
+            }
+
+            // If URL has different id, fetch from API
+            if (id && (!resultData || resultData.id !== id)) {
+                try {
+                    const resp = await fetch('/api/fxti/result/' + id);
+                    const data = await resp.json();
+                    if (data.status === 'success') {
+                        resultData = data.data;
+                        localStorage.setItem('fxti_result', JSON.stringify(resultData));
+                    }
+                } catch (e) {
+                    console.error('Fetch failed:', e);
+                }
+            }
+
+            if (!resultData) {
+                document.getElementById('loading').innerHTML = '<p>未找到結果，請先完成測評</p><a href="index.html" class="btn" style="display:inline-block;width:auto;padding:10px 24px;margin-top:12px;">前往測評</a>';
+                return;
+            }
+
+            renderResult();
+        }
+
+        function renderResult() {
+            const profile = resultData.profile;
+            const wuxing = resultData.final_wuxing;
+
+            // Header
+            document.getElementById('resultType').textContent = profile.name;
+            document.getElementById('resultTitle').textContent = profile.title;
+            document.getElementById('resultBadge').textContent = profile.type === 'pure' ? '純格 · ' + profile.elements[0] : '複合格 · ' + profile.elements.join('+');
+
+            // Element bars
+            const barsContainer = document.getElementById('elementBars');
+            ['金', '木', '水', '火', '土'].forEach(el => {
+                const pct = wuxing[el] || 0;
+                const row = document.createElement('div');
+                row.className = 'element-row';
+                row.innerHTML = `
+                    <div class="element-label">${el}</div>
+                    <div class="element-track">
+                        <div class="element-fill" style="width: ${pct}%; background: ${WUXING_COLORS[el]};">${pct}%</div>
+                    </div>
+                    <div class="element-value">${pct}%</div>
+                `;
+                barsContainer.appendChild(row);
+            });
+
+            // Traits
+            const traitsContainer = document.getElementById('traitsContainer');
+            (profile.traits || []).slice(0, 5).forEach(trait => {
+                const tag = document.createElement('span');
+                tag.className = 'trait-tag';
+                tag.textContent = trait;
+                traitsContainer.appendChild(tag);
+            });
+
+            // Description
+            document.getElementById('resultDescription').textContent = profile.description;
+            document.getElementById('resultContradiction').textContent = profile.core_contradiction;
+            document.getElementById('resultFengshui').textContent = profile.fengshui_advice;
+
+            // Share card
+            document.getElementById('cardType').textContent = profile.name;
+            document.getElementById('cardTitle').textContent = profile.title;
+            document.getElementById('cardQuote').textContent = profile.description;
+
+            // Share card elements
+            const cardElContainer = document.getElementById('cardElements');
+            ['金', '木', '水', '火', '土'].forEach(el => {
+                const pct = wuxing[el] || 0;
+                const div = document.createElement('div');
+                div.className = 'card-el';
+                div.innerHTML = `
+                    <div class="card-el-label">${el}</div>
+                    <div class="card-el-track">
+                        <div class="card-el-fill" style="height: ${pct}%; background: ${WUXING_COLORS[el]}"></div>
+                    </div>
+                    <div class="card-el-value">${pct}%</div>
+                `;
+                cardElContainer.appendChild(div);
+            });
+
+            // Share card traits
+            const cardTraits = document.getElementById('cardTraits');
+            (profile.traits || []).slice(0, 3).forEach(trait => {
+                const span = document.createElement('span');
+                span.className = 'card-trait';
+                span.textContent = trait;
+                cardTraits.appendChild(span);
+            });
+
+            // Show content
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('resultContent').classList.remove('hidden');
+        }
+
+        // Download share card
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const card = document.getElementById('shareCard');
+            html2canvas(card, { scale: 2, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'fxti-五行人格.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
+
+        // Relationship analysis button
+        document.getElementById('relationshipBtn').addEventListener('click', function() {
+            alert('雙人關係分析功能：請在API層面調用 POST /api/fxti/relationship');
+        });
+
+        loadResult();
+    </script>
+</body>
+</html>

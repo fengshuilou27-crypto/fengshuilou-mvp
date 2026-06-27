@@ -1,0 +1,1315 @@
+{
+  "user": {
+    "name": "楊愛軍",
+    "birth_date": "1978-05-26",
+    "gender": "男",
+    "job": "保險業",
+    "goals": [
+      "事業",
+      "財運"
+    ],
+    "status": "單身"
+  },
+  "match_type": "模組2 - 配對屋苑",
+  "total_estates": 28,
+  "top_results": [
+    {
+      "estate": "One Innovale",
+      "district": "粉嶺",
+      "facing": "乾山巽向",
+      "year_built": 2021,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 70.2,
+      "rating": "★★★★☆ 中高分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 21.8,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該單位為八運乾山巽向，到山到向格局。宅運基礎分30分，吉組合加10分，凶組合減10分，年度調整-1分。 八運到山到向，丁財兩得。旺山旺向格局\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為乾（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "帝御",
+      "district": "屯門(青山公路)",
+      "facing": "乾山巽向",
+      "year_built": 2020,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 70.2,
+      "rating": "★★★★☆ 中高分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 21.8,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該單位為八運乾山巽向，到山到向格局。宅運基礎分30分，吉組合加10分，凶組合減10分，年度調整-1分。 八運到山到向，丁財兩得。旺山旺向格局\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為乾（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "尚翠苑",
+      "district": "荃灣",
+      "facing": "子山午向",
+      "year_built": 2017,
+      "yun": "八運",
+      "property_type": "居屋",
+      "final_score": 59.0,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 25.5,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為八運子山午向，到山到向格局。宅運基礎分30分，吉組合加10分，凶組合減5分，年度調整-1分。 八運到山到向，丁財兩得。旺山旺向格局\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為坎（東四宅）。命卦坤（西四命）與宅卦坎（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "昇悅居",
+      "district": "荔枝角",
+      "facing": "子山午向",
+      "year_built": 2003,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 58.2,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 21.8,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為七運子山午向，到山到向格局。宅運基礎分30分，吉組合加5分，凶組合減5分，年度調整-1分。 七運到山到向，丁財兩得。旺山旺向格局，base_score 30/40。⚠️ MVP 簡化排盤，需專業確認\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為坎（東四宅）。命卦坤（西四命）與宅卦坎（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "萬景峯",
+      "district": "荃灣",
+      "facing": "卯山酉向",
+      "year_built": 2007,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 47.8,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 14.2,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為八運卯山酉向，雙星會向格局。宅運基礎分20分，吉組合加10分，凶組合減10分，年度調整-1分。 八運雙星會向，旺財不旺丁。⚠️ MVP 簡化排盤，需專業確認\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為震（東四宅）。命卦坤（西四命）與宅卦震（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "YOHO Town",
+      "district": "元朗",
+      "facing": "卯山酉向",
+      "year_built": 2005,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 47.8,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 14.2,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為八運卯山酉向，雙星會向格局。宅運基礎分20分，吉組合加10分，凶組合減10分，年度調整-1分。 八運雙星會向，旺財不旺丁。⚠️ MVP 簡化排盤，需專業確認\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為震（東四宅）。命卦坤（西四命）與宅卦震（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "將軍澳中心",
+      "district": "將軍澳",
+      "facing": "卯山酉向",
+      "year_built": 2001,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 46.2,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 9.8,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為七運卯山酉向，雙星會向格局。宅運基礎分14分，吉組合加5分，凶組合減5分，年度調整-1分。 七運雙星會向，旺財不旺丁。⚠️ MVP 簡化排盤，需專業確認\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為震（東四宅）。命卦坤（西四命）與宅卦震（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "灝景灣",
+      "district": "青衣",
+      "facing": "丑山未向",
+      "year_built": 1998,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 44.0,
+      "rating": "★☆☆☆☆ 低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為艮（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "沙田第一城",
+      "district": "沙田",
+      "facing": "乾山巽向",
+      "year_built": 1981,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 41.0,
+      "rating": "★☆☆☆☆ 低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該建築年份屬六運，但MVP未收錄該坐向的六運宅運盤。\n六運的零正神配置暫未收錄\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為乾（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "海怡半島",
+      "district": "鴨脷洲",
+      "facing": "午山子向",
+      "year_built": 1992,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "黃埔花園",
+      "district": "紅磡",
+      "facing": "午山子向",
+      "year_built": 1986,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "麗城花園",
+      "district": "荃灣",
+      "facing": "午山子向",
+      "year_built": 1988,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "新都城",
+      "district": "寶琳",
+      "facing": "午山子向",
+      "year_built": 1996,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "愉景新城",
+      "district": "荃灣",
+      "facing": "午山子向",
+      "year_built": 1997,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "港運城",
+      "district": "北角",
+      "facing": "午山子向",
+      "year_built": 1996,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "城市花園",
+      "district": "北角",
+      "facing": "午山子向",
+      "year_built": 1984,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "寶盈花園",
+      "district": "將軍澳",
+      "facing": "午山子向",
+      "year_built": 1997,
+      "yun": "七運",
+      "property_type": "居屋",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "錦英苑",
+      "district": "馬鞍山",
+      "facing": "午山子向",
+      "year_built": 1991,
+      "yun": "七運",
+      "property_type": "居屋",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "筲箕灣廣場",
+      "district": "筲箕灣",
+      "facing": "午山子向",
+      "year_built": 1992,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "樂軒臺",
+      "district": "跑馬地",
+      "facing": "午山子向",
+      "year_built": 1993,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    }
+  ],
+  "all_results": [
+    {
+      "estate": "One Innovale",
+      "district": "粉嶺",
+      "facing": "乾山巽向",
+      "year_built": 2021,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 70.2,
+      "rating": "★★★★☆ 中高分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 21.8,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該單位為八運乾山巽向，到山到向格局。宅運基礎分30分，吉組合加10分，凶組合減10分，年度調整-1分。 八運到山到向，丁財兩得。旺山旺向格局\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為乾（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "帝御",
+      "district": "屯門(青山公路)",
+      "facing": "乾山巽向",
+      "year_built": 2020,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 70.2,
+      "rating": "★★★★☆ 中高分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 21.8,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該單位為八運乾山巽向，到山到向格局。宅運基礎分30分，吉組合加10分，凶組合減10分，年度調整-1分。 八運到山到向，丁財兩得。旺山旺向格局\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為乾（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "尚翠苑",
+      "district": "荃灣",
+      "facing": "子山午向",
+      "year_built": 2017,
+      "yun": "八運",
+      "property_type": "居屋",
+      "final_score": 59.0,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 25.5,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為八運子山午向，到山到向格局。宅運基礎分30分，吉組合加10分，凶組合減5分，年度調整-1分。 八運到山到向，丁財兩得。旺山旺向格局\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為坎（東四宅）。命卦坤（西四命）與宅卦坎（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "昇悅居",
+      "district": "荔枝角",
+      "facing": "子山午向",
+      "year_built": 2003,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 58.2,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 21.8,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為七運子山午向，到山到向格局。宅運基礎分30分，吉組合加5分，凶組合減5分，年度調整-1分。 七運到山到向，丁財兩得。旺山旺向格局，base_score 30/40。⚠️ MVP 簡化排盤，需專業確認\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為坎（東四宅）。命卦坤（西四命）與宅卦坎（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "萬景峯",
+      "district": "荃灣",
+      "facing": "卯山酉向",
+      "year_built": 2007,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 47.8,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 14.2,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為八運卯山酉向，雙星會向格局。宅運基礎分20分，吉組合加10分，凶組合減10分，年度調整-1分。 八運雙星會向，旺財不旺丁。⚠️ MVP 簡化排盤，需專業確認\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為震（東四宅）。命卦坤（西四命）與宅卦震（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "YOHO Town",
+      "district": "元朗",
+      "facing": "卯山酉向",
+      "year_built": 2005,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 47.8,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 14.2,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為八運卯山酉向，雙星會向格局。宅運基礎分20分，吉組合加10分，凶組合減10分，年度調整-1分。 八運雙星會向，旺財不旺丁。⚠️ MVP 簡化排盤，需專業確認\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為震（東四宅）。命卦坤（西四命）與宅卦震（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "將軍澳中心",
+      "district": "將軍澳",
+      "facing": "卯山酉向",
+      "year_built": 2001,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 46.2,
+      "rating": "★★☆☆☆ 中低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 9.8,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 7.5
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該單位為七運卯山酉向，雙星會向格局。宅運基礎分14分，吉組合加5分，凶組合減5分，年度調整-1分。 七運雙星會向，旺財不旺丁。⚠️ MVP 簡化排盤，需專業確認\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為震（東四宅）。命卦坤（西四命）與宅卦震（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數7.5分。"
+    },
+    {
+      "estate": "灝景灣",
+      "district": "青衣",
+      "facing": "丑山未向",
+      "year_built": 1998,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 44.0,
+      "rating": "★☆☆☆☆ 低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為艮（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "沙田第一城",
+      "district": "沙田",
+      "facing": "乾山巽向",
+      "year_built": 1981,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 41.0,
+      "rating": "★☆☆☆☆ 低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 15.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": false
+      },
+      "rationale": "該建築年份屬六運，但MVP未收錄該坐向的六運宅運盤。\n六運的零正神配置暫未收錄\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為乾（西四宅）。宅命同類（東四/西四），基礎計算結果。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "海怡半島",
+      "district": "鴨脷洲",
+      "facing": "午山子向",
+      "year_built": 1992,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "黃埔花園",
+      "district": "紅磡",
+      "facing": "午山子向",
+      "year_built": 1986,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "麗城花園",
+      "district": "荃灣",
+      "facing": "午山子向",
+      "year_built": 1988,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "新都城",
+      "district": "寶琳",
+      "facing": "午山子向",
+      "year_built": 1996,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "愉景新城",
+      "district": "荃灣",
+      "facing": "午山子向",
+      "year_built": 1997,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "港運城",
+      "district": "北角",
+      "facing": "午山子向",
+      "year_built": 1996,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "城市花園",
+      "district": "北角",
+      "facing": "午山子向",
+      "year_built": 1984,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "寶盈花園",
+      "district": "將軍澳",
+      "facing": "午山子向",
+      "year_built": 1997,
+      "yun": "七運",
+      "property_type": "居屋",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "錦英苑",
+      "district": "馬鞍山",
+      "facing": "午山子向",
+      "year_built": 1991,
+      "yun": "七運",
+      "property_type": "居屋",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "筲箕灣廣場",
+      "district": "筲箕灣",
+      "facing": "午山子向",
+      "year_built": 1992,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "樂軒臺",
+      "district": "跑馬地",
+      "facing": "午山子向",
+      "year_built": 1993,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "新峰花園",
+      "district": "大埔",
+      "facing": "午山子向",
+      "year_built": 1994,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "中心圍村屋",
+      "district": "沙田",
+      "facing": "午山子向",
+      "year_built": 1990,
+      "yun": "七運",
+      "property_type": "村屋",
+      "final_score": 29.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 3.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬七運，但MVP未收錄該坐向的七運宅運盤。\n七運正神在西方，零神在東方。七運環境無明顯山水，基礎分+3 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "愛海頌",
+      "district": "深水埗",
+      "facing": "午山子向",
+      "year_built": 2019,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 26.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬八運，但MVP未收錄該坐向的八運宅運盤。\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "太古城",
+      "district": "鰂魚涌",
+      "facing": "子山午向",
+      "year_built": 1980,
+      "yun": "七運",
+      "property_type": "私人屋苑",
+      "final_score": 26.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬六運，但MVP未收錄該坐向的六運宅運盤。\n六運的零正神配置暫未收錄\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為坎（東四宅）。命卦坤（西四命）與宅卦坎（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "美孚新邨",
+      "district": "美孚",
+      "facing": "午山子向",
+      "year_built": 1975,
+      "yun": "六運",
+      "property_type": "私人屋苑",
+      "final_score": 26.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬六運，但MVP未收錄該坐向的六運宅運盤。\n六運的零正神配置暫未收錄\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "都會駅",
+      "district": "調景嶺",
+      "facing": "午山子向",
+      "year_built": 2006,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 26.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬八運，但MVP未收錄該坐向的八運宅運盤。\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "柏傲莊",
+      "district": "大圍",
+      "facing": "午山子向",
+      "year_built": 2022,
+      "yun": "九運",
+      "property_type": "私人屋苑",
+      "final_score": 26.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬八運，但MVP未收錄該坐向的八運宅運盤。\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    },
+    {
+      "estate": "溱岸8號",
+      "district": "荃灣",
+      "facing": "午山子向",
+      "year_built": 2014,
+      "yun": "八運",
+      "property_type": "私人屋苑",
+      "final_score": 26.0,
+      "rating": "☆☆☆☆☆ 極低分區間（需專業師傅確認）",
+      "score_breakdown": {
+        "flying_stars": 0.0,
+        "zero_main_god": 0.0,
+        "region": 10.0,
+        "landscape_sha": 0,
+        "bazi": 16,
+        "bagua": 0.0,
+        "goal": 0.0
+      },
+      "flags": {
+        "severe_penalty_applied": false,
+        "sha_detected": false,
+        "remedies_required": false,
+        "yun_conversion_considered": false,
+        "theory_conflict_detected": true
+      },
+      "rationale": "該建築年份屬八運，但MVP未收錄該坐向的八運宅運盤。\n八運正神在東北，零神在西南。山水配置未提供明確加分。 MVP為簡化計算，基於公開資料，僅供參考，建議實地勘察並諮詢專業師傅。\n未檢測到已知煞氣，該項目無扣分。 基於公開資料查表，僅供參考。\n年柱天干五行為土（天干戊），樓層10屬土，兩者關係為「比劫」，計算得分16分。 MVP簡化：未用完整八字，僅以年柱天干近似日主五行。 基於公開資料簡化計算，僅供參考，具體判斷建議諮詢專業師傅。\n命卦為坤（西四命），宅卦為離（東四宅）。命卦坤（西四命）與宅卦離（東四宅）不相配，可按命卦重新定位吉位。 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。\n雙目標匹配（事業, 財運），平均分數0.0分。"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "test_info": {
+    "test_name": "FXTI 五行人格測評測試樣本",
+    "version": "v0.6.0",
+    "generated_at": "2026-06-16T01:30:00+08:00",
+    "description": "FXTI 模組測試數據，包含單人測評與雙人關係分析樣本"
+  },
+  "test_cases": [
+    {
+      "case_id": "fxti_single_001",
+      "case_name": "單人測評 - 金水型策略家",
+      "input": {
+        "birth_year": 1990,
+        "birth_month": 5,
+        "birth_day": 15,
+        "birth_hour": 12,
+        "gender": "male",
+        "occupation": "金融分析師",
+        "answers": [0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+      },
+      "expected_profile_type": "pure",
+      "expected_element": "金"
+    },
+    {
+      "case_id": "fxti_single_002",
+      "case_name": "單人測評 - 木火型激勵者",
+      "input": {
+        "birth_year": 1988,
+        "birth_month": 8,
+        "birth_day": 20,
+        "birth_hour": 14,
+        "gender": "female",
+        "occupation": "市場營銷",
+        "answers": [1, 3, 1, 3, 3, 3, 3, 3, 1, 3]
+      },
+      "expected_profile_type": "composite",
+      "expected_elements": ["木", "火"]
+    },
+    {
+      "case_id": "fxti_single_003",
+      "case_name": "單人測評 - 水土型滋養者",
+      "input": {
+        "birth_year": 1995,
+        "birth_month": 3,
+        "birth_day": 8,
+        "birth_hour": 22,
+        "gender": "female",
+        "occupation": "心理諮詢師",
+        "answers": [2, 2, 2, 2, 2, 4, 2, 2, 2, 2]
+      },
+      "expected_profile_type": "composite",
+      "expected_elements": ["水", "土"]
+    },
+    {
+      "case_id": "fxti_single_004",
+      "case_name": "單人測評 - 純火型熱情領導者",
+      "input": {
+        "birth_year": 1985,
+        "birth_month": 7,
+        "birth_day": 25,
+        "birth_hour": 10,
+        "gender": "male",
+        "occupation": "創業家",
+        "answers": [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+      },
+      "expected_profile_type": "pure",
+      "expected_element": "火"
+    },
+    {
+      "case_id": "fxti_single_005",
+      "case_name": "單人測評 - 金木型革新者",
+      "input": {
+        "birth_year": 1992,
+        "birth_month": 11,
+        "birth_day": 3,
+        "birth_hour": 8,
+        "gender": "male",
+        "occupation": "產品經理",
+        "answers": [0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
+      },
+      "expected_profile_type": "composite",
+      "expected_elements": ["金", "木"]
+    }
+  ],
+  "relationship_tests": [
+    {
+      "case_id": "fxti_rel_001",
+      "case_name": "雙人關係 - 相生（金生水）",
+      "person_a": {
+        "birth_year": 1990,
+        "birth_month": 5,
+        "birth_day": 15,
+        "birth_hour": 12,
+        "gender": "male",
+        "answers": [0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+      },
+      "person_b": {
+        "birth_year": 1993,
+        "birth_month": 9,
+        "birth_day": 22,
+        "birth_hour": 18,
+        "gender": "female",
+        "answers": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+      },
+      "expected_relation_type": "supportive",
+      "expected_relation_name": "相生（A生助B）"
+    },
+    {
+      "case_id": "fxti_rel_002",
+      "case_name": "雙人關係 - 相剋（水剋火）",
+      "person_a": {
+        "birth_year": 1995,
+        "birth_month": 3,
+        "birth_day": 8,
+        "birth_hour": 22,
+        "gender": "female",
+        "answers": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+      },
+      "person_b": {
+        "birth_year": 1985,
+        "birth_month": 7,
+        "birth_day": 25,
+        "birth_hour": 10,
+        "gender": "male",
+        "answers": [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+      },
+      "expected_relation_type": "controlling",
+      "expected_relation_name": "相剋（A制約B）"
+    },
+    {
+      "case_id": "fxti_rel_003",
+      "case_name": "雙人關係 - 平衡（木+火 vs 金+水）",
+      "person_a": {
+        "birth_year": 1988,
+        "birth_month": 8,
+        "birth_day": 20,
+        "birth_hour": 14,
+        "gender": "female",
+        "answers": [1, 3, 1, 3, 3, 3, 3, 3, 1, 3]
+      },
+      "person_b": {
+        "birth_year": 1990,
+        "birth_month": 5,
+        "birth_day": 15,
+        "birth_hour": 12,
+        "gender": "male",
+        "answers": [0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+      },
+      "expected_relation_type": "neutral",
+      "expected_relation_name": "平衡"
+    }
+  ],
+  "api_endpoints": {
+    "profiles": "GET /api/fxti/profiles",
+    "calculate": "POST /api/fxti/calculate",
+    "result": "GET /api/fxti/result/{fxti_id}",
+    "relationship": "POST /api/fxti/relationship"
+  },
+  "notes": [
+    "answers 陣列對應 10 道問卷題，每題 0-4（0=金, 1=木, 2=水, 3=火, 4=土）",
+    "先天八字佔 40%，後天問卷佔 60% 合成最終五行分布",
+    "純格判定：單一元素 >= 30% 且與第二名差距 >= 20%",
+    "關係分析包含：相似度、互補度、和諧度、共同風水建議"
+  ]
+}

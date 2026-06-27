@@ -1,0 +1,1152 @@
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from typing import List, Optional, Dict, Any
+from datetime import datetime
+from pathlib import Path
+import csv
+import json
+import os
+import re
+import sqlite3
+import logging
+import uuid
+import hashlib
+
+from data.flying_star import get_yun, SUPPORTED_FACINGS, FLYING_STAR_TABLE
+from models.flying_star_analysis import analyze_flying_star
+from models.zero_main_god import analyze_zero_main_god
+from models.sha_assessment import analyze_sha
+from models.bazi_matching import analyze_bazi
+from models.bagua_matching import analyze_bagua, analyze_bagua_dual
+from models.goal_matching import analyze_goal
+from models.match_result import aggregate_match_result
+
+from data.fxti_bazi import get_innate_wuxing
+from data.fxti_questionnaire import get_questionnaire, calculate_acquired_wuxing
+from data.fxti_profile import determine_profile, synthesize_result, ALL_PROFILES
+from data.fxti_relationship import analyze_relationship
+from data.school_manager import get_school_manager
+from data.life_magnetic_direction import analyze_life_magnetic_direction, check_direction_compatibility
+from data.life_gua import analyze_life_gua
+
+app = FastAPI(
+    title="AI風水樓盤匹配系統",
+    description="MVP v0.7 - 流派插件化 + 漢五派生命磁向 + 人命卦 + 多目標加權 + 同住人雙八字 + 職業五行 + FXTI五行人格測評",
+    version="0.7.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8001", "http://127.0.0.1:8001", "https://fengshuilou.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+logger = logging.getLogger(__name__)
+
+# SQLite database setup
+DB_PATH = Path("data/fengshuilou.db")
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+def init_db():
+    conn = sqlite3.connect(str(DB_PATH))
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY, username TEXT UNIQUE, password_hash TEXT,
+        created_at TEXT, last_login TEXT
+    )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS fxti_results (
+        id TEXT PRIMARY KEY, data TEXT, created_at TEXT
+    )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS match_results (
+        id TEXT PRIMARY KEY, user_id TEXT, property_data TEXT, score REAL,
+        created_at TEXT
+    )''')
+    conn.commit()
+    conn.close()
+    logger.info("Database initialized at %s", DB_PATH)
+
+init_db()
+
+def db_conn():
+    return sqlite3.connect(str(DB_PATH))
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# In-memory auth cache (MVP simple session)
+active_sessions: Dict[str, str] = {}  # token -> user_id
+
+
+
+
+class GoalItem(BaseModel):
+    goal: str = Field(..., description="目標名稱")
+    priority: int = Field(1, description="優先級：1=主, 2=次, 3=第三")
+
+
+class RequestMeta(BaseModel):
+    eval_year: int = Field(default=2026, description="評估年份")
+    user_gender: str = Field(..., description="性別：男/女")
+    birth_date: str = Field(..., description="出生日期 YYYY-MM-DD")
+    birth_time: Optional[str] = Field(None, description="出生時間 HH:MM")
+    birth_place: Optional[str] = Field(None, description="出生地")
+    user_job: Optional[str] = Field(None, description="職業")
+    floor_preference: Optional[str] = Field(None, description="樓層偏好")
+    household_weight_mode: Optional[str] = Field("balanced", description="家庭權重模式")
+    # 同住人（雙人模式）
+    cohabitant_enabled: bool = Field(False, description="啟用同住人雙人模式")
+    cohabitant_gender: Optional[str] = Field(None, description="同住人性別：男/女")
+    cohabitant_birth_date: Optional[str] = Field(None, description="同住人出生日期 YYYY-MM-DD")
+    cohabitant_birth_time: Optional[str] = Field(None, description="同住人出生時間 HH:MM")
+    cohabitant_user_job: Optional[str] = Field(None, description="同住人職業")
+    cohabitant_weight_ratio: float = Field(0.5, description="同住人比例：0.5=50/50, 0.7=70/30, 0.3=30/70")
+    # 樓盤資料
+    building_year: int = Field(..., description="建築年份")
+    building_facing: str = Field(..., description="坐向：子山午向/丑山未向/乾山巽向/卯山酉向等")
+    floor_number: int = Field(..., description="樓層")
+    address: Optional[str] = Field(None, description="物業地址")
+    # 目標（多選）
+    goals: List[GoalItem] = Field(..., description="目標列表，最多3個")
+    north_has_water: bool = Field(False, description="北側有水")
+    south_has_mountain: bool = Field(False, description="南側有山")
+    detected_shas: Optional[List[str]] = Field(default=[], description="已知煞氣")
+
+
+class EvaluateRequest(BaseModel):
+    request_meta: RequestMeta
+
+
+class UserProfile(BaseModel):
+    eval_year: int = Field(default=2026, description="評估年份")
+    user_gender: str = Field(..., description="性別：男/女")
+    birth_date: str = Field(..., description="出生日期 YYYY-MM-DD")
+    birth_time: Optional[str] = Field(None, description="出生時間 HH:MM")
+    birth_place: Optional[str] = Field(None, description="出生地")
+    user_job: Optional[str] = Field(None, description="職業")
+    # 同住人
+    cohabitant_enabled: bool = Field(False, description="啟用同住人雙人模式")
+    cohabitant_gender: Optional[str] = Field(None, description="同住人性別")
+    cohabitant_birth_date: Optional[str] = Field(None, description="同住人出生日期")
+    cohabitant_birth_time: Optional[str] = Field(None, description="同住人出生時間")
+    cohabitant_user_job: Optional[str] = Field(None, description="同住人職業")
+    cohabitant_weight_ratio: float = Field(0.5, description="同住人比例")
+    # 目標
+    goals: List[GoalItem] = Field(..., description="目標列表")
+    household_weight_mode: Optional[str] = Field("balanced", description="家庭權重模式")
+
+
+class PropertyFilter(BaseModel):
+    price_min: Optional[int] = Field(None, description="最低價格（萬）")
+    price_max: Optional[int] = Field(None, description="最高價格（萬）")
+    districts: Optional[List[str]] = Field(None, description="地區列表")
+    facings: Optional[List[str]] = Field(None, description="坐向列表")
+    floor_min: Optional[int] = Field(None, description="最低樓層")
+    floor_max: Optional[int] = Field(None, description="最高樓層")
+
+
+class SearchPropertiesRequest(BaseModel):
+    user_profile: UserProfile
+    filters: PropertyFilter
+    top_n: int = Field(default=15, description="返回前N個物業")
+
+
+class EvaluateFromDbRequest(BaseModel):
+    user_profile: UserProfile
+    property_id: str = Field(..., description="物業ID")
+
+
+class MatchEstatesRequest(BaseModel):
+    user_profile: UserProfile
+    top_n: int = Field(default=3, description="返回前N個屋苑")
+
+
+class MatchListingsRequest(BaseModel):
+    user_profile: UserProfile
+    top_n: int = Field(default=15, description="返回前N個樓盤")
+    call_buy_threshold: int = Field(default=50, description="觸發叫買市場的分數閾值")
+    filters: Optional[PropertyFilter] = Field(None, description="物業篩選條件")
+
+
+# FXTI Models
+class FXTICalculateRequest(BaseModel):
+    birth_year: int = Field(..., description="出生年")
+    birth_month: int = Field(..., description="出生月")
+    birth_day: int = Field(..., description="出生日")
+    birth_hour: Optional[int] = Field(None, description="出生時（0-23）")
+    gender: Optional[str] = Field(None, description="性別 male/female")
+    occupation: Optional[str] = Field(None, description="職業")
+    answers: List[int] = Field(..., description="10題問卷答案，每題0-4")
+
+
+class FXTIResultResponse(BaseModel):
+    id: str
+    profile: Dict[str, Any]
+    final_wuxing: Dict[str, float]
+    innate_wuxing: Dict[str, float]
+    acquired_wuxing: Dict[str, float]
+    bazi: Dict[str, Any]
+
+
+class FXTIPersonInput(BaseModel):
+    fxti_id: Optional[str] = Field(None, description="FXTI結果ID")
+    birth_year: Optional[int] = Field(None, description="出生年")
+    birth_month: Optional[int] = Field(None, description="出生月")
+    birth_day: Optional[int] = Field(None, description="出生日")
+    birth_hour: Optional[int] = Field(None, description="出生時")
+    gender: Optional[str] = Field(None, description="性別")
+    occupation: Optional[str] = Field(None, description="職業")
+    answers: Optional[List[int]] = Field(None, description="10題問卷答案")
+
+
+class FXTIRelationshipRequest(BaseModel):
+    person_a: FXTIPersonInput
+    person_b: FXTIPersonInput
+
+
+# FXTI storage now uses SQLite (see init_db above)
+# Legacy: fxti_results_db: Dict[str, dict] = {}
+# 使用內存存儲作為後備（當SQLite不可用時）
+fxti_results_db: Dict[str, dict] = {}
+
+
+def load_estates():
+    """載入屋苑數據"""
+    estates = []
+    possible_paths = [
+        Path(__file__).parent / ".." / "scraper_28hse" / "data" / "estates_28hse.csv",
+        Path(__file__).parent / ".." / ".." / "scraper_28hse" / "data" / "estates_28hse.csv",
+        Path("scraper_28hse/data/estates_28hse.csv"),
+        Path("../scraper_28hse/data/estates_28hse.csv"),
+        Path("../../scraper_28hse/data/estates_28hse.csv"),
+    ]
+    data_path = None
+    for p in possible_paths:
+        if p.exists():
+            data_path = p
+            break
+    if data_path:
+        with open(data_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get("facing") in SUPPORTED_FACINGS:
+                    estates.append(row)
+    return estates
+
+
+def load_listings():
+    """載入樓盤數據"""
+    listings = []
+    possible_paths = [
+        Path(__file__).parent / ".." / "scraper_28hse" / "data" / "listings_28hse.csv",
+        Path(__file__).parent / ".." / ".." / "scraper_28hse" / "data" / "listings_28hse.csv",
+        Path("scraper_28hse/data/listings_28hse.csv"),
+        Path("../scraper_28hse/data/listings_28hse.csv"),
+        Path("../../scraper_28hse/data/listings_28hse.csv"),
+    ]
+    data_path = None
+    for p in possible_paths:
+        if p.exists():
+            data_path = p
+            break
+    if data_path:
+        with open(data_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get("facing") in SUPPORTED_FACINGS:
+                    listings.append(row)
+    return listings
+
+
+ALL_LISTINGS = load_listings()
+ALL_ESTATES = load_estates()
+
+
+def _parse_goals(goals):
+    """解析目標列表，向後兼容字符串"""
+    if isinstance(goals, str):
+        return [{"goal": goals, "priority": 1}]
+    if isinstance(goals, list) and len(goals) > 0 and isinstance(goals[0], dict):
+        return goals
+    if isinstance(goals, list):
+        return [{"goal": g, "priority": 1} for g in goals]
+    return []
+
+
+def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None):
+    """單人匹配計算"""
+    # 1. 飛星分析
+    flying_star_result = analyze_flying_star(
+        building_year=building_year,
+        building_facing=building_facing,
+        eval_year=eval_year
+    )
+
+    # 2. 零正神
+    zero_main_god_result = analyze_zero_main_god(
+        building_year=building_year,
+        north_has_water=north_has_water,
+        south_has_mountain=south_has_mountain
+    )
+
+    # 3. 煞氣
+    sha_result = analyze_sha(detected_shas=detected_shas or [])
+
+    # 4. 八字（含職業）
+    bazi_result = analyze_bazi(
+        birth_date=birth_date,
+        floor_number=floor_number,
+        birth_time=birth_time,
+        user_job=user_job
+    )
+
+    # 5. 八宅
+    bagua_result = analyze_bagua(
+        birth_date=birth_date,
+        gender=gender,
+        building_facing=building_facing
+    )
+
+    # 6. 目標（多選）
+    goal_result = analyze_goal(
+        building_year=building_year,
+        building_facing=building_facing,
+        goals=goals
+    )
+
+    # 7. 聚合
+    match_result = aggregate_match_result(
+        flying_star_result=flying_star_result,
+        zero_main_god_result=zero_main_god_result,
+        sha_result=sha_result,
+        bazi_result=bazi_result,
+        bagua_result=bagua_result,
+        goal_result=goal_result
+    )
+
+    # 8. 填充樓盤信息
+    if address:
+        match_result["property_info"] = {"address": address}
+
+    # 9. 雙周期飛星詳細報告
+    dual_period = flying_star_result.get("dual_period", {})
+    building_yun = dual_period.get("building_yun", flying_star_result.get("yun", "未知"))
+    current_yun = dual_period.get("current_yun", building_yun)
+
+    match_result["dual_period_flying_star"] = {
+        "building_yun": building_yun,
+        "current_yun": current_yun,
+        "dual_period_enabled": dual_period.get("enabled", False),
+        "building_weight": dual_period.get("building_weight", 1.0),
+        "current_weight": dual_period.get("current_weight", 0.0),
+        "pan_type_change": dual_period.get("pan_type_change", False),
+        "building_yun_analysis": {
+            "pan_type": flying_star_result.get("pan_type"),
+            "score": flying_star_result.get("building_score", flying_star_result.get("score")),
+            "mountain_stars": flying_star_result.get("mountain_stars"),
+            "facing_stars": flying_star_result.get("facing_stars"),
+            "auspicious_combos": flying_star_result.get("auspicious_combos", []),
+            "inauspicious_combos": flying_star_result.get("inauspicious_combos", [])
+        },
+        "current_yun_analysis": {
+            "pan_type": flying_star_result.get("current_pan_type"),
+            "score": flying_star_result.get("current_score"),
+            "mountain_stars": flying_star_result.get("current_mountain_stars"),
+            "facing_stars": flying_star_result.get("current_facing_stars"),
+            "auspicious_combos": flying_star_result.get("current_auspicious_combos", []),
+            "inauspicious_combos": flying_star_result.get("current_inauspicious_combos", [])
+        } if dual_period.get("enabled") else None,
+        "yun_transition_note": dual_period.get("note", f"該樓宇建於{building_yun}，當前為{current_yun}。")
+    }
+
+    return match_result
+
+
+def run_single_match(meta: RequestMeta):
+    """執行單次匹配計算（支持單人/雙人）"""
+    goals = _parse_goals(meta.goals)
+
+    if meta.cohabitant_enabled and meta.cohabitant_birth_date and meta.cohabitant_gender:
+        # 雙人模式：宅不變，人加權
+        weight_a = 1 - meta.cohabitant_weight_ratio
+        weight_b = meta.cohabitant_weight_ratio
+
+        # 分別計算兩人
+        result_a = _run_single_person_match(
+            birth_date=meta.birth_date, gender=meta.user_gender,
+            birth_time=meta.birth_time, user_job=meta.user_job,
+            building_year=meta.building_year, building_facing=meta.building_facing,
+            floor_number=meta.floor_number, goals=goals,
+            detected_shas=meta.detected_shas,
+            north_has_water=meta.north_has_water,
+            south_has_mountain=meta.south_has_mountain,
+            eval_year=meta.eval_year,
+            address=meta.address
+        )
+
+        result_b = _run_single_person_match(
+            birth_date=meta.cohabitant_birth_date, gender=meta.cohabitant_gender,
+            birth_time=meta.cohabitant_birth_time, user_job=meta.cohabitant_user_job,
+            building_year=meta.building_year, building_facing=meta.building_facing,
+            floor_number=meta.floor_number, goals=goals,
+            detected_shas=meta.detected_shas,
+            north_has_water=meta.north_has_water,
+            south_has_mountain=meta.south_has_mountain,
+            eval_year=meta.eval_year,
+            address=meta.address
+        )
+
+        # 八宅雙人分析（專門用於對照表）
+        bagua_dual = analyze_bagua_dual(
+            meta.birth_date, meta.user_gender,
+            meta.cohabitant_birth_date, meta.cohabitant_gender,
+            meta.building_facing, weight_a, weight_b
+        )
+
+        # 合併分數：宅客觀分不變，人主觀分加權
+        merged = dict(result_a)  # 複製A的結果作為基礎
+
+        # 宅客觀分（不變）
+        # 人主觀分：八字、八宅、目標
+        bazi_merged = round(result_a["score_breakdown"]["八字"] * weight_a + result_b["score_breakdown"]["八字"] * weight_b, 1)
+        bagua_merged = round(result_a["score_breakdown"]["八宅"] * weight_a + result_b["score_breakdown"]["八宅"] * weight_b, 1)
+        goal_merged = round(result_a["score_breakdown"]["目標"] * weight_a + result_b["score_breakdown"]["目標"] * weight_b, 1)
+
+        merged["score_breakdown"]["八字"] = bazi_merged
+        merged["score_breakdown"]["八宅"] = bagua_merged
+        merged["score_breakdown"]["目標"] = goal_merged
+
+        # 重新計算總分
+        total = sum(merged["score_breakdown"].values())
+        merged["final_score"] = max(0, min(100, round(total, 1)))
+
+        # 更新評級
+        fs = merged["final_score"]
+        if fs >= 85: merged["rating"] = "★★★★★ 高分區間（需專業師傅確認）"
+        elif fs >= 70: merged["rating"] = "★★★★☆ 中高分區間（需專業師傅確認）"
+        elif fs >= 60: merged["rating"] = "★★★☆☆ 中分區間（需專業師傅確認）"
+        elif fs >= 45: merged["rating"] = "★★☆☆☆ 中低分區間（需專業師傅確認）"
+        elif fs >= 30: merged["rating"] = "★☆☆☆☆ 低分區間（需專業師傅確認）"
+        else: merged["rating"] = "☆☆☆☆☆ 極低分區間（需專業師傅確認）"
+
+        # 更新理由
+        merged["ai_rationale"] = (
+            f"【雙人模式】A({meta.user_gender},{meta.birth_date})權重{weight_a:.0%}，"
+            f"B({meta.cohabitant_gender},{meta.cohabitant_birth_date})權重{weight_b:.0%}。\n"
+            f"{result_a['ai_rationale']}\n"
+            f"{result_b['ai_rationale']}"
+        )
+
+        # 合併八字信息
+        merged["bazi_data"] = {
+            "person_a": result_a.get("bazi_data", {}),
+            "person_b": result_b.get("bazi_data", {})
+        }
+
+        # 八宅對照表
+        merged["bagua_comparison"] = bagua_dual.get("comparison_table")
+        merged["is_dual"] = True
+        merged["weight_a"] = weight_a
+        merged["weight_b"] = weight_b
+
+        return merged
+    else:
+        # 單人模式
+        return _run_single_person_match(
+            birth_date=meta.birth_date, gender=meta.user_gender,
+            birth_time=meta.birth_time, user_job=meta.user_job,
+            building_year=meta.building_year, building_facing=meta.building_facing,
+            floor_number=meta.floor_number, goals=goals,
+            detected_shas=meta.detected_shas,
+            north_has_water=meta.north_has_water,
+            south_has_mountain=meta.south_has_mountain,
+            eval_year=meta.eval_year,
+            address=meta.address
+        )
+
+
+@app.get("/")
+def read_root():
+    return {"message": "AI風水樓盤匹配系統 MVP v0.7", "docs": "/docs", "features": ["流派插件化", "漢五派生命磁向", "人命卦", "FXTI五行人格"]}
+
+
+@app.post("/api/evaluate")
+def evaluate(request: EvaluateRequest):
+    """模組1：自測現有住所 — 單一評估"""
+    meta = request.request_meta
+    match_result = run_single_match(meta)
+    return {"status": "success", "match_result": match_result}
+
+
+@app.post("/api/search-properties")
+def search_properties(request: SearchPropertiesRequest):
+    """模組3：根據用戶偏好篩選物業並匹配"""
+    profile = request.user_profile
+    filters = request.filters
+
+    listings = ALL_LISTINGS
+
+    # 應用篩選
+    filtered = []
+    for listing in listings:
+        # 坐向篩選
+        if filters.facings and listing.get("facing") not in filters.facings:
+            continue
+        # 地區篩選
+        if filters.districts and listing.get("district") not in filters.districts:
+            continue
+        # 價格篩選（簡化：解析price_raw中的數字）
+        if filters.price_min or filters.price_max:
+            price_str = listing.get("price_raw", "")
+            price_num = 0
+            m = re.search(r'(\d+(?:\.\d+)?)\s*萬', price_str)
+            if m:
+                price_num = float(m.group(1))
+            if filters.price_min and price_num < filters.price_min:
+                continue
+            if filters.price_max and price_num > filters.price_max:
+                continue
+        # 樓層篩選
+        if filters.floor_min or filters.floor_max:
+            floor = 10
+            if listing.get("unit_info"):
+                m = re.search(r'(\d+)', listing.get("unit_info", ""))
+                if m:
+                    floor = int(m.group(1))
+            if filters.floor_min and floor < filters.floor_min:
+                continue
+            if filters.floor_max and floor > filters.floor_max:
+                continue
+        filtered.append(listing)
+
+    results = []
+    for listing in filtered:
+        try:
+            year = int(listing.get("year_built", 2000)) if listing.get("year_built") else 2000
+            floor = 10
+            if listing.get("unit_info"):
+                m = re.search(r'(\d+)', listing.get("unit_info", ""))
+                if m:
+                    floor = int(m.group(1))
+
+            goals = _parse_goals(profile.goals)
+            meta = RequestMeta(
+                eval_year=profile.eval_year,
+                user_gender=profile.user_gender,
+                birth_date=profile.birth_date,
+                birth_time=profile.birth_time,
+                birth_place=profile.birth_place,
+                user_job=profile.user_job,
+                cohabitant_enabled=profile.cohabitant_enabled,
+                cohabitant_gender=profile.cohabitant_gender,
+                cohabitant_birth_date=profile.cohabitant_birth_date,
+                cohabitant_birth_time=profile.cohabitant_birth_time,
+                cohabitant_user_job=profile.cohabitant_user_job,
+                cohabitant_weight_ratio=profile.cohabitant_weight_ratio,
+                building_year=year,
+                building_facing=listing["facing"],
+                floor_number=floor,
+                goals=goals,
+                north_has_water=False,
+                south_has_mountain=False,
+                detected_shas=[]
+            )
+            match_result = run_single_match(meta)
+            results.append({
+                "id": f"listing_{len(results)}",
+                "title": listing.get("title", ""),
+                "estate": listing.get("estate", ""),
+                "district": listing.get("district", ""),
+                "facing": listing["facing"],
+                "price_raw": listing.get("price_raw", ""),
+                "build_area": listing.get("build_area", ""),
+                "usable_area": listing.get("usable_area", ""),
+                "rooms": listing.get("rooms", ""),
+                "unit_info": listing.get("unit_info", ""),
+                "year_built": listing.get("year_built", ""),
+                "agent": listing.get("agent", ""),
+                "final_score": match_result["final_score"],
+                "rating": match_result["rating"],
+                "score_breakdown": match_result["score_breakdown"],
+                "flags": match_result["flags"],
+                "rationale": match_result["ai_rationale"],
+                "match_result": match_result
+            })
+        except Exception as e:
+            logger.error("計算錯誤 %s: %s", listing.get("title"), e)
+
+    results.sort(key=lambda x: x["final_score"], reverse=True)
+    top_results = results[:request.top_n]
+
+    # 分數<50或無匹配時引導叫買市場
+    call_buy_triggered = len(results) == 0 or (len(top_results) > 0 and top_results[0]["final_score"] < 50)
+
+    return {
+        "status": "success",
+        "module": "模組3 - 物業篩選匹配",
+        "total_filtered": len(filtered),
+        "matched_count": len(results),
+        "top_results": top_results,
+        "call_buy_market": {
+            "triggered": call_buy_triggered,
+            "message": "目前篩選條件下無高分匹配物業。您可以瀏覽「叫買市場」查看所有物業，或放寬篩選條件。"
+        }
+    }
+
+
+@app.get("/api/market-list")
+def market_list():
+    """叫買市場：列出所有物業"""
+    listings = ALL_LISTINGS
+    results = []
+    for listing in listings:
+        year = listing.get("year_built", "")
+        facing = listing.get("facing", "")
+        data_confirmed = bool(year and facing in SUPPORTED_FACINGS)
+        results.append({
+            "id": f"listing_{len(results)}",
+            "title": listing.get("title", ""),
+            "estate": listing.get("estate", ""),
+            "district": listing.get("district", ""),
+            "facing": facing,
+            "price_raw": listing.get("price_raw", ""),
+            "build_area": listing.get("build_area", ""),
+            "usable_area": listing.get("usable_area", ""),
+            "rooms": listing.get("rooms", ""),
+            "unit_info": listing.get("unit_info", ""),
+            "year_built": year,
+            "agent": listing.get("agent", ""),
+            "data_confirmed": data_confirmed,
+            "data_note": "" if data_confirmed else "資料待確認（坐向或年份缺失）"
+        })
+    return {"status": "success", "total": len(results), "listings": results}
+
+
+@app.post("/api/evaluate-from-db")
+def evaluate_from_db(request: EvaluateFromDbRequest):
+    """從數據庫選擇物業進行自測（跳轉模組1邏輯）"""
+    profile = request.user_profile
+    property_id = request.property_id
+
+    # 查找物業
+    listing = None
+    for l in ALL_LISTINGS:
+        if f"listing_{ALL_LISTINGS.index(l)}" == property_id:
+            listing = l
+            break
+
+    if not listing:
+        raise HTTPException(status_code=404, detail="物業未找到")
+
+    year = int(listing.get("year_built", 2000)) if listing.get("year_built") else 2000
+    floor = 10
+    if listing.get("unit_info"):
+        m = re.search(r'(\d+)', listing.get("unit_info", ""))
+        if m:
+            floor = int(m.group(1))
+
+    goals = _parse_goals(profile.goals)
+    meta = RequestMeta(
+        eval_year=profile.eval_year,
+        user_gender=profile.user_gender,
+        birth_date=profile.birth_date,
+        birth_time=profile.birth_time,
+        birth_place=profile.birth_place,
+        user_job=profile.user_job,
+        cohabitant_enabled=profile.cohabitant_enabled,
+        cohabitant_gender=profile.cohabitant_gender,
+        cohabitant_birth_date=profile.cohabitant_birth_date,
+        cohabitant_birth_time=profile.cohabitant_birth_time,
+        cohabitant_user_job=profile.cohabitant_user_job,
+        cohabitant_weight_ratio=profile.cohabitant_weight_ratio,
+        building_year=year,
+        building_facing=listing["facing"],
+        floor_number=floor,
+        goals=goals,
+        north_has_water=False,
+        south_has_mountain=False,
+        detected_shas=[]
+    )
+    match_result = run_single_match(meta)
+
+    return {
+        "status": "success",
+        "module": "模組3 - 自測",
+        "property": {
+            "title": listing.get("title", ""),
+            "estate": listing.get("estate", ""),
+            "district": listing.get("district", ""),
+            "facing": listing["facing"],
+            "price_raw": listing.get("price_raw", ""),
+            "year_built": listing.get("year_built", ""),
+            "unit_info": listing.get("unit_info", ""),
+        },
+        "match_result": match_result
+    }
+
+
+@app.post("/api/match/estates")
+def match_estates(request: MatchEstatesRequest):
+    """模組2：配對屋苑 — 批量匹配，返回TOP N"""
+    profile = request.user_profile
+    estates = ALL_ESTATES
+
+    results = []
+    for estate in estates:
+        try:
+            goals = _parse_goals(profile.goals)
+            meta = RequestMeta(
+                eval_year=profile.eval_year,
+                user_gender=profile.user_gender,
+                birth_date=profile.birth_date,
+                birth_time=profile.birth_time,
+                birth_place=profile.birth_place,
+                user_job=profile.user_job,
+                cohabitant_enabled=profile.cohabitant_enabled,
+                cohabitant_gender=profile.cohabitant_gender,
+                cohabitant_birth_date=profile.cohabitant_birth_date,
+                cohabitant_birth_time=profile.cohabitant_birth_time,
+                cohabitant_user_job=profile.cohabitant_user_job,
+                cohabitant_weight_ratio=profile.cohabitant_weight_ratio,
+                building_year=int(estate.get("year_built", 2000)),
+                building_facing=estate["facing"],
+                floor_number=10,
+                goals=goals,
+                north_has_water=False,
+                south_has_mountain=False,
+                detected_shas=[]
+            )
+            match_result = run_single_match(meta)
+            results.append({
+                "estate": estate["name"],
+                "district": estate.get("district", ""),
+                "facing": estate["facing"],
+                "year_built": int(estate.get("year_built", 0)),
+                "yun": estate.get("yun", ""),
+                "property_type": estate.get("property_type", ""),
+                "final_score": match_result["final_score"],
+                "rating": match_result["rating"],
+                "score_breakdown": match_result["score_breakdown"],
+                "flags": match_result["flags"],
+                "rationale": match_result["ai_rationale"]
+            })
+        except Exception as e:
+            logger.error("計算錯誤 %s: %s", estate.get("name"), e)
+
+    results.sort(key=lambda x: x["final_score"], reverse=True)
+    top_results = results[:request.top_n]
+
+    return {
+        "status": "success",
+        "module": "模組2 - 配對屋苑",
+        "total_estates": len(results),
+        "top_results": top_results,
+        "all_results": results
+    }
+
+
+@app.post("/api/match/listings")
+def match_listings(request: MatchListingsRequest):
+    """模組3：配對物業 — 批量匹配，支持叫買市場"""
+    profile = request.user_profile
+    listings = ALL_LISTINGS
+
+    # 應用篩選（如果提供）
+    if request.filters:
+        filters = request.filters
+        filtered = []
+        for listing in listings:
+            if filters.facings and listing.get("facing") not in filters.facings:
+                continue
+            if filters.districts and listing.get("district") not in filters.districts:
+                continue
+            filtered.append(listing)
+        listings = filtered
+
+    results = []
+    for listing in listings:
+        try:
+            year = int(listing.get("year_built", 2000)) if listing.get("year_built") else 2000
+            floor = 10
+            if listing.get("unit_info"):
+                m = re.search(r'(\d+)', listing.get("unit_info", ""))
+                if m:
+                    floor = int(m.group(1))
+
+            goals = _parse_goals(profile.goals)
+            meta = RequestMeta(
+                eval_year=profile.eval_year,
+                user_gender=profile.user_gender,
+                birth_date=profile.birth_date,
+                birth_time=profile.birth_time,
+                birth_place=profile.birth_place,
+                user_job=profile.user_job,
+                cohabitant_enabled=profile.cohabitant_enabled,
+                cohabitant_gender=profile.cohabitant_gender,
+                cohabitant_birth_date=profile.cohabitant_birth_date,
+                cohabitant_birth_time=profile.cohabitant_birth_time,
+                cohabitant_user_job=profile.cohabitant_user_job,
+                cohabitant_weight_ratio=profile.cohabitant_weight_ratio,
+                building_year=year,
+                building_facing=listing["facing"],
+                floor_number=floor,
+                goals=goals,
+                north_has_water=False,
+                south_has_mountain=False,
+                detected_shas=[]
+            )
+            match_result = run_single_match(meta)
+            results.append({
+                "title": listing.get("title", ""),
+                "estate": listing.get("estate", ""),
+                "district": listing.get("district", ""),
+                "facing": listing["facing"],
+                "price_raw": listing.get("price_raw", ""),
+                "build_area": listing.get("build_area", ""),
+                "usable_area": listing.get("usable_area", ""),
+                "rooms": listing.get("rooms", ""),
+                "unit_info": listing.get("unit_info", ""),
+                "year_built": listing.get("year_built", ""),
+                "agent": listing.get("agent", ""),
+                "final_score": match_result["final_score"],
+                "rating": match_result["rating"],
+                "score_breakdown": match_result["score_breakdown"],
+                "flags": match_result["flags"],
+                "rationale": match_result["ai_rationale"]
+            })
+        except Exception as e:
+            logger.error("計算錯誤 %s: %s", listing.get("title"), e)
+
+    results.sort(key=lambda x: x["final_score"], reverse=True)
+    top_results = results[:request.top_n]
+
+    # 叫買市場判斷
+    high_score = [r for r in results if r["final_score"] >= request.call_buy_threshold]
+    call_buy_triggered = len(high_score) == 0
+
+    call_buy_profile = None
+    if call_buy_triggered and results:
+        top3 = results[:3]
+        call_buy_profile = {
+            "facing": list(set([r["facing"] for r in top3])),
+            "district": list(set([r["district"] for r in top3])),
+            "age_range": f"{2026 - max([r.get('year_built', 2026) for r in top3])}-{2026 - min([r.get('year_built', 2026) for r in top3])}年"
+        }
+
+    return {
+        "status": "success",
+        "module": "模組3 - 配對物業",
+        "total_listings": len(results),
+        "top_results": top_results,
+        "call_buy_market": {
+            "triggered": call_buy_triggered,
+            "threshold": request.call_buy_threshold,
+            "high_score_count": len(high_score),
+            "anonymous_profile": call_buy_profile
+        },
+        "all_results": results
+    }
+
+
+@app.get("/api/supported-facings")
+def get_supported_facings():
+    facings_by_yun = {}
+    for yun, facings in FLYING_STAR_TABLE.items():
+        facings_by_yun[yun] = list(facings.keys())
+
+    return {
+        "supported": SUPPORTED_FACINGS,
+        "by_yun": facings_by_yun,
+        "total": len(SUPPORTED_FACINGS),
+        "note": "MVP 支持以上坐向，其他坐向標註為'待確認'"
+    }
+
+
+@app.get("/api/health")
+def health_check():
+    return {
+        "status": "ok",
+        "version": "0.7.0",
+        "supported_facings": len(SUPPORTED_FACINGS),
+        "modules": ["module1", "module2", "module3", "fxti", "schools", "hanwu_life_magnetic", "hanwu_life_gua"],
+        "schools": list(get_school_manager().list_schools().keys())
+    }
+
+
+# ==================== FXTI Routes ====================
+
+@app.get("/api/fxti/profiles")
+def fxti_profiles():
+    """獲取所有15個FXTI角色列表"""
+    profiles_list = []
+    for pid, pdata in ALL_PROFILES.items():
+        profiles_list.append({
+            "id": pid,
+            "name": pdata.get("name"),
+            "title": pdata.get("title"),
+            "type": "pure" if pid.startswith("A") else "composite",
+            "elements": pdata.get("elements") if pid.startswith("B") else [pdata.get("element")],
+            "traits": pdata.get("traits", [])[:3],
+            "color": pdata.get("color", "#667eea")
+        })
+    return {"status": "success", "total": len(profiles_list), "profiles": profiles_list}
+
+
+@app.post("/api/fxti/calculate")
+def fxti_calculate(request: FXTICalculateRequest):
+    """FXTI：計算五行人格"""
+    # 1. 先天八字
+    innate = get_innate_wuxing(
+        request.birth_year, request.birth_month, request.birth_day, request.birth_hour
+    )
+
+    # 2. 後天問卷
+    acquired = calculate_acquired_wuxing(request.answers)
+
+    # 3. 合成
+    final_wuxing = synthesize_result(
+        innate["wuxing_percentage"],
+        acquired["wuxing_percentage"]
+    )
+
+    # 4. 判定角色
+    profile = determine_profile(final_wuxing)
+
+    # 5. 存儲
+    result_id = f"fxti_{len(fxti_results_db) + 1:04d}"
+    result_data = {
+        "id": result_id,
+        "birth_info": {
+            "year": request.birth_year,
+            "month": request.birth_month,
+            "day": request.birth_day,
+            "hour": request.birth_hour,
+            "gender": request.gender,
+            "occupation": request.occupation
+        },
+        "bazi": innate["bazi"],
+        "innate_wuxing": innate["wuxing_percentage"],
+        "acquired_wuxing": acquired["wuxing_percentage"],
+        "final_wuxing": final_wuxing,
+        "warning": acquired.get("warning"),  # 防極端警告
+        "penalty_applied": acquired.get("penalty_applied", False),  # 是否已降權
+        "profile": {
+            "id": profile["id"],
+            "name": profile["name"],
+            "title": profile["title"],
+            "type": profile["type"],
+            "elements": profile.get("elements", [profile.get("element")]),
+            "description": profile["description"],
+            "core_contradiction": profile["core_contradiction"],
+            "fengshui_advice": profile["fengshui_advice"],
+            "traits": profile.get("traits", []),
+            "color": profile.get("color", "#667eea"),
+            "direction": profile.get("direction", "")
+        }
+    }
+    try:
+        conn = db_conn()
+        c = conn.cursor()
+        c.execute("INSERT OR REPLACE INTO fxti_results (id, data, created_at) VALUES (?, ?, ?)",
+                  (result_id, json.dumps(result_data, ensure_ascii=False), datetime.now().isoformat()))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        logger.error("FXTI save failed: %s", e)
+
+    return {
+        "status": "success",
+        "data": result_data,
+        "share_url": f"/static/fxti/result.html?id={result_id}"
+    }
+
+
+@app.get("/api/fxti/result/{fxti_id}")
+def fxti_result(fxti_id: str):
+    """FXTI：獲取結果（含分享卡URL）"""
+    try:
+        conn = db_conn()
+        c = conn.cursor()
+        c.execute("SELECT data FROM fxti_results WHERE id = ?", (fxti_id,))
+        row = c.fetchone()
+        conn.close()
+        if not row:
+            raise HTTPException(status_code=404, detail="FXTI結果未找到")
+        result = json.loads(row[0])
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("FXTI load failed: %s", e)
+        raise HTTPException(status_code=500, detail="數據庫錯誤")
+
+    return {
+        "status": "success",
+        "data": result,
+        "share_url": f"/static/fxti/result.html?id={fxti_id}"
+    }
+
+
+def _get_or_create_fxti_result(person: FXTIPersonInput) -> dict:
+    """輔助函數：根據輸入獲取或創建FXTI結果"""
+    if person.fxti_id and person.fxti_id in fxti_results_db:
+        return fxti_results_db[person.fxti_id]
+
+    # 需要現場計算
+    if not all([person.birth_year, person.birth_month, person.birth_day, person.answers]):
+        raise HTTPException(status_code=400, detail="缺少出生資料或問卷答案")
+
+    innate = get_innate_wuxing(
+        person.birth_year, person.birth_month, person.birth_day, person.birth_hour
+    )
+    acquired = calculate_acquired_wuxing(person.answers)
+    final_wuxing = synthesize_result(
+        innate["wuxing_percentage"],
+        acquired["wuxing_percentage"]
+    )
+    profile = determine_profile(final_wuxing)
+
+    result_id = f"fxti_rel_{len(fxti_results_db) + 1:04d}"
+    result_data = {
+        "id": result_id,
+        "birth_info": {
+            "year": person.birth_year,
+            "month": person.birth_month,
+            "day": person.birth_day,
+            "hour": person.birth_hour,
+            "gender": person.gender,
+            "occupation": person.occupation
+        },
+        "bazi": innate["bazi"],
+        "innate_wuxing": innate["wuxing_percentage"],
+        "acquired_wuxing": acquired["wuxing_percentage"],
+        "final_wuxing": final_wuxing,
+        "warning": acquired.get("warning"),
+        "penalty_applied": acquired.get("penalty_applied", False),
+        "profile": {
+            "id": profile["id"],
+            "name": profile["name"],
+            "title": profile["title"],
+            "type": profile["type"],
+            "elements": profile.get("elements", [profile.get("element")]),
+            "description": profile["description"],
+            "core_contradiction": profile["core_contradiction"],
+            "fengshui_advice": profile["fengshui_advice"],
+            "traits": profile.get("traits", []),
+            "color": profile.get("color", "#667eea"),
+            "direction": profile.get("direction", "")
+        }
+    }
+    fxti_results_db[result_id] = result_data
+    return result_data
+
+
+@app.post("/api/fxti/relationship")
+def fxti_relationship(request: FXTIRelationshipRequest):
+    """FXTI：雙人關係分析"""
+    result_a = _get_or_create_fxti_result(request.person_a)
+    result_b = _get_or_create_fxti_result(request.person_b)
+
+    report = analyze_relationship(result_a, result_b)
+
+    return {
+        "status": "success",
+        "data": report
+    }
+
+
+
+# ==================== 流派插件化 Routes ====================
+
+@app.get("/api/schools")
+def get_schools():
+    """獲取所有支持的風水流派"""
+    manager = get_school_manager()
+    schools = manager.list_schools()
+    return {
+        "status": "success",
+        "schools": [
+            {"id": k, "name": v} for k, v in schools.items()
+        ]
+    }
+
+
+@app.get("/api/schools/{school_id}")
+def get_school_config(school_id: str):
+    """獲取指定流派的詳細配置"""
+    manager = get_school_manager()
+    school = manager.get_school(school_id)
+    if not school:
+        raise HTTPException(status_code=404, detail="流派未找到")
+    
+    return {
+        "status": "success",
+        "school_id": school_id,
+        "name": school["name"],
+        "description": school.get("description", ""),
+        "dimensions": school.get("dimensions", {})
+    }
+
+
+# ==================== 漢五派 Routes ====================
+
+@app.post("/api/hanwu/life-magnetic-direction")
+def api_life_magnetic_direction(birth_year: int, gender: str):
+    """漢五派：生命磁向分析"""
+    result = analyze_life_magnetic_direction(birth_year, gender)
+    return {"status": "success", "data": result}
+
+
+@app.post("/api/hanwu/life-magnetic-match")
+def api_life_magnetic_match(birth_year: int, gender: str, building_facing: str):
+    """漢五派：生命磁向與樓盤朝向匹配"""
+    from data.life_magnetic_direction import get_zodiac_from_year
+    zodiac = get_zodiac_from_year(birth_year)
+    result = check_direction_compatibility(zodiac, gender, building_facing)
+    return {"status": "success", "data": result}
+
+
+@app.post("/api/hanwu/life-gua")
+def api_life_gua(birth_year: int, gender: str, building_facing: Optional[str] = None):
+    """漢五派：人命卦計算（可選樓盤朝向匹配）"""
+    result = analyze_life_gua(birth_year, gender, building_facing)
+    return {"status": "success", "data": result}
+
+
+# ==================== Auth Routes (MVP Simple) ====================
+
+@app.post("/api/auth/register")
+def register(username: str, password: str):
+    conn = db_conn()
+    c = conn.cursor()
+    try:
+        c.execute("INSERT INTO users (id, username, password_hash, created_at) VALUES (?, ?, ?, ?)",
+                  (str(uuid.uuid4()), username, hash_password(password), datetime.now().isoformat()))
+        conn.commit()
+        return {"status": "success", "message": "註冊成功"}
+    except sqlite3.IntegrityError:
+        raise HTTPException(status_code=400, detail="用戶名已存在")
+    finally:
+        conn.close()
+
+@app.post("/api/auth/login")
+def login(username: str, password: str):
+    conn = db_conn()
+    c = conn.cursor()
+    c.execute("SELECT id, password_hash FROM users WHERE username = ?", (username,))
+    row = c.fetchone()
+    conn.close()
+    if not row or row[1] != hash_password(password):
+        raise HTTPException(status_code=401, detail="用戶名或密碼錯誤")
+    token = str(uuid.uuid4())
+    active_sessions[token] = row[0]
+    return {"status": "success", "token": token, "user_id": row[0]}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)
