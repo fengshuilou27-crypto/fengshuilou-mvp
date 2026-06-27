@@ -139,7 +139,7 @@ def calculate_acquired_wuxing(answers):
         answers: list of int, 每題選擇的選項索引 (0-4)
                0=金, 1=木, 2=水, 3=火, 4=土
     Returns:
-        dict: 五行百分比，含極端檢測警告
+        dict: 五行百分比
     """
     if len(answers) != 10:
         raise ValueError("必須回答10題")
@@ -153,27 +153,6 @@ def calculate_acquired_wuxing(answers):
         element = element_map[answer_idx]
         scores[element] += 1
 
-    # === 防極端機制（2026-06-18 新增） ===
-    max_score = max(scores.values())
-    max_element = max(scores, key=scores.get)
-    warning = None
-    penalty_applied = False
-    
-    # 如果全部10題選同一元素，觸發降權
-    if max_score == 10:
-        warning = f"檢測到全部選擇『{max_element}』型答案，可能過於極端。已自動降權20%並分散其他元素。"
-        # 降權：將最高元素扣2分，分給其他元素各0.5分
-        scores[max_element] -= 2
-        for e in scores:
-            if e != max_element:
-                scores[e] += 0.5
-    # 如果8-9題選同一元素，觸發警告
-    elif max_score >= 8:
-        warning = f"檢測到『{max_element}』型答案佔比過高（{max_score}/10），建議重新檢視選擇。"
-    # 如果5-7題選同一元素，輕微警告
-    elif max_score >= 5:
-        warning = f"『{max_element}』型傾向明顯（{max_score}/10），結果已記錄。"
-
     total = sum(scores.values())
     percentages = {
         element: round(score / total * 100, 2)
@@ -182,7 +161,5 @@ def calculate_acquired_wuxing(answers):
 
     return {
         'scores': scores,
-        'wuxing_percentage': percentages,
-        'warning': warning,
-        'penalty_applied': max_score == 10
+        'wuxing_percentage': percentages
     }

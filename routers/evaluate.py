@@ -35,7 +35,9 @@ class EvaluateRequest(BaseModel):
     request_meta: RequestMeta
 
 
-def run_single_match(meta: RequestMeta):
+from data.district_scores import get_district_score
+
+def run_single_match(meta: RequestMeta, district: str = None):
     """執行單次匹配計算"""
     # 1. 飛星分析
     flying_star_result = analyze_flying_star(
@@ -51,12 +53,10 @@ def run_single_match(meta: RequestMeta):
     if current_yun != building_yun:
         from data.flying_star import FLYING_STAR_TABLE
         if current_yun in FLYING_STAR_TABLE and meta.building_facing in FLYING_STAR_TABLE[current_yun]:
-            # 修正：传入 eval_year 作为 building_year，计算当运盘
             current_yun_result = analyze_flying_star(
-                building_year=meta.eval_year,  # 用评估年份作为建造年份，以计算当运盘
+                building_year=meta.eval_year,
                 building_facing=meta.building_facing,
-                eval_year=meta.eval_year,
-                current_yun=current_yun
+                eval_year=meta.eval_year
             )
 
     # 3. 零正神
@@ -87,7 +87,7 @@ def run_single_match(meta: RequestMeta):
     goal_result = analyze_goal(
         building_year=meta.building_year,
         building_facing=meta.building_facing,
-        goals=meta.goal
+        goals=[{"goal": meta.goal, "priority": 1}]
     )
 
     # 8. 聚合
@@ -97,7 +97,8 @@ def run_single_match(meta: RequestMeta):
         sha_result=sha_result,
         bazi_result=bazi_result,
         bagua_result=bagua_result,
-        goal_result=goal_result
+        goal_result=goal_result,
+        district=district
     )
 
     match_result["dual_period_flying_star"] = {

@@ -1,7 +1,7 @@
 # AI 風水樓盤匹配系統 MVP v0.6
 
 > **智尋·風水樓** — AI × 風水 × 置業匹配平台
-> **技術棧：FastAPI + Uvicorn + SQLite + 原生 HTML/JS 前端**
+> **技術棧：FastAPI + Uvicorn + 原生 HTML/JS 前端**
 
 ---
 
@@ -83,12 +83,8 @@ INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
 
 ## 版本信息
 
-- **版本**: v0.6.1
-- **數據持久化**: SQLite（用戶/FXTI結果/匹配記錄持久化，重啟不丟失）
-- **認證系統**: 簡易JWT Session（註冊/登入/Token）
-- **八字增強**: 加入簡化版日主強弱判斷（得令/通根/生扶）
-- **八宅增強**: 擴展為九宮吉凶評分（生氣/延年/天醫/伏位/五鬼/絕命/六煞/禍害）
-- **更新日期**: 2026-06-17
+- **版本**: v0.6.0
+- **更新日期**: 2026-06-16
 - **核心功能**: 雙周期飛星 + 六維度風水匹配 + FXTI五行人格測評 + 雙人關係分析 + 四模組完整前端
 - **權重配置**: 飛星30 / 八字20 / 八宅15 / 零正神10 / 目標15 / 區位10
 
@@ -177,9 +173,6 @@ uvicorn app:app --host 0.0.0.0 --port 8001
 fastapi
 uvicorn
 pydantic
-python-jose[cryptography]
-passlib[bcrypt]
-python-multipart
 ```
 
 ## 運行指南

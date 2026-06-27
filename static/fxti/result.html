@@ -291,6 +291,10 @@
         .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none; }
+        .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s; background: white; }
+        .module-card:hover { transform: translateY(-3px); }
+        @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
 
         @media (max-width: 600px) {
             .share-card { width: 100%; height: auto; aspect-ratio: 2/3; }
@@ -300,10 +304,34 @@
 </head>
 <body>
     <div class="container">
+        <div class="module-cards">
+            <a href="../index.html" class="module-card" style="color: #444;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
+                <div style="font-size: 13px; font-weight: 600;">模組1</div>
+                <div style="font-size: 11px; opacity: 0.7;">自測住所</div>
+            </a>
+            <a href="../module2.html" class="module-card" style="color: #444;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🏢</div>
+                <div style="font-size: 13px; font-weight: 600;">模組2</div>
+                <div style="font-size: 11px; opacity: 0.7;">配對屋苑</div>
+            </a>
+            <a href="../module3.html" class="module-card" style="color: #444;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🔍</div>
+                <div style="font-size: 13px; font-weight: 600;">模組3</div>
+                <div style="font-size: 11px; opacity: 0.7;">配對物業</div>
+            </a>
+            <a href="index.html" class="module-card" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
+                <div style="font-size: 13px; font-weight: 600;">模組4</div>
+                <div style="font-size: 11px; opacity: 0.9;">FXTI人格</div>
+            </a>
+        </div>
+
         <div class="nav">
-            <a href="../index.html">模組1-3</a>
-            <a href="index.html">FXTI測評</a>
-            <a href="result.html" class="active">測評結果</a>
+            <a href="../index.html">模組1：自測住所</a>
+            <a href="../module2.html">模組2：配對屋苑</a>
+            <a href="../module3.html">模組3：配對物業</a>
+            <a href="index.html" class="active">模組4：FXTI人格</a>
         </div>
 
         <div id="loading" class="loading">

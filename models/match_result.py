@@ -1,10 +1,13 @@
+from data.district_scores import get_district_score
+
 def aggregate_match_result(
     flying_star_result: dict,
     zero_main_god_result: dict,
     sha_result: dict,
     bazi_result: dict,
     bagua_result: dict,
-    goal_result: dict
+    goal_result: dict,
+    district: str = None
 ):
     """
     聚合匹配結果
@@ -19,8 +22,8 @@ def aggregate_match_result(
     bagua_score = bagua_result.get("score", 0)
     goal_score = goal_result.get("score", 0)
     
-    # 區位分數（MVP簡化：固定值，未來可接入地理數據）
-    region_score = 10
+    # 區位分數（基於地區評分，區分不同地段價值）
+    region_score = get_district_score(district) if district else 5.0
     
     # 各模組正規化到100分制目標權重
     # 正規化公式：原始分數 × (目標權重 / 原始滿分)

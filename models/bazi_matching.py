@@ -1,63 +1,8 @@
 from data.bazi import (
-    GAN_WUXING, FLOOR_WUXING, WUXING_RELATIONS, ZHI_WUXING,
+    GAN_WUXING, FLOOR_WUXING, WUXING_RELATIONS,
     calculate_bazi, get_year_ganzhi, CAREER_WUXING
 )
 
-
-
-
-def _judge_day_master_strength(bazi_result: dict) -> dict:
-    """
-    簡化版日主強弱判斷（MVP標註用）
-    判斷依據：得令（月令是否同五行）、通根（其他柱是否有同五行）、生扶（是否有印星比劫）
-    """
-    day_master = bazi_result.get("day_master", {})
-    dm_wuxing = day_master.get("wuxing", "未知")
-    month_zhi = bazi_result.get("month_pillar", {}).get("zhi", "")
-    month_zhi_wuxing = ZHI_WUXING.get(month_zhi, "未知")
-    
-    # 得令：月令五行與日主相同或相生
-    season_score = 0
-    if month_zhi_wuxing == dm_wuxing:
-        season_score = 2  # 得令（比劫月）
-    elif WUXING_RELATIONS["生"].get(month_zhi_wuxing) == dm_wuxing:
-        season_score = 1  # 得令（印星月）
-    
-    # 通根：其他柱天干是否有同五行
-    root_score = 0
-    for pillar in ["year_pillar", "month_pillar", "hour_pillar"]:
-        gan = bazi_result.get(pillar, {}).get("gan", "")
-        if GAN_WUXING.get(gan) == dm_wuxing:
-            root_score += 1
-    
-    # 生扶：其他柱是否有印星（生我的五行）
-    support_score = 0
-    for pillar in ["year_pillar", "month_pillar", "hour_pillar"]:
-        zhi = bazi_result.get(pillar, {}).get("zhi", "")
-        if WUXING_RELATIONS["生"].get(ZHI_WUXING.get(zhi)) == dm_wuxing:
-            support_score += 1
-    
-    total_score = season_score + root_score + support_score
-    
-    if total_score >= 4:
-        strength = "強"
-        advice = f"日主{dm_wuxing}強旺，喜用神為克洩（金/水/土，視具體五行而定）。此樓盤匹配以「克洩」五行為優先。"
-    elif total_score >= 2:
-        strength = "中和"
-        advice = f"日主{dm_wuxing}中和，五行較平衡，樓盤匹配以「調候」為優先。"
-    else:
-        strength = "弱"
-        advice = f"日主{dm_wuxing}偏弱，喜用神為生扶（木/火/土，視具體五行而定）。此樓盤匹配以「生扶」五行為優先。"
-    
-    return {
-        "strength": strength,
-        "score": total_score,
-        "season_score": season_score,
-        "root_score": root_score,
-        "support_score": support_score,
-        "advice": advice,
-        "note": "【MVP簡化版】日主強弱判斷僅考慮月令、通根、生扶三項，未考慮合化/沖克/空亡等複雜因素。具體判斷建議諮詢專業風水師。"
-    }
 
 def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, user_job: str = None):
     """
@@ -153,8 +98,6 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
     if career_wuxing:
         career_rationale = f" 職業'{user_job}'屬{career_wuxing}，與日主{day_master_wuxing}關係為「{career_relation}」，職業加成{career_bonus:+d}分。"
     
-    strength_analysis = _judge_day_master_strength(pillars)
-    
     return {
         "status": "success",
         "day_master_gan": day_master_gan,
@@ -175,14 +118,12 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
             "hour_pillar": f"{pillars['hour_pillar']['gan']}{pillars['hour_pillar']['zhi']}",
             "day_master": f"{day_master_gan}（{day_master_wuxing}）"
         },
-        "strength_analysis": strength_analysis,
         "rationale": f"八字四柱：{pillars['year_pillar']['gan']}{pillars['year_pillar']['zhi']}年 "
                      f"{pillars['month_pillar']['gan']}{pillars['month_pillar']['zhi']}月 "
                      f"{pillars['day_pillar']['gan']}{pillars['day_pillar']['zhi']}日 "
                      f"{pillars['hour_pillar']['gan']}{pillars['hour_pillar']['zhi']}時。"
-                     f"日主為{day_master_gan}（{day_master_wuxing}），日主強弱：{strength_analysis['strength']}（評分{strength_analysis['score']}/6）。"
-                     f"樓層{floor_number}屬{floor_wuxing}，兩者關係為「{relation}」，基礎得分{score}分。{career_rationale}"
+                     f"日主為{day_master_gan}（{day_master_wuxing}），樓層{floor_number}屬{floor_wuxing}，"
+                     f"兩者關係為「{relation}」，基礎得分{score}分。{career_rationale}"
                      f"最終八字得分{final_score}分。"
-                     f" {strength_analysis['advice']}"
-                     " ⚠️ 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。"
+                     " 基於公開資料計算，僅供參考，具體判斷建議諮詢專業師傅。"
     }

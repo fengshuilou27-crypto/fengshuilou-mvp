@@ -13,7 +13,6 @@ COPY models/ ./models/
 COPY routers/ ./routers/
 COPY fxti/ ./fxti/
 COPY static/ ./static/
-COPY scraper_28hse/ ./scraper_28hse/
 COPY test_results/ ./test_results/
 COPY README.md ./
 

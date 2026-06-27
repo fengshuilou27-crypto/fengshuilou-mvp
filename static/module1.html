@@ -60,6 +60,10 @@
         .remedy-item { padding: 8px 12px; background: white; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #667eea; }
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+        .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s; }
+        .module-card:hover { transform: translateY(-3px); }
+        @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
     </style>
 </head>
 <body>
@@ -67,10 +71,34 @@
     <h1>AI風水樓盤匹配系統 <span class="module-badge">模組1</span></h1>
     <p class="subtitle">自測現有住所 — 輸入您的個人資料與現有住所，獲得風水評估報告</p>
     
+    <div class="module-cards">
+        <a href="module1.html" class="module-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
+            <div style="font-size: 13px; font-weight: 600;">模組1</div>
+            <div style="font-size: 11px; opacity: 0.9;">自測住所</div>
+        </a>
+        <a href="module2.html" class="module-card" style="background: #f0f0f0; color: #444;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🏢</div>
+            <div style="font-size: 13px; font-weight: 600;">模組2</div>
+            <div style="font-size: 11px; opacity: 0.7;">配對屋苑</div>
+        </a>
+        <a href="module3.html" class="module-card" style="background: #f0f0f0; color: #444;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔍</div>
+            <div style="font-size: 13px; font-weight: 600;">模組3</div>
+            <div style="font-size: 11px; opacity: 0.7;">配對物業</div>
+        </a>
+        <a href="fxti/index.html" class="module-card" style="background: #f0f0f0; color: #444;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
+            <div style="font-size: 13px; font-weight: 600;">模組4</div>
+            <div style="font-size: 11px; opacity: 0.7;">FXTI人格</div>
+        </a>
+    </div>
+    
     <div class="nav">
         <a href="module1.html" class="active">模組1：自測住所</a>
         <a href="module2.html">模組2：配對屋苑</a>
         <a href="module3.html">模組3：配對物業</a>
+        <a href="fxti/index.html">模組4：FXTI人格</a>
     </div>
 
     <form id="evaluateForm">

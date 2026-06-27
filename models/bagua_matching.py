@@ -48,30 +48,22 @@ def _analyze_single_bagua(birth_year: int, gender: str, building_facing: str, pe
     is_ming_east = ming_gua in EAST_FOUR_GUA
     is_zhai_east = zhai_gua in EAST_FOUR_GUA
     
-    # 九宮吉凶評分（擴展版）
-    gua_directions = BAGUA_DIRECTION_TABLE.get(ming_gua, {})
-    auspicious = {k: v for k, v in gua_directions.items() if k in ["生氣", "延年", "天醫", "伏位"]}
-    inauspicious = {k: v for k, v in gua_directions.items() if k in ["五鬼", "絕命", "六煞", "禍害"]}
-    
-    # 命宅同類基礎分 + 九宮吉凶加權
     score = 0
     mismatch_detected = False
     mismatch_desc = ""
     
     if is_ming_east == is_zhai_east:
-        score += 6  # 基礎分（同類）
+        score += 10
     else:
         mismatch_detected = True
         mismatch_desc = f"命卦{ming_gua}（{'東四命' if is_ming_east else '西四命'}）與宅卦{zhai_gua}（{'東四宅' if is_zhai_east else '西四宅'}）不相配"
     
-    # 九宮吉凶加分：每個吉位+1分，每個凶位-0.5分
-    auspicious_count = len(auspicious)
-    inauspicious_count = len(inauspicious)
-    score += auspicious_count * 1.0
-    score -= inauspicious_count * 0.5
-    score = max(0, min(10, score))
+    score = min(10, score)
     
-    # 九宮吉凶方位已在上文提取
+    # 八宅吉凶方位
+    gua_directions = BAGUA_DIRECTION_TABLE.get(ming_gua, {})
+    auspicious = {k: v for k, v in gua_directions.items() if k in ["生氣", "延年", "天醫", "伏位"]}
+    inauspicious = {k: v for k, v in gua_directions.items() if k in ["五鬼", "絕命", "六煞", "禍害"]}
     
     return {
         "status": "success",
@@ -87,19 +79,12 @@ def _analyze_single_bagua(birth_year: int, gender: str, building_facing: str, pe
         "mismatch_desc": mismatch_desc,
         "auspicious_directions": auspicious,
         "inauspicious_directions": inauspicious,
-        "nine_grid_score": {
-            "base_score": 6 if not mismatch_detected else 0,
-            "auspicious_bonus": auspicious_count * 1.0,
-            "inauspicious_penalty": inauspicious_count * 0.5,
-            "final_score": score
-        },
         "score": score,
         "max_score": 10,
         "data_source": "互联网公开资料碎片",
         "confidence": 0.6,
         "rationale": f"{person_label}命卦為{ming_gua}（{'東四命' if is_ming_east else '西四命'}），宅卦為{zhai_gua}（{'東四宅' if is_zhai_east else '西四宅'}）。"
                      + (f"{mismatch_desc}，可按命卦重新定位吉位。" if mismatch_detected else "宅命同類（東四/西四），基礎計算結果。")
-                     + f" 九宮評分：基礎{6 if not mismatch_detected else 0}分 + 吉位{auspicious_count}個×1.0 - 凶位{inauspicious_count}個×0.5 = {score}分。"
     }
 
 

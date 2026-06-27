@@ -1,0 +1,45 @@
+Total estates in CSV: 200
+Supported facings count: 8
+Estates with supported facing: 171
+Estates filtered OUT: 29
+
+Supported facings (8):
+  丁山癸向
+  丑山未向
+  乙山辛向
+  乾山巽向
+  亥山巳向
+  午山子向
+  卯山酉向
+  子山午向
+
+Filtered out estates:
+  海怡半島 - facing: '酉山卯向'
+  藍灣半島 - facing: '巽山乾向'
+  泓都 - facing: '酉山卯向'
+  愛蝶灣 - facing: '巽山乾向'
+  香島 - facing: '酉山卯向'
+  昇悅居 - facing: '酉山卯向'
+  君臨天下 - facing: '酉山卯向'
+  麗晶花園 - facing: '酉山卯向'
+  曉峰灣畔 - facing: '酉山卯向'
+  星漣海 - facing: '酉山卯向'
+  東港城 - facing: '酉山卯向'
+  南豐廣場 - facing: '酉山卯向'
+  昇薈 - facing: '酉山卯向'
+  溱岸8號 - facing: '酉山卯向'
+  金獅花園 - facing: '酉山卯向'
+  灣景花園 - facing: '酉山卯向'
+  新屯門中心 - facing: '酉山卯向'
+  天頌苑 - facing: '酉山卯向'
+  天恩邨 - facing: '酉山卯向'
+  兆麟苑 - facing: '酉山卯向'
+  時代廣場 - facing: '酉山卯向'
+  美景花園 - facing: '酉山卯向'
+  海欣花園 - facing: '酉山卯向'
+  青盛苑 - facing: '酉山卯向'
+  長發邨 - facing: '酉山卯向'
+  瑜一 - facing: '巽山乾向'
+  Lexington Hill - facing: '巽山乾向'
+  愛都大廈 - facing: '巽山乾向'
+  星域軒 - facing: '巽山乾向'

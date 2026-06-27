@@ -228,13 +228,9 @@ def determine_profile(wuxing_percentage, threshold_pure=30, threshold_gap=20):
     return profile
 
 
-def synthesize_result(innate_pct, acquired_pct, innate_weight=0.6, acquired_weight=0.4):
+def synthesize_result(innate_pct, acquired_pct, innate_weight=0.4, acquired_weight=0.6):
     """
     合成先天與後天五行百分比
-    
-    修訂（2026-06-18）：先天60% / 後天40%
-    原因：後天問卷100%同一元素可完全覆蓋先天八字，不合理。
-    先天八字（出生時間）應占主導，後天問卷為輔助校正。
     """
     final_pct = {}
     for element in innate_pct:

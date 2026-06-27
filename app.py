@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -9,11 +9,10 @@ import csv
 import json
 import os
 import re
-import sqlite3
 import logging
-import uuid
-import hashlib
 
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logger = logging.getLogger(__name__)
 from data.flying_star import get_yun, SUPPORTED_FACINGS, FLYING_STAR_TABLE
 from models.flying_star_analysis import analyze_flying_star
 from models.zero_main_god import analyze_zero_main_god
@@ -27,63 +26,22 @@ from data.fxti_bazi import get_innate_wuxing
 from data.fxti_questionnaire import get_questionnaire, calculate_acquired_wuxing
 from data.fxti_profile import determine_profile, synthesize_result, ALL_PROFILES
 from data.fxti_relationship import analyze_relationship
-from data.school_manager import get_school_manager
-from data.life_magnetic_direction import analyze_life_magnetic_direction, check_direction_compatibility
-from data.life_gua import analyze_life_gua
 
 app = FastAPI(
     title="AI風水樓盤匹配系統",
-    description="MVP v0.7 - 流派插件化 + 漢五派生命磁向 + 人命卦 + 多目標加權 + 同住人雙八字 + 職業五行 + FXTI五行人格測評",
-    version="0.7.0"
+    description="MVP v0.6 - 多目標加權 + 同住人雙八字 + 職業五行 + 模組3篩選 + FXTI五行人格測評",
+    version="0.6.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8001", "http://127.0.0.1:8001", "https://fengshuilou.com"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-# Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
-logger = logging.getLogger(__name__)
-
-# SQLite database setup
-DB_PATH = Path("data/fengshuilou.db")
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-def init_db():
-    conn = sqlite3.connect(str(DB_PATH))
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY, username TEXT UNIQUE, password_hash TEXT,
-        created_at TEXT, last_login TEXT
-    )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS fxti_results (
-        id TEXT PRIMARY KEY, data TEXT, created_at TEXT
-    )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS match_results (
-        id TEXT PRIMARY KEY, user_id TEXT, property_data TEXT, score REAL,
-        created_at TEXT
-    )''')
-    conn.commit()
-    conn.close()
-    logger.info("Database initialized at %s", DB_PATH)
-
-init_db()
-
-def db_conn():
-    return sqlite3.connect(str(DB_PATH))
-
-def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
-
-# In-memory auth cache (MVP simple session)
-active_sessions: Dict[str, str] = {}  # token -> user_id
-
-
 
 
 class GoalItem(BaseModel):
@@ -210,57 +168,96 @@ class FXTIRelationshipRequest(BaseModel):
     person_b: FXTIPersonInput
 
 
-# FXTI storage now uses SQLite (see init_db above)
-# Legacy: fxti_results_db: Dict[str, dict] = {}
-# 使用內存存儲作為後備（當SQLite不可用時）
+# FXTI in-memory storage
 fxti_results_db: Dict[str, dict] = {}
+
+
+def _find_data_path(filename: str) -> Path:
+    """Robustly find a data file in the project directory tree."""
+    script_dir = Path(__file__).resolve().parent
+    # Strategy 0: local data/ directory (same folder as app.py)
+    local_data = script_dir / "data" / filename
+    if local_data.exists():
+        return local_data
+    # Strategy 1: sibling directory (ai-fengshui-mvp/../scraper_28hse)
+    candidates = [
+        script_dir / ".." / "scraper_28hse" / "data" / filename,
+        script_dir / ".." / ".." / "scraper_28hse" / "data" / filename,
+        script_dir / ".." / ".." / ".." / "scraper_28hse" / "data" / filename,
+    ]
+    # Strategy 2: relative to cwd (for running from workspace root)
+    cwd = Path.cwd()
+    for depth in range(0, 4):
+        candidates.append(cwd / (".." * depth) / "scraper_28hse" / "data" / filename)
+    # Strategy 3: search upward from script_dir for a directory containing scraper_28hse
+    current = script_dir
+    for _ in range(5):
+        scraper_dir = current / "scraper_28hse" / "data" / filename
+        candidates.append(scraper_dir)
+        current = current.parent
+        if current == current.parent:
+            break
+
+    for p in candidates:
+        try:
+            resolved = p.resolve()
+            if resolved.exists():
+                return resolved
+        except (OSError, RuntimeError):
+            continue
+    return None
 
 
 def load_estates():
     """載入屋苑數據"""
     estates = []
-    possible_paths = [
-        Path(__file__).parent / ".." / "scraper_28hse" / "data" / "estates_28hse.csv",
-        Path(__file__).parent / ".." / ".." / "scraper_28hse" / "data" / "estates_28hse.csv",
-        Path("scraper_28hse/data/estates_28hse.csv"),
-        Path("../scraper_28hse/data/estates_28hse.csv"),
-        Path("../../scraper_28hse/data/estates_28hse.csv"),
-    ]
-    data_path = None
-    for p in possible_paths:
-        if p.exists():
-            data_path = p
-            break
+    data_path = _find_data_path("estates_28hse.csv")
     if data_path:
+        logger.info("Loading estates data: %s", data_path)
         with open(data_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if row.get("facing") in SUPPORTED_FACINGS:
                     estates.append(row)
+        logger.info("Estates loaded: %d records", len(estates))
+    else:
+        logger.warning("estates_28hse.csv not found. Ensure scraper_28hse/data/estates_28hse.csv exists.")
     return estates
 
 
+LISTINGS_HEADERS = [
+    "title", "district", "estate", "unit_info", "price", "price_raw",
+    "build_area", "usable_area", "rooms", "facing", "property_type",
+    "decoration", "views", "features", "agent", "posted_time", "url",
+    "year_built", "yun", "estate_facing"
+]
+
+
 def load_listings():
-    """載入樓盤數據"""
+    """載入樓盤數據（若缺失则自动生成空文件）"""
     listings = []
-    possible_paths = [
-        Path(__file__).parent / ".." / "scraper_28hse" / "data" / "listings_28hse.csv",
-        Path(__file__).parent / ".." / ".." / "scraper_28hse" / "data" / "listings_28hse.csv",
-        Path("scraper_28hse/data/listings_28hse.csv"),
-        Path("../scraper_28hse/data/listings_28hse.csv"),
-        Path("../../scraper_28hse/data/listings_28hse.csv"),
-    ]
-    data_path = None
-    for p in possible_paths:
-        if p.exists():
-            data_path = p
-            break
+    data_path = _find_data_path("listings_28hse.csv")
     if data_path:
+        logger.info("Loading listings data: %s", data_path)
         with open(data_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if row.get("facing") in SUPPORTED_FACINGS:
                     listings.append(row)
+        logger.info("Listings loaded: %d records", len(listings))
+    else:
+        # 自动在 scraper_28hse/data/ 创建空 listings 文件
+        scraper_data = _find_data_path("estates_28hse.csv")
+        if scraper_data:
+            listings_dir = scraper_data.parent
+            empty_listings = listings_dir / "listings_28hse.csv"
+            logger.warning("listings_28hse.csv missing, creating empty file: %s", empty_listings)
+            with open(empty_listings, "w", encoding="utf-8", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=LISTINGS_HEADERS)
+                writer.writeheader()
+            logger.info("Empty listings_28hse.csv created. Populate with real data to use Module 3.")
+        else:
+            logger.warning("listings_28hse.csv not found and scraper_28hse/data directory not located.")
     return listings
 
 
@@ -272,9 +269,12 @@ def _parse_goals(goals):
     """解析目標列表，向後兼容字符串"""
     if isinstance(goals, str):
         return [{"goal": goals, "priority": 1}]
-    if isinstance(goals, list) and len(goals) > 0 and isinstance(goals[0], dict):
-        return goals
-    if isinstance(goals, list):
+    if isinstance(goals, list) and len(goals) > 0:
+        if isinstance(goals[0], dict):
+            return goals
+        # Handle GoalItem objects (Pydantic models) and strings
+        if hasattr(goals[0], 'goal'):
+            return [{"goal": g.goal, "priority": getattr(g, 'priority', 1)} for g in goals]
         return [{"goal": g, "priority": 1} for g in goals]
     return []
 
@@ -473,7 +473,7 @@ def run_single_match(meta: RequestMeta):
 
 @app.get("/")
 def read_root():
-    return {"message": "AI風水樓盤匹配系統 MVP v0.7", "docs": "/docs", "features": ["流派插件化", "漢五派生命磁向", "人命卦", "FXTI五行人格"]}
+    return {"message": "AI風水樓盤匹配系統 MVP v0.6", "docs": "/docs"}
 
 
 @app.post("/api/evaluate")
@@ -579,7 +579,7 @@ def search_properties(request: SearchPropertiesRequest):
                 "match_result": match_result
             })
         except Exception as e:
-            logger.error("計算錯誤 %s: %s", listing.get("title"), e)
+            print(f"計算錯誤 {listing.get('title')}: {e}")
 
     results.sort(key=lambda x: x["final_score"], reverse=True)
     top_results = results[:request.top_n]
@@ -723,23 +723,29 @@ def match_estates(request: MatchEstatesRequest):
                 detected_shas=[]
             )
             match_result = run_single_match(meta)
+            yb = estate.get("building_year", estate.get("year_built", ""))
+            try:
+                year_built = int(yb) if yb else 0
+            except ValueError:
+                year_built = 0
             results.append({
-                "estate": estate["name"],
+                "name": estate["name"],
                 "district": estate.get("district", ""),
                 "facing": estate["facing"],
-                "year_built": int(estate.get("year_built", 0)),
+                "year_built": year_built,
                 "yun": estate.get("yun", ""),
-                "property_type": estate.get("property_type", ""),
-                "final_score": match_result["final_score"],
+                "property_type": estate.get("property_type", estate.get("type", "私人屋苑")),
+                "score": match_result["final_score"],
                 "rating": match_result["rating"],
                 "score_breakdown": match_result["score_breakdown"],
                 "flags": match_result["flags"],
-                "rationale": match_result["ai_rationale"]
+                "rationale": match_result["ai_rationale"],
+                "match": match_result
             })
         except Exception as e:
-            logger.error("計算錯誤 %s: %s", estate.get("name"), e)
+            print(f"計算錯誤 {estate.get('name')}: {e}")
 
-    results.sort(key=lambda x: x["final_score"], reverse=True)
+    results.sort(key=lambda x: x["score"], reverse=True)
     top_results = results[:request.top_n]
 
     return {
@@ -821,7 +827,7 @@ def match_listings(request: MatchListingsRequest):
                 "rationale": match_result["ai_rationale"]
             })
         except Exception as e:
-            logger.error("計算錯誤 %s: %s", listing.get("title"), e)
+            print(f"計算錯誤 {listing.get('title')}: {e}")
 
     results.sort(key=lambda x: x["final_score"], reverse=True)
     top_results = results[:request.top_n]
@@ -870,13 +876,7 @@ def get_supported_facings():
 
 @app.get("/api/health")
 def health_check():
-    return {
-        "status": "ok",
-        "version": "0.7.0",
-        "supported_facings": len(SUPPORTED_FACINGS),
-        "modules": ["module1", "module2", "module3", "fxti", "schools", "hanwu_life_magnetic", "hanwu_life_gua"],
-        "schools": list(get_school_manager().list_schools().keys())
-    }
+    return {"status": "ok", "version": "0.6.0", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
 
 
 # ==================== FXTI Routes ====================
@@ -934,8 +934,6 @@ def fxti_calculate(request: FXTICalculateRequest):
         "innate_wuxing": innate["wuxing_percentage"],
         "acquired_wuxing": acquired["wuxing_percentage"],
         "final_wuxing": final_wuxing,
-        "warning": acquired.get("warning"),  # 防極端警告
-        "penalty_applied": acquired.get("penalty_applied", False),  # 是否已降權
         "profile": {
             "id": profile["id"],
             "name": profile["name"],
@@ -950,15 +948,7 @@ def fxti_calculate(request: FXTICalculateRequest):
             "direction": profile.get("direction", "")
         }
     }
-    try:
-        conn = db_conn()
-        c = conn.cursor()
-        c.execute("INSERT OR REPLACE INTO fxti_results (id, data, created_at) VALUES (?, ?, ?)",
-                  (result_id, json.dumps(result_data, ensure_ascii=False), datetime.now().isoformat()))
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        logger.error("FXTI save failed: %s", e)
+    fxti_results_db[result_id] = result_data
 
     return {
         "status": "success",
@@ -970,21 +960,10 @@ def fxti_calculate(request: FXTICalculateRequest):
 @app.get("/api/fxti/result/{fxti_id}")
 def fxti_result(fxti_id: str):
     """FXTI：獲取結果（含分享卡URL）"""
-    try:
-        conn = db_conn()
-        c = conn.cursor()
-        c.execute("SELECT data FROM fxti_results WHERE id = ?", (fxti_id,))
-        row = c.fetchone()
-        conn.close()
-        if not row:
-            raise HTTPException(status_code=404, detail="FXTI結果未找到")
-        result = json.loads(row[0])
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error("FXTI load failed: %s", e)
-        raise HTTPException(status_code=500, detail="數據庫錯誤")
+    if fxti_id not in fxti_results_db:
+        raise HTTPException(status_code=404, detail="FXTI結果未找到")
 
+    result = fxti_results_db[fxti_id]
     return {
         "status": "success",
         "data": result,
@@ -1026,8 +1005,6 @@ def _get_or_create_fxti_result(person: FXTIPersonInput) -> dict:
         "innate_wuxing": innate["wuxing_percentage"],
         "acquired_wuxing": acquired["wuxing_percentage"],
         "final_wuxing": final_wuxing,
-        "warning": acquired.get("warning"),
-        "penalty_applied": acquired.get("penalty_applied", False),
         "profile": {
             "id": profile["id"],
             "name": profile["name"],
@@ -1059,93 +1036,6 @@ def fxti_relationship(request: FXTIRelationshipRequest):
         "data": report
     }
 
-
-
-# ==================== 流派插件化 Routes ====================
-
-@app.get("/api/schools")
-def get_schools():
-    """獲取所有支持的風水流派"""
-    manager = get_school_manager()
-    schools = manager.list_schools()
-    return {
-        "status": "success",
-        "schools": [
-            {"id": k, "name": v} for k, v in schools.items()
-        ]
-    }
-
-
-@app.get("/api/schools/{school_id}")
-def get_school_config(school_id: str):
-    """獲取指定流派的詳細配置"""
-    manager = get_school_manager()
-    school = manager.get_school(school_id)
-    if not school:
-        raise HTTPException(status_code=404, detail="流派未找到")
-    
-    return {
-        "status": "success",
-        "school_id": school_id,
-        "name": school["name"],
-        "description": school.get("description", ""),
-        "dimensions": school.get("dimensions", {})
-    }
-
-
-# ==================== 漢五派 Routes ====================
-
-@app.post("/api/hanwu/life-magnetic-direction")
-def api_life_magnetic_direction(birth_year: int, gender: str):
-    """漢五派：生命磁向分析"""
-    result = analyze_life_magnetic_direction(birth_year, gender)
-    return {"status": "success", "data": result}
-
-
-@app.post("/api/hanwu/life-magnetic-match")
-def api_life_magnetic_match(birth_year: int, gender: str, building_facing: str):
-    """漢五派：生命磁向與樓盤朝向匹配"""
-    from data.life_magnetic_direction import get_zodiac_from_year
-    zodiac = get_zodiac_from_year(birth_year)
-    result = check_direction_compatibility(zodiac, gender, building_facing)
-    return {"status": "success", "data": result}
-
-
-@app.post("/api/hanwu/life-gua")
-def api_life_gua(birth_year: int, gender: str, building_facing: Optional[str] = None):
-    """漢五派：人命卦計算（可選樓盤朝向匹配）"""
-    result = analyze_life_gua(birth_year, gender, building_facing)
-    return {"status": "success", "data": result}
-
-
-# ==================== Auth Routes (MVP Simple) ====================
-
-@app.post("/api/auth/register")
-def register(username: str, password: str):
-    conn = db_conn()
-    c = conn.cursor()
-    try:
-        c.execute("INSERT INTO users (id, username, password_hash, created_at) VALUES (?, ?, ?, ?)",
-                  (str(uuid.uuid4()), username, hash_password(password), datetime.now().isoformat()))
-        conn.commit()
-        return {"status": "success", "message": "註冊成功"}
-    except sqlite3.IntegrityError:
-        raise HTTPException(status_code=400, detail="用戶名已存在")
-    finally:
-        conn.close()
-
-@app.post("/api/auth/login")
-def login(username: str, password: str):
-    conn = db_conn()
-    c = conn.cursor()
-    c.execute("SELECT id, password_hash FROM users WHERE username = ?", (username,))
-    row = c.fetchone()
-    conn.close()
-    if not row or row[1] != hash_password(password):
-        raise HTTPException(status_code=401, detail="用戶名或密碼錯誤")
-    token = str(uuid.uuid4())
-    active_sessions[token] = row[0]
-    return {"status": "success", "token": token, "user_id": row[0]}
 
 if __name__ == "__main__":
     import uvicorn

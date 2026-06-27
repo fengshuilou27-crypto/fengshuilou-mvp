@@ -57,6 +57,10 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 .goal-item .priority-select { width: 100px; }
 .goal-item .remove-btn { background: #f8d7da; color: #721c24; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
 .coming-soon-badge { display: inline-block; background: #e0e0e0; color: #666; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+.module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s; }
+.module-card:hover { transform: translateY(-3px); }
+@media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
 </style>
 </head>
 <body>
@@ -64,10 +68,34 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 <h1>AI風水樓盤匹配系統 <span class="module-badge">模組2</span></h1>
 <p class="subtitle">配對屋苑 — 輸入個人資料，系統從屋苑數據庫匹配最適合您的屋苑</p>
 
+<div class="module-cards">
+    <a href="index.html" class="module-card" style="background: #f0f0f0; color: #444;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
+        <div style="font-size: 13px; font-weight: 600;">模組1</div>
+        <div style="font-size: 11px; opacity: 0.7;">自測住所</div>
+    </a>
+    <a href="module2.html" class="module-card" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🏢</div>
+        <div style="font-size: 13px; font-weight: 600;">模組2</div>
+        <div style="font-size: 11px; opacity: 0.9;">配對屋苑</div>
+    </a>
+    <a href="module3.html" class="module-card" style="background: #f0f0f0; color: #444;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🔍</div>
+        <div style="font-size: 13px; font-weight: 600;">模組3</div>
+        <div style="font-size: 11px; opacity: 0.7;">配對物業</div>
+    </a>
+    <a href="fxti/index.html" class="module-card" style="background: #f0f0f0; color: #444;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
+        <div style="font-size: 13px; font-weight: 600;">模組4</div>
+        <div style="font-size: 11px; opacity: 0.7;">FXTI人格</div>
+    </a>
+</div>
+
 <div class="nav">
 <a href="index.html">模組1：自測住所</a>
 <a href="module2.html" class="active">模組2：配對屋苑</a>
 <a href="module3.html">模組3：配對物業</a>
+<a href="fxti/index.html">模組4：FXTI人格</a>
 </div>
 
 <div id="step1">
@@ -343,13 +371,13 @@ async function runMatching() {
         if (data.status === 'success') {
             const filters = getFilters();
             let results = data.all_results.map(r => ({
-                name: r.estate, district: r.district, facing: r.facing,
+                name: r.name || r.estate, district: r.district, facing: r.facing,
                 year_built: r.year_built, yun: r.yun, property_type: r.property_type,
-                score: r.final_score, match: r
+                score: r.score || r.final_score, match: r
             }));
             results = filterResults(results, filters);
             results.sort((a, b) => b.score - a.score);
-            renderEstateList(results.slice(0, 10));
+            renderEstateList(results);
         } else {
             throw new Error(data.message || '匹配失敗');
         }
@@ -362,16 +390,16 @@ async function runMatching() {
 function renderEstateList(results) {
     document.getElementById('loading').style.display = 'none';
     let html = '<div style="margin-top:16px">';
-    const top3 = results.slice(0, 3);
-    if (top3.length === 0) {
+    if (results.length === 0) {
         html += '<p style="color:#666;text-align:center">暫無匹配屋苑</p>';
     } else {
-        html += '<p style="color:#666;margin-bottom:12px">為您推薦以下最適合的屋苑：</p>';
-        top3.forEach((r, i) => {
+        html += '<p style="color:#666;margin-bottom:12px">為您推薦以下最適合的屋苑（共 ' + results.length + ' 個）：</p>';
+        results.forEach((r, i) => {
             const sclass = r.score >= 70 ? 'score-high' : (r.score >= 45 ? 'score-mid' : 'score-low');
+            const yearText = r.year_built && r.year_built !== '0' ? r.year_built + '年建' : '年份未知';
             html += `<div class="estate-card" onclick="showDetail(${i})">
 <div class="estate-name">${i+1}. ${r.name}</div>
-<div class="estate-meta">${r.district} | ${r.facing} | ${r.year_built}年建 | ${r.property_type}</div>
+<div class="estate-meta">${r.district || '地區未知'} | ${r.facing || '坐向未知'} | ${yearText} | ${r.property_type || ''}</div>
 <div class="estate-score ${sclass}">${r.score}分</div>
 </div>`;
         });

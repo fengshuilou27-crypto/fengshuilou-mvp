@@ -25,88 +25,52 @@ class MatchEstatesRequest(BaseModel):
     top_n: int = Field(default=3, description="返回前N個屋苑")
 
 
-# 朝向到24山向映射表（2026-06-18 新增）
-# 朝向 = 面向的方向，坐向 = 背靠的方向
-# 例如：朝南 = 坐北朝南 = 子山午向
-DIRECTION_TO_FACING = {
-    # 朝向 = 面向的方向，坐向 = 背靠的方向
-    # 例如：朝南 = 坐北朝南 = 子山午向
-    "朝南": "子山午向",
-    "朝北": "午山子向",
-    "朝东": "卯山酉向",
-    "朝西": "酉山卯向",
-    "朝东南": "巽山乾向",
-    "朝西北": "乾山巽向",
-    "朝西南": "艮山坤向",   # 修正：面向西南 = 坐东北向西南 = 艮山坤向
-    "朝东北": "坤山艮向",   # 修正：面向东北 = 坐西南向东北 = 坤山艮向
-    "南": "子山午向",
-    "北": "午山子向",
-    "东": "卯山酉向",
-    "西": "酉山卯向",
-    "东南": "巽山乾向",
-    "西北": "乾山巽向",
-    "西南": "艮山坤向",
-    "东北": "坤山艮向",
-}
+def _find_data_path(filename: str) -> Path:
+    """Robustly find a data file in the project directory tree."""
+    script_dir = Path(__file__).resolve().parent
+    candidates = [
+        script_dir / ".." / ".." / "scraper_28hse" / "data" / filename,
+        script_dir / ".." / ".." / ".." / "scraper_28hse" / "data" / filename,
+        script_dir / ".." / ".." / ".." / ".." / "scraper_28hse" / "data" / filename,
+    ]
+    cwd = Path.cwd()
+    for depth in range(0, 4):
+        candidates.append(cwd / (".." * depth) / "scraper_28hse" / "data" / filename)
+    current = script_dir
+    for _ in range(5):
+        scraper_dir = current / "scraper_28hse" / "data" / filename
+        candidates.append(scraper_dir)
+        current = current.parent
+        if current == current.parent:
+            break
+    for p in candidates:
+        try:
+            resolved = p.resolve()
+            if resolved.exists():
+                return resolved
+        except (OSError, RuntimeError):
+            continue
+    return None
 
 
 def load_estates():
-    """載入屋苑數據（支持朝向映射）"""
+    """載入屋苑數據"""
     estates = []
-    possible_paths = [
-        Path(__file__).parent / ".." / "scraper_28hse" / "data" / "estates_28hse.csv",
-        Path(__file__).parent / ".." / ".." / "scraper_28hse" / "data" / "estates_28hse.csv",
-        Path("scraper_28hse/data/estates_28hse.csv"),
-        Path("../scraper_28hse/data/estates_28hse.csv"),
-        Path("../../scraper_28hse/data/estates_28hse.csv"),
-    ]
-    data_path = None
-    for p in possible_paths:
-        if p.exists():
-            data_path = p
-            break
+    data_path = _find_data_path("estates_28hse.csv")
     if data_path:
         with open(data_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # 支持朝向映射：如果 facing 是朝向（如「朝南」），映射到24山向
-                raw_facing = row.get("facing", "")
-                mapped_facing = DIRECTION_TO_FACING.get(raw_facing, raw_facing)
-                
-                if mapped_facing in SUPPORTED_FACINGS:
-                    row["facing"] = mapped_facing  # 更新为映射后的坐向
-                    row["original_facing"] = raw_facing  # 保留原始朝向
+                if row.get("facing") in SUPPORTED_FACINGS:
                     estates.append(row)
     return estates
 
 
-# === Module 5 整合： estates 為底 + listings 價格信息 ===
-
-def load_listings():
-    """載入在售物業列表（如果存在）"""
-    listings = {}
-    possible_paths = [
-        Path(__file__).parent / ".." / "scraper_28hse" / "data" / "listings_28hse.csv",
-        Path("scraper_28hse/data/listings_28hse.csv"),
-    ]
-    for p in possible_paths:
-        if p.exists():
-            with open(p, "r", encoding="utf-8") as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    estate_name = row.get("estate_name", "")
-                    if estate_name:
-                        listings[estate_name] = row
-            break
-    return listings
-
-
 @router.post("/match/estates")
 def match_estates(request: MatchEstatesRequest):
-    """模組5：配對屋苑 — 以 estates 為底，整合 listings 價格信息"""
+    """模組2：配對屋苑 — 批量匹配，返回TOP N"""
     profile = request.user_profile
     estates = load_estates()
-    listings = load_listings()  # 載入在售物業
 
     results = []
     for estate in estates:
@@ -126,55 +90,36 @@ def match_estates(request: MatchEstatesRequest):
                 south_has_mountain=False,
                 detected_shas=[]
             )
-            match_result = run_single_match(meta)
-            
-            # === Module 5 整合：檢查是否有在售物業 ===
-            estate_name = estate.get("name", "")
-            listing_info = listings.get(estate_name)
-            
-            result_item = {
-                "estate": estate_name,
+            match_result = run_single_match(meta, district=estate.get("district", ""))
+            yb = estate.get("building_year", estate.get("year_built", ""))
+            try:
+                year_built = int(yb) if yb else 0
+            except ValueError:
+                year_built = 0
+            results.append({
+                "name": estate["name"],
                 "district": estate.get("district", ""),
                 "facing": estate["facing"],
-                "original_facing": estate.get("original_facing", ""),
-                "year_built": int(estate.get("year_built", 0)),
+                "year_built": year_built,
                 "yun": estate.get("yun", ""),
-                "property_type": estate.get("property_type", ""),
-                "final_score": match_result["final_score"],
+                "property_type": estate.get("property_type", estate.get("type", "私人屋苑")),
+                "score": match_result["final_score"],
                 "rating": match_result["rating"],
                 "score_breakdown": match_result["score_breakdown"],
                 "flags": match_result["flags"],
-                "rationale": match_result["ai_rationale"]
-            }
-            
-            # 如果有在售物業，顯示價格；否則顯示「暫無在售」
-            if listing_info:
-                result_item["listing_status"] = "有在售"
-                result_item["listing_price"] = listing_info.get("price", "N/A")
-                result_item["listing_area"] = listing_info.get("area", "N/A")
-                result_item["listing_url"] = listing_info.get("url", "")
-            else:
-                result_item["listing_status"] = "暫無在售"
-                result_item["listing_price"] = None
-                result_item["listing_area"] = None
-            
-            results.append(result_item)
+                "rationale": match_result["ai_rationale"],
+                "match": match_result
+            })
         except Exception as e:
             print(f"計算錯誤 {estate.get('name')}: {e}")
 
     results.sort(key=lambda x: x["final_score"], reverse=True)
     top_results = results[:request.top_n]
 
-    # 統計：有在售 vs 無在售
-    with_listings = sum(1 for r in results if r["listing_status"] == "有在售")
-    without_listings = len(results) - with_listings
-
     return {
         "status": "success",
-        "module": "模組5 - 配對屋苑（整合estates+listings）",
+        "module": "模組2 - 配對屋苑",
         "total_estates": len(results),
-        "with_listings": with_listings,
-        "without_listings": without_listings,
         "top_results": top_results,
         "all_results": results
     }
