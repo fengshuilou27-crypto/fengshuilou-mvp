@@ -168,10 +168,10 @@ def aggregate_match_result(
             "note": "風險分值僅供參考，具體安全判斷建議諮詢專業師傅"
         },
         "flags": flags,
-        "data_source": "互联网公开资料碎片",
+        "data_source": "三六風水網專業知識庫",
         "confidence": overall_confidence,
         "ai_rationale": ai_rationale,
         "recommended_remedies": all_remedies,
         "yun_conversion_advice": yun_conversion,
-        "disclaimer": "本報告為基礎版計算結果，基於互聯網公開資料碎片，僅供參考。具體入住/投資等重大決策建議諮詢專業風水師傅進行實地勘察。"
+        "disclaimer": "本報告為v2.2優化版計算結果，基於三六風水網專業知識庫，飛星表已擴展至24山向，加入旺衰分析與喜用神計算，九宮吉凶方位分析。僅供參考，具體入住/投資等重大決策建議諮詢專業風水師傅進行實地勘察。"
     }

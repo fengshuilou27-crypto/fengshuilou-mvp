@@ -29,8 +29,8 @@ from data.fxti_relationship import analyze_relationship
 
 app = FastAPI(
     title="AI風水樓盤匹配系統",
-    description="MVP v0.6 - 多目標加權 + 同住人雙八字 + 職業五行 + 模組3篩選 + FXTI五行人格測評",
-    version="0.6.0"
+    description="MVP v2.2 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算",
+    version="2.2.0"
 )
 
 app.add_middleware(

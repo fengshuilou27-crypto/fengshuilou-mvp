@@ -4,6 +4,7 @@ from typing import List, Optional
 from pathlib import Path
 import csv
 import re
+import os
 
 from data.flying_star import SUPPORTED_FACINGS
 from routers.evaluate import RequestMeta, run_single_match
@@ -27,34 +28,6 @@ class MatchListingsRequest(BaseModel):
     call_buy_threshold: int = Field(default=70, description="觸發叫買市場的分數閾值")
 
 
-def _find_data_path(filename: str) -> Path:
-    """Robustly find a data file in the project directory tree."""
-    script_dir = Path(__file__).resolve().parent
-    candidates = [
-        script_dir / ".." / ".." / "scraper_28hse" / "data" / filename,
-        script_dir / ".." / ".." / ".." / "scraper_28hse" / "data" / filename,
-        script_dir / ".." / ".." / ".." / ".." / "scraper_28hse" / "data" / filename,
-    ]
-    cwd = Path.cwd()
-    for depth in range(0, 4):
-        candidates.append(cwd / (".." * depth) / "scraper_28hse" / "data" / filename)
-    current = script_dir
-    for _ in range(5):
-        scraper_dir = current / "scraper_28hse" / "data" / filename
-        candidates.append(scraper_dir)
-        current = current.parent
-        if current == current.parent:
-            break
-    for p in candidates:
-        try:
-            resolved = p.resolve()
-            if resolved.exists():
-                return resolved
-        except (OSError, RuntimeError):
-            continue
-    return None
-
-
 LISTINGS_HEADERS = [
     "title", "district", "estate", "unit_info", "price", "price_raw",
     "build_area", "usable_area", "rooms", "facing", "property_type",
@@ -63,43 +36,99 @@ LISTINGS_HEADERS = [
 ]
 
 
+def _get_data_path(filename: str) -> Path:
+    """獲取數據文件路徑 (本地data目錄)"""
+    script_dir = Path(__file__).resolve().parent
+    data_dir = script_dir.parent / "data"
+    file_path = data_dir / filename
+    if file_path.exists():
+        return file_path
+    return None
+
+
 def load_listings():
-    """載入樓盤數據（若缺失则自动生成空文件）"""
+    """載入樓盤數據"""
     listings = []
-    data_path = _find_data_path("listings_28hse.csv")
+    data_path = _get_data_path("listings_28hse.csv")
+    
     if data_path:
         with open(data_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if row.get("facing") in SUPPORTED_FACINGS:
                     listings.append(row)
-    else:
-        scraper_data = _find_data_path("estates_28hse.csv")
-        if scraper_data:
-            listings_dir = scraper_data.parent
-            empty_listings = listings_dir / "listings_28hse.csv"
-            with open(empty_listings, "w", encoding="utf-8", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=LISTINGS_HEADERS)
-                writer.writeheader()
+    
     return listings
+
+
+def _extract_floor_from_unit_info(unit_info: str) -> int:
+    """從單位信息中提取樓層"""
+    if not unit_info:
+        return 10  # 默認中層
+    
+    # 常見格式："中層", "高層", "低層", "10座 中層", "A座 高層 15樓"
+    # 先嘗試提取數字
+    m = re.search(r'(\d+)', unit_info)
+    if m:
+        floor = int(m.group(1))
+        # 如果是座數(通常<5)，忽略，返回默認
+        if floor <= 5 and "座" in unit_info:
+            return 10
+        return min(max(floor, 1), 80)  # 限制在1-80層
+    
+    # 中/高/低層關鍵詞映射
+    if "高層" in unit_info:
+        return 25
+    elif "低層" in unit_info:
+        return 5
+    elif "中層" in unit_info:
+        return 10
+    elif "地下" in unit_info or "G" in unit_info:
+        return 1
+    elif "頂層" in unit_info or "天台" in unit_info:
+        return 30
+    
+    return 10
 
 
 @router.post("/match/listings")
 def match_listings(request: MatchListingsRequest):
-    """模組3：配對物業 — 批量匹配，支持叫買市場"""
+    """模組3：配對物業 — 批量匹配，支持叫買市場 (v2.2)"""
     profile = request.user_profile
     listings = load_listings()
+    
+    if not listings:
+        return {
+            "status": "success",
+            "module": "模組3 - 配對物業",
+            "total_listings": 0,
+            "top_results": [],
+            "call_buy_market": {
+                "triggered": False,
+                "threshold": request.call_buy_threshold,
+                "high_score_count": 0,
+                "anonymous_profile": None
+            },
+            "all_results": []
+        }
 
     results = []
     for listing in listings:
         try:
             year = int(listing.get("year_built", 2000)) if listing.get("year_built") else 2000
-            floor = 10
-            if listing.get("unit_info"):
-                m = re.search(r'(\d+)', listing.get("unit_info", ""))
-                if m:
-                    floor = int(m.group(1))
-
+            
+            # 從unit_info提取樓層 (v2.2 改進)
+            floor = _extract_floor_from_unit_info(listing.get("unit_info", ""))
+            
+            # 從listing數據估算環境 (v2.2 改進)
+            has_sea = listing.get("views", "").lower() in ["海景", "開揚景", "好景"]
+            has_mountain = listing.get("views", "").lower() in ["山景", "園景", "綠化"]
+            
+            # 根據坐向估算北水南山
+            facing = listing.get("facing", "")
+            north_water = has_sea and facing in ["子山午向", "癸山丁向", "丑山未向", "艮山坤向", "壬山丙向"]
+            south_mountain = has_mountain and facing in ["午山子向", "丁山癸向", "未山丑向", "坤山艮向", "丙山壬向"]
+            
             meta = RequestMeta(
                 eval_year=profile.eval_year,
                 user_gender=profile.user_gender,
@@ -111,8 +140,8 @@ def match_listings(request: MatchListingsRequest):
                 building_facing=listing["facing"],
                 floor_number=floor,
                 goal=profile.goal,
-                north_has_water=False,
-                south_has_mountain=False,
+                north_has_water=north_water,
+                south_has_mountain=south_mountain,
                 detected_shas=[]
             )
             match_result = run_single_match(meta, district=listing.get("district", ""))
@@ -150,7 +179,7 @@ def match_listings(request: MatchListingsRequest):
         call_buy_profile = {
             "facing": list(set([r["facing"] for r in top3])),
             "district": list(set([r["district"] for r in top3])),
-            "age_range": f"{2026 - max([r.get('year_built', 2026) for r in top3])}-{2026 - min([r.get('year_built', 2026) for r in top3])}年"
+            "age_range": f"{2026 - max([int(r.get('year_built', 2026)) if r.get('year_built') and r.get('year_built').isdigit() else 2026 for r in top3])}-{2026 - min([int(r.get('year_built', 2026)) if r.get('year_built') and r.get('year_built').isdigit() else 2026 for r in top3])}年"
         }
 
     return {

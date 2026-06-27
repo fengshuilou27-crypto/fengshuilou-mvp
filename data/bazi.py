@@ -63,7 +63,54 @@ WUXING_RELATIONS = {
     }
 }
 
-# 時辰對照表（時辰 -> 地支）
+# 地支藏干 (本氣/中氣/餘氣)
+ZHI_HIDDEN_GAN = {
+    "子": ["癸"],           # 水
+    "丑": ["己", "癸", "辛"],  # 土水金
+    "寅": ["甲", "丙", "戊"],  # 木火土
+    "卯": ["乙"],           # 木
+    "辰": ["戊", "乙", "癸"],  # 土木水
+    "巳": ["丙", "庚", "戊"],  # 火金土
+    "午": ["丁", "己"],       # 火土
+    "未": ["己", "丁", "乙"],  # 土火木
+    "申": ["庚", "壬", "戊"],  # 金水土
+    "酉": ["辛"],           # 金
+    "戌": ["戊", "辛", "丁"],  # 土金火
+    "亥": ["壬", "甲"]       # 水木
+}
+
+# 月令旺衰表 (月支 -> 各五行狀態)
+# 旺: 當令, 相: 次旺, 休: 休息, 囚: 囚禁, 死: 最弱
+MONTH_WANG_SHUAI = {
+    "寅": {"木": "旺", "火": "相", "水": "休", "金": "囚", "土": "死"},
+    "卯": {"木": "旺", "火": "相", "水": "休", "金": "囚", "土": "死"},
+    "辰": {"土": "旺", "金": "相", "火": "休", "木": "囚", "水": "死"},
+    "巳": {"火": "旺", "土": "相", "木": "休", "水": "囚", "金": "死"},
+    "午": {"火": "旺", "土": "相", "木": "休", "水": "囚", "金": "死"},
+    "未": {"土": "旺", "金": "相", "火": "休", "木": "囚", "水": "死"},
+    "申": {"金": "旺", "水": "相", "土": "休", "火": "囚", "木": "死"},
+    "酉": {"金": "旺", "水": "相", "土": "休", "火": "囚", "木": "死"},
+    "戌": {"土": "旺", "金": "相", "火": "休", "木": "囚", "水": "死"},
+    "亥": {"水": "旺", "木": "相", "金": "休", "土": "囚", "火": "死"},
+    "子": {"水": "旺", "木": "相", "金": "休", "土": "囚", "火": "死"},
+    "丑": {"土": "旺", "金": "相", "火": "休", "木": "囚", "水": "死"}
+}
+
+# 旺衰狀態分數 (用於量化計算)
+WANG_SHUAI_SCORE = {
+    "旺": 5, "相": 3, "休": 1, "囚": -1, "死": -3
+}
+
+# 五行生扶關係 (用於喜用神計算)
+# 生我者 = 印星, 我生者 = 食傷, 克我者 = 官殺, 我克者 = 財星, 同我者 = 比劫
+WUXING_SHEN_FU = {
+    "生我": {"水": "金", "木": "水", "火": "木", "土": "火", "金": "土"},  # 印星
+    "我生": {"水": "木", "木": "火", "火": "土", "土": "金", "金": "水"},  # 食傷
+    "克我": {"水": "土", "木": "金", "火": "水", "土": "木", "金": "火"},  # 官殺
+    "我克": {"水": "火", "木": "土", "火": "金", "土": "水", "金": "木"},  # 財星
+    "同我": {"水": "水", "木": "木", "火": "火", "土": "土", "金": "金"}   # 比劫
+}
+
 TIME_TO_ZHI = {
     (0, 1): "子",   # 23:00-01:00
     (1, 3): "丑",   # 01:00-03:00
@@ -223,6 +270,169 @@ def get_hour_ganzhi(day_gan: str, hour_zhi: str):
     gan_idx = (base_gan_idx + zhi_idx) % 10
     
     return GAN_LIST[gan_idx], hour_zhi
+
+
+def calculate_wang_shuai(bazi_result: dict):
+    """
+    計算日主旺衰和喜用神
+    
+    Args:
+        bazi_result: calculate_bazi 返回的四柱結果
+    
+    Returns:
+        dict: {
+            'strength': '旺'/'中和'/'弱',
+            'strength_score': 分數 (-10 到 10),
+            'yong_shen': 喜用神 (五行),
+            'ji_shen': 忌神 (五行),
+            'wang_shuai_details': 詳細分析
+        }
+    """
+    if not bazi_result:
+        return None
+    
+    day_master = bazi_result["day_master"]["wuxing"]
+    day_gan = bazi_result["day_pillar"]["gan"]
+    day_zhi = bazi_result["day_pillar"]["zhi"]
+    month_zhi = bazi_result["month_pillar"]["zhi"]
+    month_gan = bazi_result["month_pillar"]["gan"]
+    year_zhi = bazi_result["year_pillar"]["zhi"]
+    year_gan = bazi_result["year_pillar"]["gan"]
+    hour_zhi = bazi_result["hour_pillar"]["zhi"]
+    hour_gan = bazi_result["hour_pillar"]["gan"]
+    
+    # 1. 月令判斷 (最重要，佔40%)
+    month_status = MONTH_WANG_SHUAI.get(month_zhi, {}).get(day_master, "平")
+    month_score = WANG_SHUAI_SCORE.get(month_status, 0) * 2  # 月令權重加倍
+    
+    # 2. 通根判斷 (地支藏干有無日主同類) (佔30%)
+    root_score = 0
+    root_details = []
+    
+    # 檢查日支藏干
+    day_zhi_hidden = ZHI_HIDDEN_GAN.get(day_zhi, [])
+    for g in day_zhi_hidden:
+        if GAN_WUXING.get(g) == day_master:
+            root_score += 3
+            root_details.append(f"日支{day_zhi}藏{g}({day_master})")
+    
+    # 檢查月支藏干
+    month_zhi_hidden = ZHI_HIDDEN_GAN.get(month_zhi, [])
+    for g in month_zhi_hidden:
+        if GAN_WUXING.get(g) == day_master:
+            root_score += 2
+            root_details.append(f"月支{month_zhi}藏{g}({day_master})")
+    
+    # 檢查年支藏干
+    year_zhi_hidden = ZHI_HIDDEN_GAN.get(year_zhi, [])
+    for g in year_zhi_hidden:
+        if GAN_WUXING.get(g) == day_master:
+            root_score += 1
+            root_details.append(f"年支{year_zhi}藏{g}({day_master})")
+    
+    # 檢查時支藏干
+    if hour_zhi != "?":
+        hour_zhi_hidden = ZHI_HIDDEN_GAN.get(hour_zhi, [])
+        for g in hour_zhi_hidden:
+            if GAN_WUXING.get(g) == day_master:
+                root_score += 1
+                root_details.append(f"時支{hour_zhi}藏{g}({day_master})")
+    
+    # 3. 天干生扶判斷 (佔30%)
+    support_score = 0
+    support_details = []
+    
+    # 印星 (生我者)
+    yin_shen = WUXING_SHEN_FU["生我"].get(day_master, "")
+    # 比劫 (同我者)
+    bi_jie = WUXING_SHEN_FU["同我"].get(day_master, "")
+    
+    all_gans = [year_gan, month_gan, hour_gan]
+    for gan in all_gans:
+        if gan == "?":
+            continue
+        gan_wx = GAN_WUXING.get(gan, "")
+        if gan_wx == yin_shen:
+            support_score += 2
+            support_details.append(f"{gan}({gan_wx})生扶日主")
+        elif gan_wx == bi_jie:
+            support_score += 1.5
+            support_details.append(f"{gan}({gan_wx})比劫幫身")
+        elif gan_wx == WUXING_SHEN_FU["克我"].get(day_master, ""):
+            support_score -= 2
+            support_details.append(f"{gan}({gan_wx})克制日主")
+        elif gan_wx == WUXING_SHEN_FU["我克"].get(day_master, ""):
+            support_score -= 1
+            support_details.append(f"{gan}({gan_wx})耗泄日主")
+    
+    # 計算總分
+    total_score = month_score + root_score + support_score
+    
+    # 判定旺衰
+    if total_score >= 5:
+        strength = "旺"
+    elif total_score <= -5:
+        strength = "弱"
+    else:
+        strength = "中和"
+    
+    # 計算喜用神
+    if strength == "旺":
+        yong_shen = WUXING_SHEN_FU["克我"].get(day_master, "")  # 官殺
+        if not yong_shen:
+            yong_shen = WUXING_SHEN_FU["我生"].get(day_master, "")  # 食傷
+        ji_shen = WUXING_SHEN_FU["同我"].get(day_master, "")  # 比劫
+    elif strength == "弱":
+        yong_shen = WUXING_SHEN_FU["生我"].get(day_master, "")  # 印星
+        if not yong_shen:
+            yong_shen = WUXING_SHEN_FU["同我"].get(day_master, "")  # 比劫
+        ji_shen = WUXING_SHEN_FU["克我"].get(day_master, "")  # 官殺
+    else:  # 中和
+        yong_shen = WUXING_SHEN_FU["生我"].get(day_master, "")
+        ji_shen = WUXING_SHEN_FU["克我"].get(day_master, "")
+    
+    return {
+        "strength": strength,
+        "strength_score": round(total_score, 2),
+        "yong_shen": yong_shen,
+        "ji_shen": ji_shen,
+        "month_status": month_status,
+        "month_score": month_score,
+        "root_score": root_score,
+        "root_details": root_details,
+        "support_score": support_score,
+        "support_details": support_details,
+        "yin_shen": yin_shen,
+        "bi_jie": bi_jie,
+    }
+
+
+def get_yong_shen_floor_match(yong_shen: str, floor_wuxing: str) -> dict:
+    """
+    根據喜用神判斷樓層匹配度
+    """
+    if not yong_shen or not floor_wuxing or floor_wuxing == "未知":
+        return {"score": 10, "relation": "未知", "desc": "無法判斷"}
+    
+    if floor_wuxing == yong_shen:
+        return {"score": 20, "relation": "喜用神", "desc": f"樓層屬{floor_wuxing}，為喜用神，大吉"}
+    
+    if WUXING_RELATIONS["生"].get(floor_wuxing) == yong_shen:
+        return {"score": 16, "relation": "生扶", "desc": f"樓層屬{floor_wuxing}，生扶喜用神{yong_shen}，吉"}
+    
+    if WUXING_RELATIONS["克"].get(floor_wuxing) == yong_shen:
+        return {"score": 4, "relation": "克制", "desc": f"樓層屬{floor_wuxing}，克制喜用神{yong_shen}，凶"}
+    
+    if WUXING_RELATIONS["生"].get(yong_shen) == floor_wuxing:
+        return {"score": 8, "relation": "泄氣", "desc": f"樓層屬{floor_wuxing}，喜用神{yong_shen}生之，泄氣"}
+    
+    if WUXING_RELATIONS["克"].get(yong_shen) == floor_wuxing:
+        return {"score": 12, "relation": "耗財", "desc": f"樓層屬{floor_wuxing}，喜用神{yong_shen}克之，耗財"}
+    
+    if floor_wuxing == yong_shen:
+        return {"score": 14, "relation": "比劫", "desc": f"樓層屬{floor_wuxing}，與喜用神同，比劫"}
+    
+    return {"score": 10, "relation": "未知", "desc": "無法判斷"}
 
 
 def calculate_bazi(birth_date: str, birth_time: str = None):

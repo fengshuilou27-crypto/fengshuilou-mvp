@@ -62,6 +62,7 @@ def run_single_match(meta: RequestMeta, district: str = None):
     # 3. 零正神
     zero_main_god_result = analyze_zero_main_god(
         building_year=meta.building_year,
+        building_facing=meta.building_facing,
         north_has_water=meta.north_has_water,
         south_has_mountain=meta.south_has_mountain
     )
