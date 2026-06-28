@@ -11,13 +11,17 @@ from routers.evaluate import RequestMeta, run_single_match
 router = APIRouter(prefix="/api")
 
 
+class GoalItem(BaseModel):
+    goal: str = Field(..., description="目標：財富/健康/事業/桃花/家庭和睦")
+    priority: int = Field(1, description="優先級：1=主, 2=次, 3=第三")
+
 class UserProfile(BaseModel):
     eval_year: int = Field(default=2026, description="評估年份")
     user_gender: str = Field(..., description="性別：男/女")
     birth_date: str = Field(..., description="出生日期 YYYY-MM-DD")
     birth_time: Optional[str] = Field(None, description="出生時間 HH:MM")
     user_job: Optional[str] = Field(None, description="職業")
-    goal: str = Field(..., description="目標：財富/健康/事業/桃花/家庭和睦")
+    goals: List[GoalItem] = Field(..., description="目標列表，最多3個")
     household_weight_mode: Optional[str] = Field("balanced", description="家庭權重模式")
 
 
@@ -117,7 +121,7 @@ def match_estates(request: MatchEstatesRequest):
                 building_year=int(estate.get("building_year", 2000)) if estate.get("building_year") else 2000,
                 building_facing=estate["facing"],
                 floor_number=floor,
-                goal=profile.goal,
+                goals=profile.goals,
                 north_has_water=north_water,
                 south_has_mountain=south_mountain,
                 detected_shas=[]
