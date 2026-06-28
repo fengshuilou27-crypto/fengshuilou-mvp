@@ -1,6 +1,6 @@
 from data.zero_main_god import ZERO_MAIN_GOD_TABLE, ZMG_SCORING
 from data.flying_star import get_yun, FLYING_STAR_TABLE, CURRENT_LING_STAR
-from data.flying_star import STAR_NUMBER_MAP as FS_STAR_NUMBER_MAP
+from data.goal import STAR_NUMBER_MAP as FS_STAR_NUMBER_MAP
 
 
 def analyze_zero_main_god(building_year: int, building_facing: str, north_has_water: bool, south_has_mountain: bool):
