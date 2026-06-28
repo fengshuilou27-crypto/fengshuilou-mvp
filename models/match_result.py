@@ -1,4 +1,5 @@
 from data.district_scores import get_district_score
+from data.flying_star import analyze_multi_yun
 
 def aggregate_match_result(
     flying_star_result: dict,
@@ -11,12 +12,13 @@ def aggregate_match_result(
     building_year: int = None,
     eval_year: int = 2026,
     property_features: dict = None,
-    floor_number: int = None
+    floor_number: int = None,
+    building_facing: str = None
 ):
     """
     聚合匹配結果
     加權計算總分，生成結構化報告
-    100分制：飛星30 / 八字20 / 八宅15 / 零正神10 / 目標15 / 區位10 / 物業特徵5 / 煞氣扣分
+    100分制：飛星30 / 八字20 / 八宅15 / 零正神10 / 目標15 / 區位10 / 物業特徵5 / 多運交叉±5 / 煞氣扣分
     """
     # 提取分數
     flying_score = flying_star_result.get("score", 0)
@@ -46,6 +48,21 @@ def aggregate_match_result(
         age = eval_year - building_year
         if age > 0:
             age_penalty = min(age * 0.15, 8.0)  # 每年扣0.15，最多扣8分
+    
+    # === 多運交叉分析 ===
+    multi_yun_adjust = 0.0
+    multi_yun_rationale = ""
+    multi_yun_needs_renovation = False
+    
+    if building_year and building_facing:
+        try:
+            multi_yun_result = analyze_multi_yun(building_year, eval_year, building_facing)
+            multi_yun_adjust = multi_yun_result.get("score_adjust", 0)
+            multi_yun_rationale = multi_yun_result.get("rationale", "")
+            multi_yun_needs_renovation = multi_yun_result.get("needs_renovation", False)
+        except Exception:
+            # 如果多運分析失敗，不影響其他計算
+            multi_yun_adjust = 0.0
     
     # === 物業特徵加分 ===
     property_bonus = 0.0
@@ -97,11 +114,11 @@ def aggregate_match_result(
     # 計算總分
     total_score = (
         flying_norm + zmg_norm + sha_norm + bazi_norm + bagua_norm + goal_norm + region_norm
-        - age_penalty + property_bonus + floor_tie_breaker
+        - age_penalty + multi_yun_adjust + property_bonus + floor_tie_breaker
     )
     
     # 理論最高分（100分制）
-    max_possible = 30 + 10 + 0 + 20 + 15 + 15 + 10 + 5  # = 105
+    max_possible = 30 + 10 + 0 + 20 + 15 + 15 + 10 + 5 + 5  # = 110（含多運交叉±5）
     
     # 標準化到100分制
     normalized_score = (total_score / max_possible) * 100
@@ -143,15 +160,19 @@ def aggregate_match_result(
     if sha_result.get("remedies"):
         all_remedies.extend(sha_result["remedies"])
     
-    # 運轉建議（雙周期版）
+    # 運轉建議（雙周期版 + 多運交叉分析）
     yun_conversion = None
     if yun_converted and flying_star_result.get("status") == "success":
         yun_conversion = (
             f"該單位為{flying_yun}樓，當前已進入{flying_current_yun}。"
             "元運已轉換，建議進行大裝修換天心以適應新運氣場。"
             "雙周期評分已綜合建造運盤（70%）與當運盤（30%）計算。"
-            "（僅供參考，建議諮詢專業師傅確認）"
         )
+        if multi_yun_rationale:
+            yun_conversion += f"\n多運交叉分析：{multi_yun_rationale}"
+        if multi_yun_needs_renovation:
+            yun_conversion += "\n⚠️ 建議立即進行大裝修換天心，否則元運已過，風水效力大減。"
+        yun_conversion += "（僅供參考，建議諮詢專業師傅確認）"
     elif flying_yun == "八運" and flying_star_result.get("status") == "success":
         yun_conversion = "該單位為八運樓，建議在2024年後進行大裝修換天心，以適應九運氣場。（僅供參考，建議諮詢專業師傅確認）"
     
@@ -219,6 +240,7 @@ def aggregate_match_result(
             "八宅": round(bagua_norm, 1),
             "目標": round(goal_norm, 1),
             "物業特徵": round(property_bonus, 1),
+            "多運交叉": round(multi_yun_adjust, 1),
             "樓層微調": round(floor_tie_breaker, 2),
             "樓齡懲罰": round(-age_penalty, 1)
         },
@@ -236,5 +258,5 @@ def aggregate_match_result(
         "ai_rationale": ai_rationale,
         "recommended_remedies": all_remedies,
         "yun_conversion_advice": yun_conversion,
-        "disclaimer": "本報告為v2.2優化版計算結果，基於三六風水網專業知識庫，飛星表已擴展至24山向，加入旺衰分析與喜用神計算，九宮吉凶方位分析。僅供參考，具體入住/投資等重大決策建議諮詢專業風水師傅進行實地勘察。"
+        "disclaimer": "本報告為v2.3優化版計算結果，基於三六風水網專業知識庫，飛星表已擴展至24山向，加入旺衰分析與喜用神計算，九宮吉凶方位分析，多運交叉分析（元運轉換評估），飛星盤自動推導刑煞。僅供參考，具體入住/投資等重大決策建議諮詢專業風水師傅進行實地勘察。"
     }

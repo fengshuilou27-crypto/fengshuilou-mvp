@@ -688,3 +688,283 @@ FLYING_STAR_COMBO_INAUSPICIOUS = {
     "76": "七六交劍，官非手術",
     "67": "六七交劍，刑傷破財",
 }
+
+# ============================================================
+# 多運交叉分析（元運轉換評估）
+# ============================================================
+PAN_TYPE_RANK = {
+    "到山到向": 4,   # 旺丁旺財（最佳）
+    "雙星會向": 3,   # 旺財不旺丁（次佳）
+    "其他": 2,       # 普通（中等）
+    "上山下水": 1,   # 損丁破財（最差）
+}
+
+PAN_TYPE_CHINESE = {
+    "到山到向": "旺丁旺財",
+    "雙星會向": "旺財不旺丁",
+    "其他": "普通格局",
+    "上山下水": "損丁破財",
+}
+
+
+def get_flying_star_pan(yun: str, facing: str) -> dict:
+    """獲取指定運數與座向的飛星盤"""
+    yun_data = FLYING_STAR_TABLE.get(yun, {})
+    return yun_data.get(facing, {})
+
+
+def analyze_multi_yun(building_year: int, eval_year: int, facing: str) -> dict:
+    """
+    多運交叉分析：比較建造運盤與當前運盤的吉凶變化。
+    
+    玄空風水核心概念：
+    - 建造運決定先天格局（元運盤）
+    - 當前運決定後天運勢（運過則衰，運至則旺）
+    - 元運轉換時，原來旺的盤可能變衰，原來衰的盤可能因 Renovation 而轉旺
+    
+    Returns:
+        {
+            "build_yun": str,        # 建造運
+            "current_yun": str,      # 當前運
+            "build_pan_type": str,   # 建造運格局
+            "current_pan_type": str, # 當前運格局
+            "build_rank": int,       # 建造運吉凶等級
+            "current_rank": int,     # 當前運吉凶等級
+            "rank_diff": int,        # 等級差異
+            "score_adjust": float,   # 分數調整值
+            "rationale": str,        # 風水邏輯說明
+            "needs_renovation": bool, # 是否建議換天心/大裝修
+        }
+    """
+    build_yun = get_yun(building_year)
+    current_yun = get_yun(eval_year)
+    
+    build_pan = get_flying_star_pan(build_yun, facing)
+    current_pan = get_flying_star_pan(current_yun, facing)
+    
+    # 如果當前運沒有數據，回退到建造運
+    if not build_pan:
+        return {
+            "build_yun": build_yun,
+            "current_yun": current_yun,
+            "build_pan_type": "未知",
+            "current_pan_type": "未知",
+            "build_rank": 2,
+            "current_rank": 2,
+            "rank_diff": 0,
+            "score_adjust": 0.0,
+            "rationale": "飛星數據不足，無法進行多運交叉分析",
+            "needs_renovation": False,
+        }
+    
+    if not current_pan:
+        # 當前運無數據，僅根據建造運評估
+        build_pan_type = build_pan.get("pan_type", "其他")
+        build_rank = PAN_TYPE_RANK.get(build_pan_type, 2)
+        return {
+            "build_yun": build_yun,
+            "current_yun": current_yun,
+            "build_pan_type": build_pan_type,
+            "current_pan_type": "數據缺失",
+            "build_rank": build_rank,
+            "current_rank": 2,
+            "rank_diff": 0,
+            "score_adjust": 0.0,
+            "rationale": f"{build_yun}格局為{PAN_TYPE_CHINESE.get(build_pan_type, '普通')}，當前運數據暫缺",
+            "needs_renovation": False,
+        }
+    
+    build_pan_type = build_pan.get("pan_type", "其他")
+    current_pan_type = current_pan.get("pan_type", "其他")
+    build_rank = PAN_TYPE_RANK.get(build_pan_type, 2)
+    current_rank = PAN_TYPE_RANK.get(current_pan_type, 2)
+    rank_diff = current_rank - build_rank
+    
+    # 計算分數調整
+    score_adjust = 0.0
+    needs_renovation = False
+    rationale = ""
+    
+    if build_yun == current_yun:
+        # 建造運與當前運相同：先天格局與後天運勢一致，最佳狀態
+        if build_rank == 4:
+            score_adjust = 3.0
+            rationale = f"{build_yun}當運之樓，{PAN_TYPE_CHINESE[build_pan_type]}格局正值旺運，先天後天一致，運勢正盛"
+        elif build_rank == 3:
+            score_adjust = 2.0
+            rationale = f"{build_yun}當運之樓，{PAN_TYPE_CHINESE[build_pan_type]}格局，財運亨通"
+        elif build_rank == 2:
+            score_adjust = 0.0
+            rationale = f"{build_yun}當運之樓，{PAN_TYPE_CHINESE[build_pan_type]}格局，運勢平穩"
+        else:
+            score_adjust = -2.0
+            needs_renovation = True
+            rationale = f"{build_yun}當運之樓，雖然正值當運，但先天格局為{PAN_TYPE_CHINESE[build_pan_type]}，根基不佳，運過更衰"
+    else:
+        # 建造運與當前運不同：元運轉換
+        if rank_diff > 0:
+            # 當前運比建造運更吉：Renovation 後可轉運
+            if build_rank == 1 and current_rank == 4:
+                score_adjust = 5.0
+                needs_renovation = True
+                rationale = f"元運大翻身！{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}變為{PAN_TYPE_CHINESE[current_pan_type]}，大裝修換天心後丁財兩旺"
+            elif build_rank == 1 and current_rank == 3:
+                score_adjust = 3.5
+                needs_renovation = True
+                rationale = f"{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}變為{PAN_TYPE_CHINESE[current_pan_type]}，裝修後財運大進"
+            else:
+                score_adjust = rank_diff * 1.5
+                rationale = f"{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}轉為{PAN_TYPE_CHINESE[current_pan_type]}，運勢向好"
+        elif rank_diff < 0:
+            # 當前運比建造運更凶：元運已過，運勢衰退
+            if build_rank == 4 and current_rank == 1:
+                score_adjust = -5.0
+                needs_renovation = True
+                rationale = f"元運已過大凶！{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}變為{PAN_TYPE_CHINESE[current_pan_type]}，必須換天心大裝修，否則損丁破財"
+            elif build_rank == 4 and current_rank == 2:
+                score_adjust = -3.0
+                needs_renovation = True
+                rationale = f"{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}運退變為{PAN_TYPE_CHINESE[current_pan_type]}，建議大裝修換天心以延續旺運"
+            elif build_rank == 3 and current_rank == 1:
+                score_adjust = -4.0
+                needs_renovation = True
+                rationale = f"{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}急轉為{PAN_TYPE_CHINESE[current_pan_type]}，財運急退，需專業化解"
+            else:
+                score_adjust = rank_diff * 1.5
+                rationale = f"{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}運退變為{PAN_TYPE_CHINESE[current_pan_type]}，運勢下滑"
+        else:
+            # rank_diff == 0：吉凶等級相同，但格局可能不同
+            if build_pan_type == current_pan_type:
+                if build_rank == 4:
+                    score_adjust = 1.5
+                    rationale = f"{build_yun}與{current_yun}均為{PAN_TYPE_CHINESE[build_pan_type]}，元運轉換後格局穩定，運勢持續"
+                elif build_rank == 1:
+                    score_adjust = -1.5
+                    rationale = f"{build_yun}與{current_yun}均為{PAN_TYPE_CHINESE[build_pan_type]}，長期凶格，不適合購買"
+                else:
+                    score_adjust = 0.0
+                    rationale = f"{build_yun}與{current_yun}均為{PAN_TYPE_CHINESE[build_pan_type]}，格局平穩"
+            else:
+                score_adjust = 0.0
+                rationale = f"{build_yun}時為{PAN_TYPE_CHINESE[build_pan_type]}，{current_yun}變為{PAN_TYPE_CHINESE[current_pan_type]}，吉凶等級相同，運勢無明顯變化"
+    
+    return {
+        "build_yun": build_yun,
+        "current_yun": current_yun,
+        "build_pan_type": build_pan_type,
+        "current_pan_type": current_pan_type,
+        "build_rank": build_rank,
+        "current_rank": current_rank,
+        "rank_diff": rank_diff,
+        "score_adjust": score_adjust,
+        "rationale": rationale,
+        "needs_renovation": needs_renovation,
+    }
+
+
+def derive_sha_from_pan(pan: dict) -> list:
+    """
+    從飛星盤自動推導刑煞（SHA）。
+    
+    玄空風水中常見的飛星刑煞：
+    - 二五交加：二黑病符 + 五黃大煞，損財傷丁
+    - 五黃到門/到山/到向：五黃大煞臨重要方位
+    - 六七交劍：七赤金 + 六白金，金氣過旺，官非手術
+    - 九七回祿：九紫火 + 七赤金，火克金，回祿之災
+    - 三碧是非：三碧木星臨門/臨床，口舌是非
+    - 反吟/伏吟：山星與向星對宮相沖
+    
+    Returns:
+        list of dict: [{"sha_type": str, "severity": str, "description": str, "penalty": int}]
+    """
+    if not pan:
+        return []
+    
+    shas = []
+    mountain_stars = pan.get("mountain_stars", {})
+    facing_stars = pan.get("facing_stars", {})
+    
+    # 檢查所有方位的山星+向星組合
+    directions = ["north", "northeast", "east", "southeast", 
+                  "south", "southwest", "west", "northwest", "center"]
+    
+    for direction in directions:
+        m_star = mountain_stars.get(direction)
+        f_star = facing_stars.get(direction)
+        if m_star is None or f_star is None:
+            continue
+        
+        combo = sorted([m_star, f_star])
+        combo_str = f"{combo[0]}{combo[1]}"
+        
+        # 二五交加
+        if combo_str == "25" or combo_str == "52":
+            severity = "重度" if direction in ["center", "south", "north"] else "中度"
+            shas.append({
+                "sha_type": "二五交加",
+                "severity": severity,
+                "description": f"{direction}二黑五黃交加，{FLYING_STAR_COMBO_INAUSPICIOUS.get('25', '損財傷丁')}",
+                "penalty": -15 if severity == "重度" else -10
+            })
+        
+        # 六七交劍
+        if combo_str == "67" or combo_str == "76":
+            severity = "中度"
+            shas.append({
+                "sha_type": "六七交劍",
+                "severity": severity,
+                "description": f"{direction}六白七赤交劍，{FLYING_STAR_COMBO_INAUSPICIOUS.get('67', '刑傷破財')}",
+                "penalty": -8
+            })
+        
+        # 五黃到重要方位（大門/中宮/坐山/向首）
+        if 5 in [m_star, f_star]:
+            if direction == "center":
+                shas.append({
+                    "sha_type": "五黃到中宮",
+                    "severity": "重度",
+                    "description": "五黃大煞入中宮，全宅受煞，災禍連連",
+                    "penalty": -12
+                })
+            elif direction in ["south", "north"]:
+                # 向首/坐山
+                shas.append({
+                    "sha_type": "五黃到山向",
+                    "severity": "重度",
+                    "description": f"五黃臨{direction}，坐山或向首受煞，損丁破財",
+                    "penalty": -10
+                })
+        
+        # 三碧到重要方位（臥室/大門）
+        if 3 in [m_star, f_star] and direction in ["center", "south", "north"]:
+            shas.append({
+                "sha_type": "三碧是非",
+                "severity": "輕度",
+                "description": f"{direction}三碧木星臨，口舌是非、官非訴訟",
+                "penalty": -4
+            })
+    
+    # 檢查反吟（山星與向星對宮相沖）
+    # 簡化檢查：如果山星和向星在對宮位置出現相同數字
+    # 這裡使用簡化邏輯：如果同一方位山星與向星相同，視為伏吟
+    for direction in directions:
+        m_star = mountain_stars.get(direction)
+        f_star = facing_stars.get(direction)
+        if m_star == f_star and m_star in [2, 5, 7]:
+            shas.append({
+                "sha_type": "伏吟",
+                "severity": "中度",
+                "description": f"{direction}山星向星同為{m_star}，伏吟不動，氣滯運衰",
+                "penalty": -6
+            })
+    
+    # 去重
+    seen = set()
+    unique_shas = []
+    for s in shas:
+        key = (s["sha_type"], s.get("description", ""))
+        if key not in seen:
+            seen.add(key)
+            unique_shas.append(s)
+    
+    return unique_shas

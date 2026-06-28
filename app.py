@@ -30,7 +30,7 @@ from data.fxti_relationship import analyze_relationship
 
 app = FastAPI(
     title="AI風水樓盤匹配系統",
-    description="MVP v2.2 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算",
+    description="MVP v2.3 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算 + 多運交叉分析 + 自動SHA推導",
     version="2.2.0"
 )
 
@@ -308,8 +308,11 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         south_has_mountain=south_has_mountain
     )
 
-    # 3. 煞氣
-    sha_result = analyze_sha(detected_shas=detected_shas or [])
+    # 3. 煞氣（含飛星盤自動推導刑煞）
+    sha_result = analyze_sha(
+        detected_shas=detected_shas or [],
+        flying_star_pan=flying_star_result if flying_star_result.get("status") == "success" else None
+    )
 
     # 4. 八字（含職業）
     bazi_result = analyze_bazi(
@@ -345,7 +348,8 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         building_year=building_year,
         eval_year=eval_year,
         property_features=property_features,
-        floor_number=floor_number
+        floor_number=floor_number,
+        building_facing=building_facing
     )
 
     # 8. 填充樓盤信息

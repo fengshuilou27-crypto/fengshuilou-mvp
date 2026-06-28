@@ -1,17 +1,31 @@
 from data.sha import SHA_TABLE, SEVERITY_MAP
+from data.flying_star import derive_sha_from_pan
 
 
-def analyze_sha(detected_shas: list):
+def analyze_sha(detected_shas: list, flying_star_pan: dict = None):
     """
     煞氣分析模組
-    根據輸入的煞氣列表，查表返回扣分和化解建議
+    根據輸入的煞氣列表，查表返回扣分和化解建議。
+    如果提供 flying_star_pan，則自動從飛星盤推導刑煞並合併。
     """
-    if not detected_shas:
+    # 從飛星盤自動推導刑煞（如果提供）
+    derived_shas = []
+    if flying_star_pan:
+        derived_shas = derive_sha_from_pan(flying_star_pan)
+    
+    # 合併外部輸入與自動推導的煞氣
+    all_shas = detected_shas or []
+    for ds in derived_shas:
+        # 將自動推導的煞氣轉換為與外部輸入一致的格式
+        all_shas.append(f"{ds['sha_type']}({ds['severity']})")
+    
+    if not all_shas:
         return {
             "status": "success",
             "score": 0,
             "max_score": 0,
             "shas_found": [],
+            "derived_shas": derived_shas,
             "remedies": [],
             "data_source": "互联网公开资料碎片",
             "confidence": 0.5,
@@ -22,7 +36,7 @@ def analyze_sha(detected_shas: list):
     sha_details = []
     remedies = []
     
-    for sha_name in detected_shas:
+    for sha_name in all_shas:
         # 解析煞氣名稱和嚴重程度
         # 格式可能是 "天斬煞(輕度)" 或 "天斬煞"
         severity = "輕度"
@@ -79,10 +93,11 @@ def analyze_sha(detected_shas: list):
         "score": total_penalty,
         "max_score": 0,
         "shas_found": sha_details,
+        "derived_shas": derived_shas,
         "remedies": remedies,
         "data_source": "互联网公开资料碎片",
         "confidence": 0.55,
-        "rationale": f"檢測到{len(sha_details)}項煞氣，總扣分{abs(total_penalty)}分。" +
+        "rationale": f"檢測到{len(sha_details)}項煞氣（其中自動推導{len(derived_shas)}項），總扣分{abs(total_penalty)}分。" +
                      ("建議按照化解方案處理。" if remedies else "")
                      + " 基於公開資料查表，僅供參考，具體判斷建議諮詢專業師傅。"
     }
