@@ -251,70 +251,324 @@ def analyze_water_feng_shui(lat: float, lng: float, facing: str) -> dict:
 
 # ===== 地形風水分析（Phase 1 骨架）=====
 
+def _load_terrain_model() -> dict:
+    """加載簡化地形模型"""
+    data = _load_json_data("terrain_model.json")
+    return data
+
+
+# ===== DEM 地形分析 =====
+
+def _estimate_elevation(lat: float, lng: float) -> float:
+    """
+    基於簡化地形模型估算任意坐標的高程
+    使用已知山峰 + 指數距離衰減模型
+    MVP 階段：簡化模型，後續可替換為真實 SRTM DEM 數據
+    """
+    terrain = _load_terrain_model()
+    peaks = terrain.get("peaks", [])
+    zones = terrain.get("terrain_zones", [])
+    
+    # 先找到匹配的 terrain_zone
+    base_elev = 20.0
+    for zone in zones:
+        if (zone["lat_min"] <= lat <= zone["lat_max"] and 
+            zone["lng_min"] <= lng <= zone["lng_max"]):
+            base_elev = zone["base_elevation"]
+            break
+    
+    # 基於最近山峰的高程貢獻（指數衰減）
+    peak_contribution = 0.0
+    for peak in peaks:
+        if peak.get("type") == "water":
+            continue
+        dist = haversine_distance(lat, lng, peak["lat"], peak["lng"])
+        if dist < 50:  # 50m 內視為在山頂
+            return float(peak["elevation"])
+        # 指數衰減：山峰影響半徑約 2.5km
+        # contribution = peak_elev * exp(-dist / 2500) * 0.15
+        contribution = peak["elevation"] * math.exp(-dist / 2500.0) * 0.15
+        peak_contribution += contribution
+    
+    # 組合高程（基線 + 山峰貢獻）
+    estimated = base_elev + peak_contribution
+    return max(0, min(1000, estimated))
+
+
+def _calculate_slope_around(lat: float, lng: float, radius: int = 200) -> float:
+    """
+    計算某點周邊 radius 米內的平均坡度（度）
+    用於評估地形的平坦/陡峭程度
+    """
+    # 在 4 個方向採樣
+    offsets = [
+        (0, radius),    # 北
+        (radius, 0),    # 東
+        (0, -radius),   # 南
+        (-radius, 0),   # 西
+    ]
+    
+    center_elev = _estimate_elevation(lat, lng)
+    slopes = []
+    
+    # 將米轉換為度（近似：1度 ≈ 111km）
+    lat_offset_m = radius / 111000.0
+    lng_offset_m = radius / (111000.0 * math.cos(math.radians(lat)))
+    
+    directions = [
+        (lat + lat_offset_m, lng),      # 北
+        (lat, lng + lng_offset_m),      # 東
+        (lat - lat_offset_m, lng),      # 南
+        (lat, lng - lng_offset_m),      # 西
+    ]
+    
+    for dlat, dlng in directions:
+        elev = _estimate_elevation(dlat, dlng)
+        delta_elev = abs(elev - center_elev)
+        # 坡度 = arctan(高差 / 水平距離)
+        slope = math.degrees(math.atan(delta_elev / radius))
+        slopes.append(slope)
+    
+    return sum(slopes) / len(slopes) if slopes else 0.0
+
+
+def _analyze_backing_mountain(lat: float, lng: float, facing: str) -> dict:
+    """
+    分析「靠山」
+    根據坐向，確定「後方」（坐山）方向，計算後方區域的高程特徵
+    """
+    # 坐向 → 坐山方向（180° 差）
+    # 子山午向 = 坐子向午 = 後方在北（0°），前方在南（180°）
+    shanxiang_degrees = {
+        "子": 0, "癸": 15, "丑": 30, "艮": 45, "寅": 60, "甲": 75,
+        "卯": 90, "乙": 105, "辰": 120, "巽": 135, "巳": 150, "丙": 165,
+        "午": 180, "丁": 195, "未": 210, "坤": 225, "申": 240, "庚": 255,
+        "酉": 270, "辛": 285, "戌": 300, "乾": 315, "亥": 330, "壬": 345,
+    }
+    
+    # 解析坐向：如 "子山午向" → 坐山 = 子
+    mountain = "子"  # 默認
+    if "山" in facing:
+        mountain = facing.split("山")[0].strip()
+    
+    mountain_deg = shanxiang_degrees.get(mountain, 0)
+    
+    # 在後方（坐山方向）採樣 3 個點（200m, 500m, 1000m）
+    backing_elevations = []
+    backing_distances = [200, 500, 1000]
+    
+    for dist in backing_distances:
+        # 計算後方坐標
+        lat_offset = (dist / 111000.0) * math.cos(math.radians(mountain_deg))
+        lng_offset = (dist / (111000.0 * math.cos(math.radians(lat)))) * math.sin(math.radians(mountain_deg))
+        
+        sample_lat = lat + lat_offset
+        sample_lng = lng + lng_offset
+        
+        elev = _estimate_elevation(sample_lat, sample_lng)
+        backing_elevations.append(elev)
+    
+    # 靠山評分
+    current_elev = _estimate_elevation(lat, lng)
+    avg_backing_elev = sum(backing_elevations) / len(backing_elevations)
+    elev_diff = avg_backing_elev - current_elev
+    
+    if elev_diff >= 100:
+        backing_score = 10.0
+        backing_desc = "有強力靠山，龍脈有力"
+    elif elev_diff >= 50:
+        backing_score = 8.0
+        backing_desc = "有良好靠山，氣場穩定"
+    elif elev_diff >= 20:
+        backing_score = 6.0
+        backing_desc = "有小山為靠，略有支撐"
+    elif elev_diff >= 0:
+        backing_score = 4.0
+        backing_desc = "靠山較弱，地勢平緩"
+    else:
+        backing_score = 2.0
+        backing_desc = "無靠山，後方低窪（背後空虛）"
+    
+    return {
+        "score": backing_score,
+        "description": backing_desc,
+        "elevation_diff": round(elev_diff, 1),
+        "backing_elevations": [round(e, 1) for e in backing_elevations],
+        "current_elevation": round(current_elev, 1)
+    }
+
+
+def _analyze_ming_tang(lat: float, lng: float, facing: str) -> dict:
+    """
+    分析「明堂」
+    根據坐向，確定「前方」（向首）方向，計算前方區域的開闊度
+    """
+    # 解析坐向：如 "子山午向" → 向首 = 午
+    facing_dir = "午"  # 默認
+    if "向" in facing:
+        facing_dir = facing.split("向")[1].strip() if "向" in facing else "午"
+    
+    shanxiang_degrees = {
+        "子": 0, "癸": 15, "丑": 30, "艮": 45, "寅": 60, "甲": 75,
+        "卯": 90, "乙": 105, "辰": 120, "巽": 135, "巳": 150, "丙": 165,
+        "午": 180, "丁": 195, "未": 210, "坤": 225, "申": 240, "庚": 255,
+        "酉": 270, "辛": 285, "戌": 300, "乾": 315, "亥": 330, "壬": 345,
+    }
+    
+    facing_deg = shanxiang_degrees.get(facing_dir, 180)
+    
+    # 在前方採樣 3 個點
+    front_elevations = []
+    front_distances = [200, 500, 1000]
+    
+    for dist in front_distances:
+        lat_offset = (dist / 111000.0) * math.cos(math.radians(facing_deg))
+        lng_offset = (dist / (111000.0 * math.cos(math.radians(lat)))) * math.sin(math.radians(facing_deg))
+        
+        sample_lat = lat + lat_offset
+        sample_lng = lng + lng_offset
+        
+        elev = _estimate_elevation(sample_lat, sample_lng)
+        front_elevations.append(elev)
+    
+    # 明堂評分：前方低且平坦 = 開闊
+    current_elev = _estimate_elevation(lat, lng)
+    avg_front_elev = sum(front_elevations) / len(front_elevations)
+    
+    # 前方坡度
+    front_slope = _calculate_slope_around(lat, lng, 500)
+    
+    # 如果前方有明顯高山，阻擋視線
+    if max(front_elevations) - current_elev > 100:
+        ming_tang_score = 2.0
+        ming_tang_desc = "前方有高山阻擋，明堂閉塞"
+    elif max(front_elevations) - current_elev > 50:
+        ming_tang_score = 4.0
+        ming_tang_desc = "前方有丘陵，明堂略受限制"
+    elif front_slope < 5:
+        ming_tang_score = 9.0
+        ming_tang_desc = "前方平坦開闊，明堂極佳"
+    elif front_slope < 10:
+        ming_tang_score = 7.0
+        ming_tang_desc = "前方微緩，明堂尚可"
+    else:
+        ming_tang_score = 5.0
+        ming_tang_desc = "前方有坡，明堂一般"
+    
+    return {
+        "score": ming_tang_score,
+        "description": ming_tang_desc,
+        "front_slope": round(front_slope, 1),
+        "front_elevations": [round(e, 1) for e in front_elevations]
+    }
+
+
+def _analyze_dragon_vein(lat: float, lng: float) -> dict:
+    """
+    分析「龍脈」
+    檢查屋苑是否位於主要山脈的延伸線上
+    """
+    terrain = _load_terrain_model()
+    peaks = terrain.get("peaks", [])
+    
+    # 找到最近的主要山峰
+    nearest_peak = None
+    min_dist = float('inf')
+    for peak in peaks:
+        if peak.get("type") != "peak":
+            continue
+        dist = haversine_distance(lat, lng, peak["lat"], peak["lng"])
+        if dist < min_dist:
+            min_dist = dist
+            nearest_peak = peak
+    
+    if not nearest_peak:
+        return {"score": 5.0, "description": "無法確定龍脈", "nearest_peak": None}
+    
+    # 龍脈評分：距離主要山峰越近，龍脈越強
+    if min_dist < 2000:
+        dragon_score = 10.0
+        desc = f"位於{nearest_peak['name']}龍脈近處，龍氣充沛"
+    elif min_dist < 5000:
+        dragon_score = 8.0
+        desc = f"承接{nearest_peak['name']}龍脈餘氣"
+    elif min_dist < 10000:
+        dragon_score = 6.0
+        desc = f"距離{nearest_peak['name']}龍脈較遠"
+    else:
+        dragon_score = 4.0
+        desc = f"遠離主要龍脈，氣場較弱"
+    
+    return {
+        "score": dragon_score,
+        "description": desc,
+        "nearest_peak": nearest_peak["name"],
+        "distance_m": int(min_dist),
+        "feng_shui_role": nearest_peak.get("feng_shui_role", "")
+    }
+
+
 def analyze_terrain_feng_shui(lat: float, lng: float, facing: str) -> dict:
     """
     地形風水分析（龍脈 / 靠山 / 明堂）
-    Phase 1: 基於香港宏觀地形的簡化分析
-    Phase 2: 接入 DEM 進行精確計算
+    Phase 3B: 基於簡化地形模型（DEM）進行分析
+    
+    後續可替換為真實 SRTM/ALOS DEM 數據
     """
-    # 香港宏觀地形：北高南低（九龍山脈），西高東低（大嶼山/港島）
-    # 簡化規則：
-    # - 新界北部（粉嶺/上水/元朗）：背靠山脈，有靠山
-    # - 九龍：背靠獅子山/飛鵝山，有靠山
-    # - 港島：背山面海，但山勢較陡
-    # - 離島：平地為主，靠山較弱
-
-    # 基於緯度/經度的簡化地形評估
-    terrain_score = 5.0  # 基礎分
-    backing = "一般"
-    ming_tang = "一般"
-
-    # 新界北（有靠山）
-    if lat > 22.45:
-        terrain_score = 8.0
-        backing = "九龍山脈為靠，山勢綿長"
-        ming_tang = "開闊，面向元朗平原"
-    # 九龍/沙田（獅子山為靠）
-    elif 22.35 < lat <= 22.45 and 114.15 < lng < 114.25:
-        terrain_score = 8.5
-        backing = "獅子山/飛鵝山為靠，龍脈有力"
-        ming_tang = "面向維港，明堂開闊"
-    # 港島（背山面海）
-    elif lng > 114.15 and 22.20 < lat < 22.30:
-        terrain_score = 7.5
-        backing = "太平山為靠，但山勢較陡"
-        ming_tang = "面對維港，明堂極佳"
-    # 西貢/將軍澳（依山傍海）
-    elif lng > 114.25 and 22.25 < lat < 22.35:
-        terrain_score = 7.0
-        backing = "西貢山脈為靠"
-        ming_tang = "面向吐露港/牛尾海"
-    # 屯門/元朗（平原）
-    elif lng < 114.10:
-        terrain_score = 6.0
-        backing = "青山為靠，但距離較遠"
-        ming_tang = "面向后海灣/珠江口"
-    # 東涌/大嶼山
-    elif lat < 22.30 and lng < 114.05:
-        terrain_score = 5.5
-        backing = "大嶼山為靠，但地勢平緩"
-        ming_tang = "面向機場/海景"
-
-    # 根據朝向微調
+    # DEM 估算高程
+    current_elevation = _estimate_elevation(lat, lng)
+    
+    # 靠山分析
+    backing = _analyze_backing_mountain(lat, lng, facing)
+    
+    # 明堂分析
+    ming_tang = _analyze_ming_tang(lat, lng, facing)
+    
+    # 龍脈分析
+    dragon = _analyze_dragon_vein(lat, lng)
+    
+    # 綜合地形評分
+    # 靠山 40% + 明堂 35% + 龍脈 25%
+    terrain_score = (
+        backing["score"] * 0.40 +
+        ming_tang["score"] * 0.35 +
+        dragon["score"] * 0.25
+    )
+    
+    # 根據坐向微調：坐北向南為理想格局
     if facing in ["子山午向", "壬山丙向", "癸山丁向"]:
-        # 坐北向南，符合香港「背山面海」理想格局
-        terrain_score += 1.5
-
+        terrain_score += 1.0
+    
     terrain_score = min(10, max(0, terrain_score))
-
+    
     return {
         "status": "success",
         "terrain_score": round(terrain_score, 1),  # 0-10 分
-        "backing_mountain": backing,
-        "ming_tang": ming_tang,
-        "dragon_vein": "Phase 1 簡化評估，Phase 2 接入 DEM 後可精確計算龍脈",
-        "confidence": 0.45,  # Phase 1 精度較低
-        "rationale": f"{backing}，{ming_tang}，地形綜合得分{terrain_score}分"
+        "backing_mountain": {
+            "score": backing["score"],
+            "description": backing["description"],
+            "elevation_diff": backing["elevation_diff"],
+            "current_elevation": backing["current_elevation"]
+        },
+        "ming_tang": {
+            "score": ming_tang["score"],
+            "description": ming_tang["description"],
+            "front_slope": ming_tang["front_slope"]
+        },
+        "dragon_vein": {
+            "score": dragon["score"],
+            "description": dragon["description"],
+            "nearest_peak": dragon["nearest_peak"],
+            "distance_m": dragon["distance_m"]
+        },
+        "elevation": round(current_elevation, 1),
+        "confidence": 0.60,  # 簡化模型精度
+        "rationale": (
+            f"靠山{backing['description']}({backing['score']:.0f}分) + "
+            f"明堂{ming_tang['description']}({ming_tang['score']:.0f}分) + "
+            f"龍脈{dragon['description']}({dragon['score']:.0f}分) → "
+            f"地形綜合{terrain_score:.1f}分"
+        )
     }
 
 

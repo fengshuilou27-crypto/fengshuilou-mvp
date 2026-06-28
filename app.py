@@ -23,6 +23,8 @@ from models.bagua_matching import analyze_bagua, analyze_bagua_dual
 from models.goal_matching import analyze_goal
 from models.match_result import aggregate_match_result
 
+from routers.geo import router as geo_router
+
 from data.fxti_bazi import get_innate_wuxing
 from data.fxti_questionnaire import get_questionnaire, calculate_acquired_wuxing
 from data.fxti_profile import determine_profile, synthesize_result, ALL_PROFILES
@@ -43,6 +45,8 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+app.include_router(geo_router)
 
 
 class GoalItem(BaseModel):

@@ -1,0 +1,43 @@
+{
+  "_metadata": {
+    "version": "1.0",
+    "source": "香港主要山峰已知高程 + 宏觀地形估算",
+    "note": "簡化地形模型。MVP 階段用於演示 DEM 分析功能。後續可替換為真實 SRTM/ALOS DEM 數據。",
+    "coordinate_system": "WGS84",
+    "unit": "米"
+  },
+  "peaks": [
+    {"name": "太平山", "lat": 22.2710, "lng": 114.1450, "elevation": 552, "type": "peak", "feng_shui_role": "港島主山"},
+    {"name": "聶高信山", "lat": 22.2600, "lng": 114.1500, "elevation": 430, "type": "peak", "feng_shui_role": "港島次山"},
+    {"name": "柏架山", "lat": 22.2650, "lng": 114.2100, "elevation": 532, "type": "peak", "feng_shui_role": "港島東山"},
+    {"name": "獅子山", "lat": 22.3500, "lng": 114.1850, "elevation": 495, "type": "peak", "feng_shui_role": "九龍主山"},
+    {"name": "飛鵝山", "lat": 22.3350, "lng": 114.2300, "elevation": 603, "type": "peak", "feng_shui_role": "九龍東山"},
+    {"name": "大帽山", "lat": 22.4100, "lng": 114.1250, "elevation": 957, "type": "peak", "feng_shui_role": "新界主山/香港最高峰"},
+    {"name": "鳳凰山", "lat": 22.2500, "lng": 113.9200, "elevation": 934, "type": "peak", "feng_shui_role": "大嶼山主山"},
+    {"name": "大東山", "lat": 22.2600, "lng": 113.9800, "elevation": 869, "type": "peak", "feng_shui_role": "大嶼山次山"},
+    {"name": "青山", "lat": 22.3850, "lng": 113.9600, "elevation": 583, "type": "peak", "feng_shui_role": "屯門主山"},
+    {"name": "九逕山", "lat": 22.3950, "lng": 114.0200, "elevation": 507, "type": "peak", "feng_shui_role": "屯門次山"},
+    {"name": "雞公嶺", "lat": 22.4800, "lng": 114.0800, "elevation": 585, "type": "peak", "feng_shui_role": "新界北山"},
+    {"name": "大刀屻", "lat": 22.4350, "lng": 114.1150, "elevation": 566, "type": "peak", "feng_shui_role": "新界中山"},
+    {"name": "馬鞍山", "lat": 22.3950, "lng": 114.2450, "elevation": 702, "type": "peak", "feng_shui_role": "沙田東山"},
+    {"name": "西貢萬宜水庫東壩", "lat": 22.3700, "lng": 114.3750, "elevation": 50, "type": "coast", "feng_shui_role": "東海入口"},
+    {"name": "吐露港", "lat": 22.4200, "lng": 114.2100, "elevation": 0, "type": "water", "feng_shui_role": "新界東海"},
+    {"name": "后海灣", "lat": 22.5000, "lng": 114.0300, "elevation": 0, "type": "water", "feng_shui_role": "新界北海"}
+  ],
+  "terrain_zones": [
+    {"name": "港島中環", "lat_min": 22.230, "lat_max": 22.300, "lng_min": 114.130, "lng_max": 114.170, "base_elevation": 30, "terrain_type": "urban_coastal"},
+    {"name": "港島東區", "lat_min": 22.230, "lat_max": 22.300, "lng_min": 114.170, "lng_max": 114.260, "base_elevation": 40, "terrain_type": "urban_hilly"},
+    {"name": "九龍半島", "lat_min": 22.300, "lat_max": 22.340, "lng_min": 114.150, "lng_max": 114.210, "base_elevation": 20, "terrain_type": "urban_flat"},
+    {"name": "西九龍", "lat_min": 22.300, "lat_max": 22.330, "lng_min": 114.100, "lng_max": 114.150, "base_elevation": 25, "terrain_type": "urban_coastal"},
+    {"name": "九龍東", "lat_min": 22.300, "lat_max": 22.350, "lng_min": 114.210, "lng_max": 114.260, "base_elevation": 50, "terrain_type": "urban_hilly"},
+    {"name": "新界東沙田", "lat_min": 22.350, "lat_max": 22.420, "lng_min": 114.170, "lng_max": 114.230, "base_elevation": 60, "terrain_type": "valley"},
+    {"name": "新界東馬鞍山", "lat_min": 22.380, "lat_max": 22.450, "lng_min": 114.220, "lng_max": 114.260, "base_elevation": 80, "terrain_type": "mountain_foot"},
+    {"name": "新界西荃灣", "lat_min": 22.330, "lat_max": 22.380, "lng_min": 114.050, "lng_max": 114.150, "base_elevation": 30, "terrain_type": "coastal_hilly"},
+    {"name": "新界西屯門", "lat_min": 22.350, "lat_max": 22.420, "lng_min": 113.900, "lng_max": 114.050, "base_elevation": 50, "terrain_type": "coastal_plain"},
+    {"name": "新界西元朗", "lat_min": 22.420, "lat_max": 22.500, "lng_min": 113.950, "lng_max": 114.080, "base_elevation": 10, "terrain_type": "alluvial_plain"},
+    {"name": "新界北粉嶺上水", "lat_min": 22.450, "lat_max": 22.550, "lng_min": 114.050, "lng_max": 114.150, "base_elevation": 30, "terrain_type": "valley"},
+    {"name": "大嶼山", "lat_min": 22.200, "lat_max": 22.320, "lng_min": 113.850, "lng_max": 114.050, "base_elevation": 100, "terrain_type": "mountain_island"},
+    {"name": "東涌", "lat_min": 22.280, "lat_max": 22.320, "lng_min": 113.900, "lng_max": 113.980, "base_elevation": 15, "terrain_type": "coastal_flat"},
+    {"name": "西貢", "lat_min": 22.280, "lat_max": 22.420, "lng_min": 114.250, "lng_max": 114.400, "base_elevation": 40, "terrain_type": "coastal_hilly"}
+  ]
+}
