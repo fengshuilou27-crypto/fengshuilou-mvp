@@ -876,7 +876,7 @@ def get_supported_facings():
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "version": "0.6.0", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
+    return {"status": "ok", "version": "2.2.0", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
 
 
 # ==================== FXTI Routes ====================
