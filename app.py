@@ -798,8 +798,7 @@ def match_estates(request: MatchEstatesRequest):
                 "has_mountain_view": has_mountain,
                 "decoration": "",  # 屋苑數據無裝修信息
                 "transport_rating": 0,
-                "amenities_score": 0,
-                "estate_name": estate.get("name", "")
+                "amenities_score": 0
             }
             try:
                 tr = estate.get("transport_rating", "")
@@ -936,8 +935,7 @@ def match_listings(request: MatchListingsRequest):
                 "has_mountain_view": has_mountain,
                 "decoration": listing.get("decoration", ""),
                 "transport_rating": 0,
-                "amenities_score": 0,
-                "estate_name": listing.get("estate", "")
+                "amenities_score": 0
             }
             
             goals = _parse_goals(profile.goals)

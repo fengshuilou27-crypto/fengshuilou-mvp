@@ -94,17 +94,10 @@ def aggregate_match_result(
     if floor_number and isinstance(floor_number, int) and floor_number > 0:
         floor_tie_breaker = min(floor_number * 0.01, 0.3)  # 每層+0.01，最多+0.3
     
-    # === 樓盤名稱微調（確保每個樓盤都有唯一分數）===
-    name_tie_breaker = 0.0
-    if property_features and property_features.get("estate_name"):
-        # 使用名稱哈希產生微小差異（-0.15 到 +0.15）
-        name_hash = hash(property_features.get("estate_name", "")) % 1000
-        name_tie_breaker = (name_hash / 1000) * 0.3 - 0.15
-    
     # 計算總分
     total_score = (
         flying_norm + zmg_norm + sha_norm + bazi_norm + bagua_norm + goal_norm + region_norm
-        - age_penalty + property_bonus + floor_tie_breaker + name_tie_breaker
+        - age_penalty + property_bonus + floor_tie_breaker
     )
     
     # 理論最高分（100分制）
@@ -227,7 +220,6 @@ def aggregate_match_result(
             "目標": round(goal_norm, 1),
             "物業特徵": round(property_bonus, 1),
             "樓層微調": round(floor_tie_breaker, 2),
-            "名稱微調": round(name_tie_breaker, 3),
             "樓齡懲罰": round(-age_penalty, 1)
         },
         "radar_chart": radar_data,
