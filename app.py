@@ -815,7 +815,7 @@ def match_estates(request: MatchEstatesRequest):
                 cohabitant_birth_time=profile.cohabitant_birth_time,
                 cohabitant_user_job=profile.cohabitant_user_job,
                 cohabitant_weight_ratio=profile.cohabitant_weight_ratio,
-                building_year=int(estate.get("year_built", 2000)),
+                building_year=int(estate.get("building_year", 2000)),
                 building_facing=estate["facing"],
                 floor_number=floor,
                 goals=goals,
