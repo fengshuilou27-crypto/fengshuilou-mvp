@@ -143,7 +143,7 @@ def match_listings(request: MatchListingsRequest):
                 building_year=year,
                 building_facing=listing["facing"],
                 floor_number=floor,
-                goals=profile.goals,
+                goal=profile.goals[0].goal if profile.goals else "財富",
                 north_has_water=north_water,
                 south_has_mountain=south_mountain,
                 detected_shas=[]

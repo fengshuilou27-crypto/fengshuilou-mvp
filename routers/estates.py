@@ -121,7 +121,7 @@ def match_estates(request: MatchEstatesRequest):
                 building_year=int(estate.get("building_year", 2000)) if estate.get("building_year") else 2000,
                 building_facing=estate["facing"],
                 floor_number=floor,
-                goals=profile.goals,
+                goal=profile.goals[0].goal if profile.goals else "財富",
                 north_has_water=north_water,
                 south_has_mountain=south_mountain,
                 detected_shas=[]

@@ -3,6 +3,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 from data.fxti_bazi import get_innate_wuxing
 from data.fxti_questionnaire import calculate_acquired_wuxing
 from data.fxti_profile import determine_profile, synthesize_result, ALL_PROFILES
@@ -119,38 +122,38 @@ class TestProfile(BaseModel):
     birth_date: str = "1991-03-04"
     birth_time: Optional[str] = "18:55"
     user_job: Optional[str] = None
-    goal: str = "財富"
+    goals: List[dict] = [{"goal": "財富", "priority": 1}]
     household_weight_mode: Optional[str] = "balanced"
 
 class TestRequest(BaseModel):
     user_profile: TestProfile
     top_n: int = 5
 
-from routers.estates import match_estates, UserProfile, MatchEstatesRequest
+from routers.estates import match_estates, UserProfile, MatchEstatesRequest, GoalItem
 
 req = MatchEstatesRequest(
-    user_profile={
-        "eval_year": 2026, "user_gender": "男", "birth_date": "1991-03-04",
-        "birth_time": "18:55", "goal": "財富"},
+    user_profile=UserProfile(
+        eval_year=2026, user_gender="男", birth_date="1991-03-04",
+        birth_time="18:55", goals=[GoalItem(goal="財富", priority=1)]),
     top_n=5)
 
 result = match_estates(req)
 report.append(f"匹配成功: {result['total_estates']} 個屋苑")
 report.append("Top 5:")
 for i, r in enumerate(result['top_results'], 1):
-    report.append(f"  {i}. {r['estate']} ({r['district']}) - {r['final_score']:.1f}分")
+    report.append(f"  {i}. {r['name']} ({r['district']}) - {r['final_score']:.1f}分")
 report.append("")
 
 # === Module 5: Listing matching ===
 report.append("【模塊5】配對物業 (/api/match/listings)")
 report.append("-" * 40)
 
-from routers.listings import match_listings, MatchListingsRequest
+from routers.listings import match_listings, MatchListingsRequest, UserProfile, GoalItem
 
 req2 = MatchListingsRequest(
-    user_profile={
-        "eval_year": 2026, "user_gender": "男", "birth_date": "1991-03-04",
-        "birth_time": "18:55", "goal": "財富"},
+    user_profile=UserProfile(
+        eval_year=2026, user_gender="男", birth_date="1991-03-04",
+        birth_time="18:55", goals=[GoalItem(goal="財富", priority=1)]),
     top_n=5)
 
 result2 = match_listings(req2)
