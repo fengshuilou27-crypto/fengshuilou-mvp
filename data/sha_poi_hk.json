@@ -1,0 +1,510 @@
+{
+  "_metadata": {
+    "version": "1.0",
+    "source": "香港政府公開資料 + 地圖手動標註",
+    "coordinate_system": "WGS84",
+    "note": "煞氣 POI 列表。severity: critical(-10) / severe(-7) / moderate(-5) / mild(-3)。"
+  },
+  "pois": [
+    {
+      "name": "瑪麗醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.2688,
+      "lng": 114.1311,
+      "district": "薄扶林",
+      "description": "大型醫院，病符星重",
+      "feng_shui_effect": "病符煞，影響健康運"
+    },
+    {
+      "name": "威爾斯親王醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.3795,
+      "lng": 114.1985,
+      "district": "沙田",
+      "description": "大型醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "東區尤德夫人那打素醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.2695,
+      "lng": 114.2360,
+      "district": "柴灣",
+      "description": "大型醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "伊利沙伯醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.3090,
+      "lng": 114.1750,
+      "district": "油麻地",
+      "description": "大型醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "廣華醫院",
+      "sha_type": "醫院煞",
+      "severity": "moderate",
+      "lat": 22.3155,
+      "lng": 114.1735,
+      "district": "油尖旺",
+      "description": "歷史悠久醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "聯合醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.3225,
+      "lng": 114.2305,
+      "district": "觀塘",
+      "description": "大型醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "屯門醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.4075,
+      "lng": 113.9650,
+      "district": "屯門",
+      "description": "大型醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "博愛醫院",
+      "sha_type": "醫院煞",
+      "severity": "moderate",
+      "lat": 22.4450,
+      "lng": 114.0350,
+      "district": "元朗",
+      "description": "醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "北區醫院",
+      "sha_type": "醫院煞",
+      "severity": "severe",
+      "lat": 22.4960,
+      "lng": 114.1250,
+      "district": "上水",
+      "description": "大型醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "天水圍醫院",
+      "sha_type": "醫院煞",
+      "severity": "moderate",
+      "lat": 22.4600,
+      "lng": 114.0050,
+      "district": "天水圍",
+      "description": "醫院",
+      "feng_shui_effect": "病符煞"
+    },
+    {
+      "name": "寶蓮禪寺（天壇大佛）",
+      "sha_type": "神煞",
+      "severity": "moderate",
+      "lat": 22.2540,
+      "lng": 113.9050,
+      "district": "大嶼山",
+      "description": "大型寺廟，佛像高大",
+      "feng_shui_effect": "神煞/光煞，對附近住宅有壓迫感"
+    },
+    {
+      "name": "黃大仙祠",
+      "sha_type": "神煞",
+      "severity": "mild",
+      "lat": 22.3420,
+      "lng": 114.1935,
+      "district": "黃大仙",
+      "description": "香火鼎盛寺廟",
+      "feng_shui_effect": "神煞，對正對住宅有影響"
+    },
+    {
+      "name": "車公廟",
+      "sha_type": "神煞",
+      "severity": "mild",
+      "lat": 22.3620,
+      "lng": 114.1750,
+      "district": "沙田",
+      "description": "著名寺廟",
+      "feng_shui_effect": "神煞"
+    },
+    {
+      "name": "慈山寺",
+      "sha_type": "神煞",
+      "severity": "moderate",
+      "lat": 22.4300,
+      "lng": 114.2450,
+      "district": "大埔",
+      "description": "大型觀音像",
+      "feng_shui_effect": "神煞/光煞"
+    },
+    {
+      "name": "志蓮淨苑",
+      "sha_type": "神煞",
+      "severity": "mild",
+      "lat": 22.3380,
+      "lng": 114.2050,
+      "district": "鑽石山",
+      "description": "寺廟",
+      "feng_shui_effect": "神煞"
+    },
+    {
+      "name": "香港殯儀館",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.2790,
+      "lng": 114.1850,
+      "district": "北角",
+      "description": "殯儀館",
+      "feng_shui_effect": "陰煞極重，對附近住宅大凶"
+    },
+    {
+      "name": "萬國殯儀館",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.3335,
+      "lng": 114.2100,
+      "district": "紅磡",
+      "description": "殯儀館",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "紅磡（大環山）公眾墳場",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.3050,
+      "lng": 114.1880,
+      "district": "紅磡",
+      "description": "墳場",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "柴灣歌連臣角火葬場",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.2600,
+      "lng": 114.2450,
+      "district": "柴灣",
+      "description": "火葬場",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "將軍澳墳場",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.3100,
+      "lng": 114.2750,
+      "district": "將軍澳",
+      "description": "大型墳場",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "和合石墳場",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.4850,
+      "lng": 114.1350,
+      "district": "粉嶺",
+      "description": "大型墳場",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "長沙灣天主教墳場",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.3400,
+      "lng": 114.1550,
+      "district": "長沙灣",
+      "description": "墳場",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "沙田富山公眾殯儀館",
+      "sha_type": "陰煞",
+      "severity": "critical",
+      "lat": 22.3750,
+      "lng": 114.1950,
+      "district": "沙田",
+      "description": "殯儀館",
+      "feng_shui_effect": "陰煞極重"
+    },
+    {
+      "name": "荔枝角政府合署（差館）",
+      "sha_type": "官非煞",
+      "severity": "moderate",
+      "lat": 22.3380,
+      "lng": 114.1480,
+      "district": "長沙灣",
+      "description": "警署",
+      "feng_shui_effect": "官非煞"
+    },
+    {
+      "name": "旺角警署",
+      "sha_type": "官非煞",
+      "severity": "moderate",
+      "lat": 22.3190,
+      "lng": 114.1680,
+      "district": "旺角",
+      "description": "警署",
+      "feng_shui_effect": "官非煞"
+    },
+    {
+      "name": "油麻地警署",
+      "sha_type": "官非煞",
+      "severity": "moderate",
+      "lat": 22.3115,
+      "lng": 114.1705,
+      "district": "油麻地",
+      "description": "歷史警署",
+      "feng_shui_effect": "官非煞"
+    },
+    {
+      "name": "中區警署",
+      "sha_type": "官非煞",
+      "severity": "mild",
+      "lat": 22.2800,
+      "lng": 114.1550,
+      "district": "中環",
+      "description": "警署",
+      "feng_shui_effect": "官非煞"
+    },
+    {
+      "name": "荔枝角收押所",
+      "sha_type": "官非煞",
+      "severity": "severe",
+      "lat": 22.3370,
+      "lng": 114.1470,
+      "district": "長沙灣",
+      "description": "監獄/收押所",
+      "feng_shui_effect": "官非煞極重"
+    },
+    {
+      "name": "赤柱監獄",
+      "sha_type": "官非煞",
+      "severity": "severe",
+      "lat": 22.2200,
+      "lng": 114.2050,
+      "district": "赤柱",
+      "description": "監獄",
+      "feng_shui_effect": "官非煞極重"
+    },
+    {
+      "name": "石壁監獄",
+      "sha_type": "官非煞",
+      "severity": "severe",
+      "lat": 22.2350,
+      "lng": 113.9050,
+      "district": "大嶼山",
+      "description": "監獄",
+      "feng_shui_effect": "官非煞極重"
+    },
+    {
+      "name": "懲教署職員訓練院（塘福）",
+      "sha_type": "官非煞",
+      "severity": "moderate",
+      "lat": 22.2400,
+      "lng": 113.9100,
+      "district": "大嶼山",
+      "description": "懲教設施",
+      "feng_shui_effect": "官非煞"
+    },
+    {
+      "name": "青山發電廠（A廠）",
+      "sha_type": "電磁煞",
+      "severity": "severe",
+      "lat": 22.3800,
+      "lng": 113.9300,
+      "district": "屯門",
+      "description": "大型火力發電廠",
+      "feng_shui_effect": "電磁煞/火煞"
+    },
+    {
+      "name": "青山發電廠（B廠）",
+      "sha_type": "電磁煞",
+      "severity": "severe",
+      "lat": 22.3820,
+      "lng": 113.9280,
+      "district": "屯門",
+      "description": "大型火力發電廠",
+      "feng_shui_effect": "電磁煞/火煞"
+    },
+    {
+      "name": "南丫發電廠",
+      "sha_type": "電磁煞",
+      "severity": "severe",
+      "lat": 22.2050,
+      "lng": 114.1150,
+      "district": "南丫島",
+      "description": "大型發電廠",
+      "feng_shui_effect": "電磁煞/火煞"
+    },
+    {
+      "name": "中電龍鼓灘發電廠",
+      "sha_type": "電磁煞",
+      "severity": "severe",
+      "lat": 22.4200,
+      "lng": 113.9050,
+      "district": "屯門",
+      "description": "大型發電廠",
+      "feng_shui_effect": "電磁煞/火煞"
+    },
+    {
+      "name": "中電青山變電站",
+      "sha_type": "電磁煞",
+      "severity": "moderate",
+      "lat": 22.3850,
+      "lng": 113.9350,
+      "district": "屯門",
+      "description": "高壓變電站",
+      "feng_shui_effect": "電磁煞"
+    },
+    {
+      "name": "中電荃灣變電站",
+      "sha_type": "電磁煞",
+      "severity": "moderate",
+      "lat": 22.3700,
+      "lng": 114.1150,
+      "district": "荃灣",
+      "description": "高壓變電站",
+      "feng_shui_effect": "電磁煞"
+    },
+    {
+      "name": "港燈南丫變電站",
+      "sha_type": "電磁煞",
+      "severity": "moderate",
+      "lat": 22.2100,
+      "lng": 114.1200,
+      "district": "南丫島",
+      "description": "變電站",
+      "feng_shui_effect": "電磁煞"
+    },
+    {
+      "name": "西環屠宰場（已停用）",
+      "sha_type": "陰煞",
+      "severity": "severe",
+      "lat": 22.2820,
+      "lng": 114.1300,
+      "district": "西環",
+      "description": "舊屠宰場（已停用，煞氣殘留）",
+      "feng_shui_effect": "陰煞/血光煞"
+    },
+    {
+      "name": "上水屠房",
+      "sha_type": "陰煞",
+      "severity": "severe",
+      "lat": 22.5050,
+      "lng": 114.1200,
+      "district": "上水",
+      "description": "屠房",
+      "feng_shui_effect": "陰煞/血光煞"
+    },
+    {
+      "name": "堅尼地城焚化爐（已拆卸）",
+      "sha_type": "火煞",
+      "severity": "mild",
+      "lat": 22.2800,
+      "lng": 114.1250,
+      "district": "堅尼地城",
+      "description": "舊焚化爐（已拆卸，煞氣殘留）",
+      "feng_shui_effect": "火煞殘留"
+    },
+    {
+      "name": "佐敦谷堆填區（已停用）",
+      "sha_type": "穢煞",
+      "severity": "severe",
+      "lat": 22.3250,
+      "lng": 114.2200,
+      "district": "觀塘",
+      "description": "舊垃圾堆填區",
+      "feng_shui_effect": "穢煞/病符煞"
+    },
+    {
+      "name": "將軍澳堆填區（已停用）",
+      "sha_type": "穢煞",
+      "severity": "severe",
+      "lat": 22.3150,
+      "lng": 114.2800,
+      "district": "將軍澳",
+      "description": "舊垃圾堆填區",
+      "feng_shui_effect": "穢煞/病符煞"
+    },
+    {
+      "name": "新界東南堆填區（將軍澳）",
+      "sha_type": "穢煞",
+      "severity": "critical",
+      "lat": 22.3000,
+      "lng": 114.2850,
+      "district": "將軍澳",
+      "description": "運營中垃圾堆填區",
+      "feng_shui_effect": "穢煞極重"
+    },
+    {
+      "name": "新界西堆填區（屯門）",
+      "sha_type": "穢煞",
+      "severity": "critical",
+      "lat": 22.4100,
+      "lng": 113.9100,
+      "district": "屯門",
+      "description": "運營中垃圾堆填區",
+      "feng_shui_effect": "穢煞極重"
+    },
+    {
+      "name": "打鼓嶺堆填區",
+      "sha_type": "穢煞",
+      "severity": "critical",
+      "lat": 22.5400,
+      "lng": 114.1550,
+      "district": "打鼓嶺",
+      "description": "運營中垃圾堆填區",
+      "feng_shui_effect": "穢煞極重"
+    },
+    {
+      "name": "昂船洲污水處理廠",
+      "sha_type": "穢煞",
+      "severity": "moderate",
+      "lat": 22.3150,
+      "lng": 114.1350,
+      "district": "昂船洲",
+      "description": "大型污水處理廠",
+      "feng_shui_effect": "穢煞"
+    },
+    {
+      "name": "沙田污水處理廠",
+      "sha_type": "穢煞",
+      "severity": "moderate",
+      "lat": 22.3950,
+      "lng": 114.2050,
+      "district": "沙田",
+      "description": "污水處理廠",
+      "feng_shui_effect": "穢煞"
+    },
+    {
+      "name": "香港賽馬會（跑馬地馬場）",
+      "sha_type": "賭煞",
+      "severity": "mild",
+      "lat": 22.2730,
+      "lng": 114.1850,
+      "district": "跑馬地",
+      "description": "賭場/馬場",
+      "feng_shui_effect": "賭煞，財來財去"
+    },
+    {
+      "name": "香港賽馬會（沙田馬場）",
+      "sha_type": "賭煞",
+      "severity": "mild",
+      "lat": 22.4000,
+      "lng": 114.2150,
+      "district": "沙田",
+      "description": "賭場/馬場",
+      "feng_shui_effect": "賭煞"
+    }
+  ]
+}

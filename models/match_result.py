@@ -1,5 +1,6 @@
 from data.district_scores import get_district_score
 from data.flying_star import analyze_multi_yun
+from data.gis_analysis import analyze_gis_feng_shui
 
 def aggregate_match_result(
     flying_star_result: dict,
@@ -13,12 +14,14 @@ def aggregate_match_result(
     eval_year: int = 2026,
     property_features: dict = None,
     floor_number: int = None,
-    building_facing: str = None
+    building_facing: str = None,
+    estate_name: str = None
 ):
     """
     聚合匹配結果
     加權計算總分，生成結構化報告
-    100分制：飛星30 / 八字20 / 八宅15 / 零正神10 / 目標15 / 區位10 / 物業特徵5 / 多運交叉±5 / 煞氣扣分
+    100分制：飛星22 + 八字18 + 八宅13 + 零正神8 + 目標13 + 區位8 + 物業特徵5 + GIS 8 + 多運交叉±5 = 100
+    扣分：煞氣（最多-20）/ 樓齡（最多-8）
     """
     # 提取分數
     flying_score = flying_star_result.get("score", 0)
@@ -33,14 +36,15 @@ def aggregate_match_result(
     
     # 各模組正規化到100分制目標權重
     # 正規化公式：原始分數 × (目標權重 / 原始滿分)
+    # 正分維度合計：22+18+13+8+13+8+8+5 = 95，+ 多運交叉±5 = 100
     # 煞氣模組（max_score=0）直接應用扣分
-    flying_norm = (flying_score / 40) * 30
-    zmg_norm = (zmg_score / 10) * 10
-    bazi_norm = bazi_score  # bazi_matching 已改為20分制，直接等於目標權重20
-    bagua_norm = (bagua_score / 10) * 15
-    goal_norm = (goal_score / 15) * 15
-    region_norm = (region_score / 10) * 10  # 固定10分
-    sha_norm = sha_score  # 直接應用扣分
+    flying_norm = (flying_score / 40) * 22   # 飛星 22 分（原30→25→22，核心但需為GIS留空間）
+    zmg_norm = (zmg_score / 10) * 8          # 零正神 8 分
+    bazi_norm = (bazi_score / 20) * 18       # 八字 18 分（原20分制）
+    bagua_norm = (bagua_score / 10) * 13     # 八宅 13 分
+    goal_norm = (goal_score / 15) * 13       # 目標 13 分
+    region_norm = (region_score / 10) * 8     # 區位 8 分
+    sha_norm = sha_score  # 直接應用扣分（負值）
     
     # === 樓齡懲罰 ===
     age_penalty = 0.0
@@ -63,6 +67,25 @@ def aggregate_match_result(
         except Exception:
             # 如果多運分析失敗，不影響其他計算
             multi_yun_adjust = 0.0
+    
+    # === GIS 地理風水分析 ===
+    gis_result = {"score": 0, "max_score": 0, "status": "skipped"}
+    gis_norm = 0.0
+    if estate_name or district:
+        try:
+            # 優先使用 estate_name，否則嘗試用 district 作為 fallback
+            lookup_name = estate_name if estate_name else district
+            gis_result = analyze_gis_feng_shui(
+                estate_name=estate_name,
+                facing=building_facing
+            )
+            # GIS 模組原始滿分20分，目標權重8分
+            if gis_result.get("status") == "success":
+                gis_norm = (gis_result.get("score", 0) / 20) * 8
+            else:
+                gis_norm = 0.0
+        except Exception:
+            gis_norm = 0.0
     
     # === 物業特徵加分 ===
     property_bonus = 0.0
@@ -111,18 +134,15 @@ def aggregate_match_result(
     if floor_number and isinstance(floor_number, int) and floor_number > 0:
         floor_tie_breaker = min(floor_number * 0.01, 0.3)  # 每層+0.01，最多+0.3
     
-    # 計算總分
+    # 計算總分（直接100分制，無需額外歸一化）
     total_score = (
-        flying_norm + zmg_norm + sha_norm + bazi_norm + bagua_norm + goal_norm + region_norm
-        - age_penalty + multi_yun_adjust + property_bonus + floor_tie_breaker
+        flying_norm + zmg_norm + bazi_norm + bagua_norm + goal_norm + region_norm + gis_norm + property_bonus
+        + sha_norm + multi_yun_adjust - age_penalty + floor_tie_breaker
     )
     
-    # 理論最高分（100分制）
-    max_possible = 30 + 10 + 0 + 20 + 15 + 15 + 10 + 5 + 5  # = 110（含多運交叉±5）
-    
-    # 標準化到100分制
-    normalized_score = (total_score / max_possible) * 100
-    normalized_score = max(0, min(100, round(normalized_score, 1)))
+    # 正分維度合計：22+18+13+8+13+8+8+5 = 95，+ 多運交叉(+5) = 100
+    # 直接截斷到 0-100，無需再歸一化
+    normalized_score = max(0, min(100, round(total_score, 1)))
     
     # 評級（基礎版：只做分數區間標註，不做入住建議判斷）
     if normalized_score >= 85:
@@ -195,23 +215,25 @@ def aggregate_match_result(
         sha_result.get("confidence", 0.6),
         bazi_result.get("confidence", 0.6),
         bagua_result.get("confidence", 0.6),
-        goal_result.get("confidence", 0.6)
+        goal_result.get("confidence", 0.6),
+        gis_result.get("confidence", 0.5)
     ]
     overall_confidence = round(sum(confidences) / len(confidences), 2)
     
-    # 7維度 Radar 圖數據（正規化到 0-100）
+    # 8維度 Radar 圖數據（正規化到 0-100）
     radar_data = {
-        "dimensions": ["飛星", "八字", "八宅", "零正神", "目標", "區位", "物業特徵"],
+        "dimensions": ["飛星", "八字", "八宅", "零正神", "目標", "區位", "物業特徵", "GIS風水"],
         "scores": [
-            round(min(100, max(0, (flying_norm / 30) * 100)), 1),
-            round(min(100, max(0, (bazi_norm / 20) * 100)), 1),
-            round(min(100, max(0, (bagua_norm / 15) * 100)), 1),
-            round(min(100, max(0, (zmg_norm / 10) * 100)), 1),
-            round(min(100, max(0, (goal_norm / 15) * 100)), 1),
-            round(min(100, max(0, (region_norm / 10) * 100)), 1),
+            round(min(100, max(0, (flying_norm / 22) * 100)), 1),
+            round(min(100, max(0, (bazi_norm / 18) * 100)), 1),
+            round(min(100, max(0, (bagua_norm / 13) * 100)), 1),
+            round(min(100, max(0, (zmg_norm / 8) * 100)), 1),
+            round(min(100, max(0, (goal_norm / 13) * 100)), 1),
+            round(min(100, max(0, (region_norm / 8) * 100)), 1),
             round(min(100, max(0, (property_bonus / 5) * 100)), 1),
+            round(min(100, max(0, (gis_norm / 8) * 100)), 1),
         ],
-        "max_values": [100, 100, 100, 100, 100, 100, 100]
+        "max_values": [100, 100, 100, 100, 100, 100, 100, 100]
     }
     
     # 八字完整信息
@@ -240,6 +262,7 @@ def aggregate_match_result(
             "八宅": round(bagua_norm, 1),
             "目標": round(goal_norm, 1),
             "物業特徵": round(property_bonus, 1),
+            "GIS風水": round(gis_norm, 1),
             "多運交叉": round(multi_yun_adjust, 1),
             "樓層微調": round(floor_tie_breaker, 2),
             "樓齡懲罰": round(-age_penalty, 1)
@@ -258,5 +281,5 @@ def aggregate_match_result(
         "ai_rationale": ai_rationale,
         "recommended_remedies": all_remedies,
         "yun_conversion_advice": yun_conversion,
-        "disclaimer": "本報告為v2.3優化版計算結果，基於三六風水網專業知識庫，飛星表已擴展至24山向，加入旺衰分析與喜用神計算，九宮吉凶方位分析，多運交叉分析（元運轉換評估），飛星盤自動推導刑煞。僅供參考，具體入住/投資等重大決策建議諮詢專業風水師傅進行實地勘察。"
+        "disclaimer": "本報告為v2.4優化版計算結果，基於三六風水網專業知識庫，飛星表已擴展至24山向，加入旺衰分析與喜用神計算，九宮吉凶方位分析，多運交叉分析（元運轉換評估），飛星盤自動推導刑煞，GIS地理風水分析（水法/地形/煞氣掃描）。僅供參考，具體入住/投資等重大決策建議諮詢專業風水師傅進行實地勘察。"
     }

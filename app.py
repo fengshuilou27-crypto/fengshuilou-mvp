@@ -30,7 +30,7 @@ from data.fxti_relationship import analyze_relationship
 
 app = FastAPI(
     title="AI風水樓盤匹配系統",
-    description="MVP v2.3 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算 + 多運交叉分析 + 自動SHA推導",
+    description="MVP v2.4 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算 + 多運交叉分析 + 自動SHA推導 + GIS地理風水分析",
     version="2.2.0"
 )
 
@@ -76,6 +76,7 @@ class RequestMeta(BaseModel):
     north_has_water: bool = Field(False, description="北側有水")
     south_has_mountain: bool = Field(False, description="南側有山")
     detected_shas: Optional[List[str]] = Field(default=[], description="已知煞氣")
+    estate_name: Optional[str] = Field(None, description="屋苑名稱（用於GIS風水分析）")
     property_features: Optional[dict] = Field(default=None, description="物業特徵：海景/山景/裝修/交通等")
 
 
@@ -291,7 +292,7 @@ def _parse_goals(goals):
     return []
 
 
-def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None, property_features=None):
+def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None, property_features=None, estate_name=None):
     """單人匹配計算"""
     # 1. 飛星分析
     flying_star_result = analyze_flying_star(
@@ -349,7 +350,8 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         eval_year=eval_year,
         property_features=property_features,
         floor_number=floor_number,
-        building_facing=building_facing
+        building_facing=building_facing,
+        estate_name=estate_name
     )
 
     # 8. 填充樓盤信息
@@ -390,9 +392,13 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
     return match_result
 
 
-def run_single_match(meta: RequestMeta):
+def run_single_match(meta: RequestMeta, district: str = None):
     """執行單次匹配計算（支持單人/雙人）"""
     goals = _parse_goals(meta.goals)
+    
+    # 如果外部傳入 district，覆蓋 meta.address
+    if district and not meta.address:
+        meta.address = district
 
     if meta.cohabitant_enabled and meta.cohabitant_birth_date and meta.cohabitant_gender:
         # 雙人模式：宅不變，人加權
@@ -410,7 +416,8 @@ def run_single_match(meta: RequestMeta):
             south_has_mountain=meta.south_has_mountain,
             eval_year=meta.eval_year,
             address=meta.address,
-            property_features=meta.property_features
+            property_features=meta.property_features,
+            estate_name=meta.estate_name
         )
 
         result_b = _run_single_person_match(
@@ -423,7 +430,8 @@ def run_single_match(meta: RequestMeta):
             south_has_mountain=meta.south_has_mountain,
             eval_year=meta.eval_year,
             address=meta.address,
-            property_features=meta.property_features
+            property_features=meta.property_features,
+            estate_name=meta.estate_name
         )
 
         # 八宅雙人分析（專門用於對照表）
@@ -492,7 +500,8 @@ def run_single_match(meta: RequestMeta):
             south_has_mountain=meta.south_has_mountain,
             eval_year=meta.eval_year,
             address=meta.address,
-            property_features=meta.property_features
+            property_features=meta.property_features,
+            estate_name=meta.estate_name
         )
 
 

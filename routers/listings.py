@@ -146,7 +146,8 @@ def match_listings(request: MatchListingsRequest):
                 goal=profile.goals[0].goal if profile.goals else "財富",
                 north_has_water=north_water,
                 south_has_mountain=south_mountain,
-                detected_shas=[]
+                detected_shas=[],
+                estate_name=listing.get("estate", "")
             )
             match_result = run_single_match(meta, district=listing.get("district", ""))
             results.append({

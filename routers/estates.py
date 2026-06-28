@@ -124,7 +124,8 @@ def match_estates(request: MatchEstatesRequest):
                 goal=profile.goals[0].goal if profile.goals else "財富",
                 north_has_water=north_water,
                 south_has_mountain=south_mountain,
-                detected_shas=[]
+                detected_shas=[],
+                estate_name=estate.get("name", "")
             )
             match_result = run_single_match(meta, district=estate.get("district", ""))
             yb = estate.get("building_year", "")
