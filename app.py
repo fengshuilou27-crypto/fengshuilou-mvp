@@ -292,6 +292,7 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
     # 2. 零正神
     zero_main_god_result = analyze_zero_main_god(
         building_year=building_year,
+        building_facing=building_facing,
         north_has_water=north_has_water,
         south_has_mountain=south_has_mountain
     )
