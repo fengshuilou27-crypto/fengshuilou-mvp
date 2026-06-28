@@ -213,7 +213,7 @@
 </div>
 
 <script>
-const API_URL = 'http://localhost:8001/api/evaluate';
+const API_URL = '/api/evaluate';
 
 function getGaugeClass(score) {
     if (score >= 85) return 'gauge-excellent';
@@ -258,7 +258,7 @@ document.getElementById('evaluateForm').addEventListener('submit', async (e) => 
             building_year: parseInt(document.getElementById('buildingYear').value),
             building_facing: document.getElementById('buildingFacing').value,
             floor_number: parseInt(document.getElementById('floorNumber').value),
-            goal: document.getElementById('goal').value,
+            goals: [{goal: document.getElementById('goal').value, priority: 1}],
             north_has_water: document.getElementById('northWater').value === 'true',
             south_has_mountain: document.getElementById('southMountain').value === 'true',
             detected_shas: shas

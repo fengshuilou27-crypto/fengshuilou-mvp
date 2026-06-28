@@ -478,8 +478,18 @@ def read_root():
     return FileResponse("static/index.html")
 
 
+@app.get("/index.html")
+def index_html():
+    return FileResponse("static/index.html")
+
+
 @app.get("/module1")
 def module1():
+    return FileResponse("static/module1.html")
+
+
+@app.get("/module1.html")
+def module1_html():
     return FileResponse("static/module1.html")
 
 
@@ -488,9 +498,39 @@ def module2():
     return FileResponse("static/module2.html")
 
 
+@app.get("/module2.html")
+def module2_html():
+    return FileResponse("static/module2.html")
+
+
 @app.get("/module3")
 def module3():
     return FileResponse("static/module3.html")
+
+
+@app.get("/module3.html")
+def module3_html():
+    return FileResponse("static/module3.html")
+
+
+@app.get("/fxti")
+def fxti():
+    return FileResponse("static/fxti/index.html")
+
+
+@app.get("/fxti/index.html")
+def fxti_index():
+    return FileResponse("static/fxti/index.html")
+
+
+@app.get("/fxti/result.html")
+def fxti_result_html():
+    return FileResponse("static/fxti/result.html")
+
+
+@app.get("/fxti/share.html")
+def fxti_share_html():
+    return FileResponse("static/fxti/share.html")
 
 
 @app.post("/api/evaluate")
