@@ -972,10 +972,20 @@ def match_listings(request: MatchListingsRequest):
     call_buy_profile = None
     if call_buy_triggered and results:
         top3 = results[:3]
+        # 安全地解析 year_built
+        valid_years = []
+        for r in top3:
+            yb = r.get('year_built', '')
+            if yb and str(yb).isdigit():
+                valid_years.append(int(yb))
+        if valid_years:
+            age_range = f"{2026 - max(valid_years)}-{2026 - min(valid_years)}年"
+        else:
+            age_range = "未知"
         call_buy_profile = {
             "facing": list(set([r["facing"] for r in top3])),
             "district": list(set([r["district"] for r in top3])),
-            "age_range": f"{2026 - max([r.get('year_built', 2026) for r in top3])}-{2026 - min([r.get('year_built', 2026) for r in top3])}年"
+            "age_range": age_range
         }
 
     return {
