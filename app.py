@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime
@@ -473,7 +474,22 @@ def run_single_match(meta: RequestMeta):
 
 @app.get("/")
 def read_root():
-    return {"message": "AI風水樓盤匹配系統 MVP v0.6", "docs": "/docs"}
+    return FileResponse("static/index.html")
+
+
+@app.get("/module1")
+def module1():
+    return FileResponse("static/module1.html")
+
+
+@app.get("/module2")
+def module2():
+    return FileResponse("static/module2.html")
+
+
+@app.get("/module3")
+def module3():
+    return FileResponse("static/module3.html")
 
 
 @app.post("/api/evaluate")
