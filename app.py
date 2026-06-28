@@ -266,6 +266,16 @@ def load_listings():
 ALL_LISTINGS = load_listings()
 ALL_ESTATES = load_estates()
 
+# Build estate year lookup from estates_unified.csv for listings with missing year_built
+ESTATE_YEAR_LOOKUP = {}
+for estate in ALL_ESTATES:
+    name = estate.get("name", "").strip()
+    year = estate.get("building_year", "")
+    if name and year and str(year).isdigit():
+        ESTATE_YEAR_LOOKUP[name] = int(year)
+
+logger.info("ESTATE_YEAR_LOOKUP built: %d estates", len(ESTATE_YEAR_LOOKUP))
+
 
 def _parse_goals(goals):
     """解析目標列表，向後兼容字符串"""
@@ -334,7 +344,8 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         district=address,
         building_year=building_year,
         eval_year=eval_year,
-        property_features=property_features
+        property_features=property_features,
+        floor_number=floor_number
     )
 
     # 8. 填充樓盤信息
@@ -880,7 +891,17 @@ def match_listings(request: MatchListingsRequest):
     results = []
     for listing in listings:
         try:
-            year = int(listing.get("year_built", 2000)) if listing.get("year_built") else 2000
+            # 年份提取：優先使用 year_built，其次查 estates 表，最後默認 2000
+            raw_year = listing.get("year_built", "")
+            if raw_year and str(raw_year).strip().isdigit():
+                year = int(raw_year)
+            else:
+                estate_name = listing.get("estate", "").strip()
+                if estate_name in ESTATE_YEAR_LOOKUP:
+                    year = ESTATE_YEAR_LOOKUP[estate_name]
+                    logger.debug("Filled year_built for %s from estate lookup: %d", estate_name, year)
+                else:
+                    year = 2000
             
             # 樓層提取：優先解析低層/中層/高層，其次提取數字
             unit_info = listing.get("unit_info", "")
@@ -951,7 +972,7 @@ def match_listings(request: MatchListingsRequest):
                 "usable_area": listing.get("usable_area", ""),
                 "rooms": listing.get("rooms", ""),
                 "unit_info": listing.get("unit_info", ""),
-                "year_built": listing.get("year_built", ""),
+                "year_built": year,
                 "agent": listing.get("agent", ""),
                 "final_score": match_result["final_score"],
                 "rating": match_result["rating"],

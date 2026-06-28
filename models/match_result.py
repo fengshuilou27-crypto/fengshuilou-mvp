@@ -10,7 +10,8 @@ def aggregate_match_result(
     district: str = None,
     building_year: int = None,
     eval_year: int = 2026,
-    property_features: dict = None
+    property_features: dict = None,
+    floor_number: int = None
 ):
     """
     聚合匹配結果
@@ -88,10 +89,15 @@ def aggregate_match_result(
         # 物業特徵總分上限 5 分
         property_bonus = min(property_bonus, 5.0)
     
+    # === 樓層精確度微調（避免尾數相同導致分數相同）===
+    floor_tie_breaker = 0.0
+    if floor_number and isinstance(floor_number, int) and floor_number > 0:
+        floor_tie_breaker = min(floor_number * 0.01, 0.3)  # 每層+0.01，最多+0.3
+    
     # 計算總分
     total_score = (
         flying_norm + zmg_norm + sha_norm + bazi_norm + bagua_norm + goal_norm + region_norm
-        - age_penalty + property_bonus
+        - age_penalty + property_bonus + floor_tie_breaker
     )
     
     # 理論最高分（100分制）
@@ -213,6 +219,7 @@ def aggregate_match_result(
             "八宅": round(bagua_norm, 1),
             "目標": round(goal_norm, 1),
             "物業特徵": round(property_bonus, 1),
+            "樓層微調": round(floor_tie_breaker, 2),
             "樓齡懲罰": round(-age_penalty, 1)
         },
         "radar_chart": radar_data,
