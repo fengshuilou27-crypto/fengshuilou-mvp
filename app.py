@@ -76,6 +76,7 @@ class RequestMeta(BaseModel):
     north_has_water: bool = Field(False, description="北側有水")
     south_has_mountain: bool = Field(False, description="南側有山")
     detected_shas: Optional[List[str]] = Field(default=[], description="已知煞氣")
+    property_features: Optional[dict] = Field(default=None, description="物業特徵：海景/山景/裝修/交通等")
 
 
 class EvaluateRequest(BaseModel):
@@ -280,7 +281,7 @@ def _parse_goals(goals):
     return []
 
 
-def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None):
+def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None, property_features=None):
     """單人匹配計算"""
     # 1. 飛星分析
     flying_star_result = analyze_flying_star(
@@ -329,7 +330,11 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         sha_result=sha_result,
         bazi_result=bazi_result,
         bagua_result=bagua_result,
-        goal_result=goal_result
+        goal_result=goal_result,
+        district=address,
+        building_year=building_year,
+        eval_year=eval_year,
+        property_features=property_features
     )
 
     # 8. 填充樓盤信息
@@ -389,7 +394,8 @@ def run_single_match(meta: RequestMeta):
             north_has_water=meta.north_has_water,
             south_has_mountain=meta.south_has_mountain,
             eval_year=meta.eval_year,
-            address=meta.address
+            address=meta.address,
+            property_features=meta.property_features
         )
 
         result_b = _run_single_person_match(
@@ -401,7 +407,8 @@ def run_single_match(meta: RequestMeta):
             north_has_water=meta.north_has_water,
             south_has_mountain=meta.south_has_mountain,
             eval_year=meta.eval_year,
-            address=meta.address
+            address=meta.address,
+            property_features=meta.property_features
         )
 
         # 八宅雙人分析（專門用於對照表）
@@ -469,7 +476,8 @@ def run_single_match(meta: RequestMeta):
             north_has_water=meta.north_has_water,
             south_has_mountain=meta.south_has_mountain,
             eval_year=meta.eval_year,
-            address=meta.address
+            address=meta.address,
+            property_features=meta.property_features
         )
 
 
@@ -758,6 +766,42 @@ def match_estates(request: MatchEstatesRequest):
     for estate in estates:
         try:
             goals = _parse_goals(profile.goals)
+            
+            # 估算樓層（從 total_floors 取中層，否則默認10）
+            total_floors = estate.get("total_floors", "")
+            if total_floors and total_floors.isdigit():
+                floor = int(total_floors) // 2
+            else:
+                floor = 10
+            
+            # 從數據提取環境特徵
+            has_sea = estate.get("has_sea_view", "False").lower() == "true"
+            has_mountain = estate.get("has_mountain_view", "False").lower() == "true"
+            facing = estate.get("facing", "")
+            north_water = has_sea and facing in ["子山午向", "癸山丁向", "丑山未向", "艮山坤向", "壬山丙向"]
+            south_mountain = has_mountain and facing in ["午山子向", "丁山癸向", "未山丑向", "坤山艮向", "丙山壬向"]
+            
+            # 構建物業特徵
+            property_features = {
+                "has_sea_view": has_sea,
+                "has_mountain_view": has_mountain,
+                "decoration": "",  # 屋苑數據無裝修信息
+                "transport_rating": 0,
+                "amenities_score": 0
+            }
+            try:
+                tr = estate.get("transport_rating", "")
+                if tr and tr.isdigit():
+                    property_features["transport_rating"] = int(tr)
+            except:
+                pass
+            try:
+                am = estate.get("amenities_score", "")
+                if am and am.isdigit():
+                    property_features["amenities_score"] = int(am)
+            except:
+                pass
+            
             meta = RequestMeta(
                 eval_year=profile.eval_year,
                 user_gender=profile.user_gender,
@@ -773,11 +817,12 @@ def match_estates(request: MatchEstatesRequest):
                 cohabitant_weight_ratio=profile.cohabitant_weight_ratio,
                 building_year=int(estate.get("year_built", 2000)),
                 building_facing=estate["facing"],
-                floor_number=10,
+                floor_number=floor,
                 goals=goals,
-                north_has_water=False,
-                south_has_mountain=False,
-                detected_shas=[]
+                north_has_water=north_water,
+                south_has_mountain=south_mountain,
+                detected_shas=[],
+                property_features=property_features
             )
             match_result = run_single_match(meta)
             yb = estate.get("building_year", estate.get("year_built", ""))
@@ -836,12 +881,42 @@ def match_listings(request: MatchListingsRequest):
     for listing in listings:
         try:
             year = int(listing.get("year_built", 2000)) if listing.get("year_built") else 2000
+            
+            # 樓層提取：優先解析低層/中層/高層，其次提取數字
+            unit_info = listing.get("unit_info", "")
             floor = 10
-            if listing.get("unit_info"):
-                m = re.search(r'(\d+)', listing.get("unit_info", ""))
-                if m:
-                    floor = int(m.group(1))
-
+            if unit_info:
+                if "低層" in unit_info or "低层" in unit_info:
+                    floor = 5
+                elif "中層" in unit_info or "中层" in unit_info:
+                    floor = 10
+                elif "高層" in unit_info or "高层" in unit_info:
+                    floor = 20
+                else:
+                    m = re.search(r'(\d+)', unit_info)
+                    if m:
+                        floor_num = int(m.group(1))
+                        # 過濾掉座號（通常小於3或介於20-100之間）
+                        if 3 <= floor_num <= 80:
+                            floor = floor_num
+            
+            # 從 views 字段推斷環境特徵
+            views = listing.get("views", "")
+            has_sea = "海景" in views or "臨海" in views or "海" in views
+            has_mountain = "山景" in views or "園景" in views or "山" in views
+            facing = listing.get("facing", "")
+            north_water = has_sea and facing in ["子山午向", "癸山丁向", "丑山未向", "艮山坤向", "壬山丙向"]
+            south_mountain = has_mountain and facing in ["午山子向", "丁山癸向", "未山丑向", "坤山艮向", "丙山壬向"]
+            
+            # 構建物業特徵
+            property_features = {
+                "has_sea_view": has_sea,
+                "has_mountain_view": has_mountain,
+                "decoration": listing.get("decoration", ""),
+                "transport_rating": 0,
+                "amenities_score": 0
+            }
+            
             goals = _parse_goals(profile.goals)
             meta = RequestMeta(
                 eval_year=profile.eval_year,
@@ -860,9 +935,10 @@ def match_listings(request: MatchListingsRequest):
                 building_facing=listing["facing"],
                 floor_number=floor,
                 goals=goals,
-                north_has_water=False,
-                south_has_mountain=False,
-                detected_shas=[]
+                north_has_water=north_water,
+                south_has_mountain=south_mountain,
+                detected_shas=[],
+                property_features=property_features
             )
             match_result = run_single_match(meta)
             results.append({

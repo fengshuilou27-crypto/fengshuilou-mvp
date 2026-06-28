@@ -7,12 +7,15 @@ def aggregate_match_result(
     bazi_result: dict,
     bagua_result: dict,
     goal_result: dict,
-    district: str = None
+    district: str = None,
+    building_year: int = None,
+    eval_year: int = 2026,
+    property_features: dict = None
 ):
     """
     聚合匹配結果
     加權計算總分，生成結構化報告
-    100分制：飛星30 / 八字20 / 八宅15 / 零正神10 / 目標15 / 區位10 / 煞氣扣分
+    100分制：飛星30 / 八字20 / 八宅15 / 零正神10 / 目標15 / 區位10 / 物業特徵5 / 煞氣扣分
     """
     # 提取分數
     flying_score = flying_star_result.get("score", 0)
@@ -36,13 +39,63 @@ def aggregate_match_result(
     region_norm = (region_score / 10) * 10  # 固定10分
     sha_norm = sha_score  # 直接應用扣分
     
+    # === 樓齡懲罰 ===
+    age_penalty = 0.0
+    if building_year and eval_year:
+        age = eval_year - building_year
+        if age > 0:
+            age_penalty = min(age * 0.15, 8.0)  # 每年扣0.15，最多扣8分
+    
+    # === 物業特徵加分 ===
+    property_bonus = 0.0
+    property_bonus_details = {}
+    if property_features:
+        # 海景/山景
+        if property_features.get("has_sea_view"):
+            property_bonus += 0.5
+            property_bonus_details["海景"] = 0.5
+        if property_features.get("has_mountain_view"):
+            property_bonus += 0.5
+            property_bonus_details["山景"] = 0.5
+        
+        # 裝修狀態
+        decoration = property_features.get("decoration", "")
+        deco_score = 0.0
+        if "豪華" in decoration or "靚裝" in decoration:
+            deco_score = 1.5
+        elif "雅緻" in decoration or "精裝" in decoration:
+            deco_score = 1.0
+        elif "基本" in decoration:
+            deco_score = 0.5
+        if deco_score > 0:
+            property_bonus += deco_score
+            property_bonus_details["裝修"] = deco_score
+        
+        # 交通便利度 (1-5分)
+        transport_rating = property_features.get("transport_rating", 0)
+        if transport_rating and isinstance(transport_rating, (int, float)) and transport_rating > 0:
+            transport_score = min(transport_rating * 0.4, 2.0)
+            property_bonus += transport_score
+            property_bonus_details["交通"] = round(transport_score, 1)
+        
+        # 配套設施 (0-100分)
+        amenities_score = property_features.get("amenities_score", 0)
+        if amenities_score and isinstance(amenities_score, (int, float)) and amenities_score > 0:
+            amenities_bonus = min(amenities_score / 20 * 0.5, 2.0)
+            property_bonus += amenities_bonus
+            property_bonus_details["配套"] = round(amenities_bonus, 1)
+        
+        # 物業特徵總分上限 5 分
+        property_bonus = min(property_bonus, 5.0)
+    
     # 計算總分
     total_score = (
         flying_norm + zmg_norm + sha_norm + bazi_norm + bagua_norm + goal_norm + region_norm
+        - age_penalty + property_bonus
     )
     
     # 理論最高分（100分制）
-    max_possible = 30 + 10 + 0 + 20 + 15 + 15 + 10  # = 100
+    max_possible = 30 + 10 + 0 + 20 + 15 + 15 + 10 + 5  # = 105
     
     # 標準化到100分制
     normalized_score = (total_score / max_possible) * 100
@@ -119,9 +172,9 @@ def aggregate_match_result(
     ]
     overall_confidence = round(sum(confidences) / len(confidences), 2)
     
-    # 6維度 Radar 圖數據（正規化到 0-100）
+    # 7維度 Radar 圖數據（正規化到 0-100）
     radar_data = {
-        "dimensions": ["飛星", "八字", "八宅", "零正神", "目標", "區位"],
+        "dimensions": ["飛星", "八字", "八宅", "零正神", "目標", "區位", "物業特徵"],
         "scores": [
             round(min(100, max(0, (flying_norm / 30) * 100)), 1),
             round(min(100, max(0, (bazi_norm / 20) * 100)), 1),
@@ -129,8 +182,9 @@ def aggregate_match_result(
             round(min(100, max(0, (zmg_norm / 10) * 100)), 1),
             round(min(100, max(0, (goal_norm / 15) * 100)), 1),
             round(min(100, max(0, (region_norm / 10) * 100)), 1),
+            round(min(100, max(0, (property_bonus / 5) * 100)), 1),
         ],
-        "max_values": [100, 100, 100, 100, 100, 100]
+        "max_values": [100, 100, 100, 100, 100, 100, 100]
     }
     
     # 八字完整信息
@@ -157,7 +211,9 @@ def aggregate_match_result(
             "煞氣": round(sha_norm, 1),
             "八字": round(bazi_norm, 1),
             "八宅": round(bagua_norm, 1),
-            "目標": round(goal_norm, 1)
+            "目標": round(goal_norm, 1),
+            "物業特徵": round(property_bonus, 1),
+            "樓齡懲罰": round(-age_penalty, 1)
         },
         "radar_chart": radar_data,
         "bagua_comparison": bagua_comparison,
