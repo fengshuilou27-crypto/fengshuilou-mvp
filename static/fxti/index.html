@@ -24,7 +24,9 @@
         h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 26px; }
         .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
         .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
-        .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
+        .logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
+.logo-link img { height: 48px; width: auto; }
+.nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
         .nav a:hover { background: #667eea; color: white; }
         .nav a.active { background: #e74c3c; color: white; }
         .version-badge { display: inline-block; background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
@@ -102,6 +104,7 @@
 </head>
 <body>
     <div class="container">
+        <a href="/" class="logo-link" title="回到主頁"><img src="/logo.png" alt="風水樓"></a>
         <h1>FXTI 五行人格測評 <span class="version-badge">Module 4</span></h1>
         <p class="subtitle">先天八字 + 後天問卷 · 15種角色原型 · 專屬風水建議</p>
 
@@ -231,21 +234,42 @@
                 container.appendChild(card);
             });
 
-            // Bind click events
-            document.querySelectorAll('.options').forEach(optsGroup => {
-                optsGroup.querySelectorAll('.option').forEach(opt => {
-                    opt.addEventListener('click', function() {
-                        const qIdx = parseInt(optsGroup.dataset.idx);
-                        const oIdx = parseInt(this.dataset.oidx);
-                        answers[qIdx] = oIdx;
-
-                        // Visual update
-                        optsGroup.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-                        this.classList.add('selected');
-
-                        updateProgress();
-                    });
-                });
+            // Bind click events using event delegation for better reliability
+            document.getElementById('quizSection').addEventListener('click', function(e) {
+                const option = e.target.closest('.option');
+                if (!option) return;
+                
+                const optsGroup = option.closest('.options');
+                if (!optsGroup) return;
+                
+                const qIdx = parseInt(optsGroup.dataset.idx);
+                const oIdx = parseInt(option.dataset.oidx);
+                if (isNaN(qIdx) || isNaN(oIdx)) return;
+                
+                answers[qIdx] = oIdx;
+                
+                // Visual update: remove selected from all options in this group
+                optsGroup.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                updateProgress();
+            });
+            
+            // Keyboard support: allow Enter/Space to select
+            document.getElementById('quizSection').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    const option = document.activeElement.closest('.option');
+                    if (option) {
+                        e.preventDefault();
+                        option.click();
+                    }
+                }
+            });
+            
+            // Make options focusable for keyboard navigation
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.setAttribute('tabindex', '0');
+                opt.setAttribute('role', 'radio');
             });
         }
 

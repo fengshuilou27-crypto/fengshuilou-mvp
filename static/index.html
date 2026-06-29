@@ -23,6 +23,8 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
+        .logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
+        .logo-link img { height: 48px; width: auto; }
         .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
         .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
         .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
@@ -160,6 +162,7 @@
 </head>
 <body>
     <div class="container">
+        <a href="/" class="logo-link" title="回到主頁"><img src="/logo.png" alt="風水樓"></a>
         <h1>AI風水樓盤匹配系統 <span class="version-badge">MVP v2.4.0+GIS</span></h1>
         <p class="subtitle">雙周期飛星 · 多目標加權 · 同住人雙八字 · 六維度分析 · FXTI五行人格</p>
 
@@ -446,18 +449,37 @@
         function loadTestCase(name) {
             const data = TEST_CASES[name];
             if (!data) return;
-            document.querySelector('select[name="user_gender"]').value = data.user_gender;
-            document.querySelector('input[name="birth_date"]').value = data.birth_date;
-            document.querySelector('input[name="birth_time"]').value = data.birth_time || '';
-            document.querySelector('input[name="birth_place"]').value = data.birth_place || '';
-            document.querySelector('select[name="user_job"]').value = data.user_job || '';
+            
+            // 修復：保存用戶已輸入的個人資料，避免被預設覆蓋
+            const userBirthDate = document.querySelector('input[name="birth_date"]').value;
+            const userBirthTime = document.querySelector('input[name="birth_time"]').value;
+            const userBirthPlace = document.querySelector('input[name="birth_place"]').value;
+            const userGender = document.querySelector('select[name="user_gender"]').value;
+            const userJob = document.querySelector('select[name="user_job"]').value;
+            
+            // 只覆蓋樓盤相關字段，保留個人資料（除非用戶未填寫）
+            // 坐向、年份、樓層、環境特徵
             document.querySelector('select[name="building_facing"]').value = data.building_facing;
             document.querySelector('input[name="building_year"]').value = data.building_year;
             document.querySelector('input[name="floor_number"]').value = data.floor_number;
             document.querySelector('input[name="north_has_water"]').checked = data.north_has_water;
             document.querySelector('input[name="south_has_mountain"]').checked = data.south_has_mountain;
             document.querySelector('input[name="address"]').value = data.address || '';
-
+            
+            // 個人資料：只有當用戶未填寫時才使用預設值（出生日期默認值為1990-05-15，若用戶未更改則覆蓋）
+            const defaultBirthDate = '1990-05-15';
+            if (!userBirthDate || userBirthDate === defaultBirthDate) {
+                document.querySelector('input[name="birth_date"]').value = data.birth_date;
+            }
+            const defaultBirthTime = '12:00';
+            if (!userBirthTime || userBirthTime === defaultBirthTime) {
+                document.querySelector('input[name="birth_time"]').value = data.birth_time || '';
+            }
+            if (!userBirthPlace) {
+                document.querySelector('input[name="birth_place"]').value = data.birth_place || '';
+            }
+            // 性別和職業通常由用戶明確選擇，保留用戶選擇
+            
             // 同住人
             document.querySelector('input[name="cohabitant_enabled"]').checked = data.cohabitant_enabled || false;
             toggleCohabitant();
@@ -483,6 +505,9 @@
 
             // 煞氣
             document.querySelectorAll('input[name="sha"]').forEach(cb => cb.checked = false);
+            
+            // 提示用戶
+            alert(`已加載「${name}」樓盤預設\n\n個人資料（出生日期等）已保留，樓盤信息已更新。`);
         }
 
         function toggleCohabitant() {
@@ -707,7 +732,7 @@
                             <div class="score-bar">
                                 <div class="score-bar-fill ${bScore >= 25 ? 'gauge-excellent' : bScore >= 15 ? 'gauge-good' : bScore >= 8 ? 'gauge-average' : 'gauge-poor'}" style="width: ${(bScore/40)*100}%"></div>
                             </div>
-                            ${renderPanGrid(buildingPan.mountain_stars, buildingPan.facing_stars, buildingPan.auspicious_combos, buildingPan.inauspicious_combos)}
+                            ${renderPanGrid(buildingPan.mountain_stars, buildingPan.facing_stars, buildingPan.auspicious_combos, buildingPan.inauspicious_combos, dp.building_yun + '建造運')}
                         </div>
                         <div class="period-card">
                             <h4>當運（${dp.current_yun}）</h4>
@@ -716,17 +741,28 @@
                             <div class="score-bar">
                                 <div class="score-bar-fill ${currentPan.score >= 25 ? 'gauge-excellent' : currentPan.score >= 15 ? 'gauge-good' : currentPan.score >= 8 ? 'gauge-average' : 'gauge-poor'}" style="width: ${(currentPan.score/40)*100}%"></div>
                             </div>
-                            ${renderPanGrid(currentPan.mountain_stars, currentPan.facing_stars, currentPan.auspicious_combos, currentPan.inauspicious_combos)}
+                            ${renderPanGrid(currentPan.mountain_stars, currentPan.facing_stars, currentPan.auspicious_combos, currentPan.inauspicious_combos, dp.current_yun + '當運')}
                             ` : '<p style="font-size: 12px; color: #999; padding: 20px 0;">當運該坐向暫未收錄</p>'}
                         </div>
                     </div>
                 `;
             }
 
-            // 八宅對照表（雙人模式）
+            // 八宅對照表（雙人模式）— 優化版：預先構建方位映射，避免重複遍歷
             let baguaComparisonHtml = '';
             if (match.bagua_comparison) {
                 const bc = match.bagua_comparison;
+                // 預先構建方位映射：{ 方位: 吉位名稱, ... }
+                const buildDirMap = (auspicious, inauspicious) => {
+                    const map = {};
+                    Object.entries(auspicious || {}).forEach(([name, dir]) => { map[dir] = name; });
+                    Object.entries(inauspicious || {}).forEach(([name, dir]) => { map[dir + '_凶'] = name; });
+                    return map;
+                };
+                const aMap = buildDirMap(bc.person_a.auspicious, bc.person_a.inauspicious);
+                const bMap = buildDirMap(bc.person_b.auspicious, bc.person_b.inauspicious);
+                const conflictDirs = new Set((bc.conflicts || []).map(c => c.direction));
+                
                 baguaComparisonHtml = `
                     <h3 class="section-title">八宅吉位凶位對照</h3>
                     <div class="info-card">
@@ -736,17 +772,17 @@
                 `;
                 const directions = ['東南', '南', '東', '北', '東北', '西南', '西北', '西'];
                 directions.forEach(dir => {
-                    const aAusp = Object.entries(bc.person_a.auspicious || {}).find(([k,v]) => v === dir);
-                    const aInausp = Object.entries(bc.person_a.inauspicious || {}).find(([k,v]) => v === dir);
-                    const bAusp = Object.entries(bc.person_b.auspicious || {}).find(([k,v]) => v === dir);
-                    const bInausp = Object.entries(bc.person_b.inauspicious || {}).find(([k,v]) => v === dir);
-                    const isConflict = (aAusp && bInausp) || (bAusp && aInausp);
+                    const aAusp = aMap[dir] || '-';
+                    const aInausp = aMap[dir + '_凶'] || '-';
+                    const bAusp = bMap[dir] || '-';
+                    const bInausp = bMap[dir + '_凶'] || '-';
+                    const isConflict = conflictDirs.has(dir);
                     baguaComparisonHtml += `<tr class="${isConflict ? 'conflict' : ''}">
                         <td>${dir}</td>
-                        <td class="auspicious">${aAusp ? aAusp[0] : '-'}</td>
-                        <td class="inauspicious">${aInausp ? aInausp[0] : '-'}</td>
-                        <td class="auspicious">${bAusp ? bAusp[0] : '-'}</td>
-                        <td class="inauspicious">${bInausp ? bInausp[0] : '-'}</td>
+                        <td class="auspicious">${aAusp}</td>
+                        <td class="inauspicious">${aInausp}</td>
+                        <td class="auspicious">${bAusp}</td>
+                        <td class="inauspicious">${bInausp}</td>
                         <td>${isConflict ? '需調和' : ''}</td>
                     </tr>`;
                 });
@@ -774,6 +810,55 @@
                     <h3 class="section-title">樓盤信息</h3>
                     <div class="info-card" style="border-left-color: #28a745;">
                         <p><strong>地址：</strong>${match.property_info.address}</p>
+                    </div>
+                `;
+            }
+
+            // 八字排盤詳情
+            let baziDetailHtml = '';
+            if (match.bazi_data && match.bazi_data.bazi_full) {
+                const bf = match.bazi_data.bazi_full;
+                const ws = match.bazi_data.wang_shuai;
+                baziDetailHtml = `
+                    <h3 class="section-title">八字排盤詳情</h3>
+                    <div class="info-card" style="border-left-color: #9b59b6;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center; margin-bottom: 16px;">
+                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">年柱</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.year_pillar}</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">月柱</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.month_pillar}</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">日柱</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.day_pillar}</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">時柱</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.hour_pillar}</div>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; color: #555;">
+                            <div><strong>日主：</strong>${bf.day_master}</div>
+                            <div><strong>旺衰：</strong>${ws ? ws.strength : '未知'}</div>
+                            <div><strong>喜用神：</strong><span style="color: #28a745;">${ws ? ws.yong_shen : '未知'}</span></div>
+                            <div><strong>忌神：</strong><span style="color: #dc3545;">${ws ? ws.ji_shen : '未知'}</span></div>
+                        </div>
+                        ${ws ? `
+                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
+                            <strong>旺衰分析：</strong>日主${bf.day_master.split('（')[0]}在月令${ws.month_status}，
+                            月令得分${ws.month_score}，通根得分${ws.root_score}，天干生扶得分${ws.support_score}，
+                            總分${ws.strength_score}，判定為「${ws.strength}」。
+                        </div>
+                        ` : ''}
+                        ${match.bazi_data.floor_wuxing ? `
+                        <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                            <strong>樓層五行：</strong>${match.bazi_data.floor_wuxing}（${match.bazi_data.hetu_wuxing}${match.bazi_data.najia_wuxing ? ' + 納甲' + match.bazi_data.najia_wuxing : ''}）
+                            <span style="color: #888;"> · 關係：${match.bazi_data.relation}</span>
+                        </div>
+                        ` : ''}
                     </div>
                 `;
             }
@@ -823,6 +908,8 @@
                     <div class="info-card">
                         <p>${match.ai_rationale}</p>
                     </div>
+
+                    ${baziDetailHtml}
 
                     ${baziCareerHtml}
 
@@ -885,26 +972,96 @@
             }
         }
 
-        function renderPanGrid(mountainStars, facingStars, auspicious, inauspicious) {
+        function renderPanGrid(mountainStars, facingStars, auspicious, inauspicious, yunInfo) {
             if (!mountainStars) return '<p style="font-size: 12px; color: #999; padding: 20px 0;">暫無排盤數據</p>';
-            const directions = ['northwest', 'north', 'northeast', 'west', 'center', 'east', 'southwest', 'south', 'southeast'];
-            const directionLabels = {'northwest': '西北', 'north': '正北', 'northeast': '東北', 'west': '正西', 'center': '中宮', 'east': '正東', 'southwest': '西南', 'south': '正南', 'southeast': '東南'};
-            let html = '<div class="pan-grid">';
-            directions.forEach(dir => {
-                const m = mountainStars[dir] || '-';
-                const f = facingStars[dir] || '-';
-                let cellClass = 'cell';
-                let title = '';
-                const aCombo = auspicious && auspicious.find(c => c.direction === dir);
-                const iCombo = inauspicious && inauspicious.find(c => c.direction === dir);
-                if (aCombo) { cellClass += ' cell-auspicious'; title = `吉：${aCombo.desc}`; }
-                if (iCombo) { cellClass += ' cell-inauspicious'; title = `凶：${iCombo.desc}`; }
-                if (dir === 'center') cellClass += ' cell-center';
-                html += `<div class="${cellClass}" title="${title}">
-                    <div class="cell-direction">${directionLabels[dir]}</div>
-                    <div class="cell-stars">${m}\u00b7${f}</div>
+            
+            // 九宫飞星盘布局（洛书九宫）
+            // 4 9 2
+            // 3 5 7
+            // 8 1 6
+            const luoShuLayout = [
+                ['southeast', 'south', 'southwest'],
+                ['east', 'center', 'west'],
+                ['northeast', 'north', 'northwest']
+            ];
+            
+            const directionLabels = {
+                'north': '正北', 'northeast': '東北', 'east': '正東', 'southeast': '東南',
+                'south': '正南', 'southwest': '西南', 'west': '正西', 'northwest': '西北',
+                'center': '中宮'
+            };
+            
+            // 九宫格颜色映射（基于玄空飞星的吉凶）
+            const starColors = {
+                1: '#1e88e5',  // 一白水星 - 吉
+                2: '#8d6e63',  // 二黑土星 - 凶
+                3: '#43a047',  // 三碧木星 - 平
+                4: '#43a047',  // 四绿木星 - 吉
+                5: '#e53935',  // 五黄土星 - 大凶
+                6: '#1e88e5',  // 六白金星 - 吉
+                7: '#fb8c00',  // 七赤金星 - 平
+                8: '#fb8c00',  // 八白土星 - 大吉
+                9: '#e53935'   // 九紫火星 - 吉
+            };
+            
+            let html = '<div style="background: #fafafa; border-radius: 8px; padding: 16px; margin-top: 8px;">';
+            
+            // 运盘信息
+            if (yunInfo) {
+                html += `<div style="text-align: center; margin-bottom: 12px; font-size: 13px; color: #666;">
+                    <strong>${yunInfo}</strong> · 山星為「●」向星為「○」
                 </div>`;
+            }
+            
+            // 九宫格
+            html += '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 280px; margin: 0 auto;">';
+            
+            luoShuLayout.forEach(row => {
+                row.forEach(dir => {
+                    const m = mountainStars[dir] || '-';
+                    const f = facingStars[dir] || '-';
+                    const mNum = parseInt(m) || 0;
+                    const fNum = parseInt(f) || 0;
+                    
+                    let cellStyle = 'background: white; border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px 4px; text-align: center; position: relative; min-height: 60px; display: flex; flex-direction: column; justify-content: center;';
+                    let mColor = mNum ? (starColors[mNum] || '#666') : '#999';
+                    let fColor = fNum ? (starColors[fNum] || '#666') : '#999';
+                    
+                    // 检查吉凶组合
+                    const aCombo = auspicious && auspicious.find(c => c.direction === dir);
+                    const iCombo = inauspicious && inauspicious.find(c => c.direction === dir);
+                    
+                    if (aCombo) {
+                        cellStyle += ' border-color: #28a745; background: #d4edda;';
+                    } else if (iCombo) {
+                        cellStyle += ' border-color: #dc3545; background: #f8d7da;';
+                    } else if (dir === 'center') {
+                        cellStyle += ' border-color: #667eea; background: #f0f4ff;';
+                    }
+                    
+                    let tooltip = '';
+                    if (aCombo) tooltip = `吉：${aCombo.desc}`;
+                    if (iCombo) tooltip = `凶：${iCombo.desc}`;
+                    
+                    html += `<div style="${cellStyle}" title="${tooltip}">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">${directionLabels[dir]}</div>
+                        <div style="font-size: 16px; font-weight: 700; color: ${mColor};">●${m}</div>
+                        <div style="font-size: 16px; font-weight: 700; color: ${fColor};">○${f}</div>
+                    </div>`;
+                });
             });
+            
+            html += '</div>';
+            
+            // 图例
+            html += `
+                <div style="display: flex; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; color: #666;">
+                    <span style="color: #28a745;">■</span> 吉星
+                    <span style="color: #dc3545;">■</span> 凶星
+                    <span style="color: #667eea;">■</span> 中宮
+                </div>
+            `;
+            
             html += '</div>';
             return html;
         }
