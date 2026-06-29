@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Microsoft JhengHei', sans-serif; background: #f5f5f5; }
+        body { font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif; background: #f5f5f5; }
         #header {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #ffd700;
@@ -22,44 +22,27 @@
         }
         #header h1 { font-size: 18px; display: flex; align-items: center; gap: 10px; }
         #header .badge {
-            background: #ffd700;
-            color: #1a1a2e;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
+            background: #ffd700; color: #1a1a2e; padding: 2px 8px; border-radius: 4px;
+            font-size: 11px; font-weight: bold;
         }
         #container { display: flex; height: calc(100vh - 50px); }
         #sidebar {
-            width: 320px;
-            background: #fff;
-            border-right: 1px solid #ddd;
-            overflow-y: auto;
-            padding: 15px;
+            width: 320px; background: #fff; border-right: 1px solid #ddd;
+            overflow-y: auto; padding: 15px; display: flex; flex-direction: column;
         }
         #sidebar h3 { font-size: 14px; color: #333; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700; }
         .filter-group { margin-bottom: 15px; }
         .filter-group label { display: block; font-size: 12px; color: #666; margin-bottom: 5px; }
         .filter-group select, .filter-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
+            width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;
         }
         .btn {
-            background: linear-gradient(135deg, #ffd700, #ffb700);
-            color: #1a1a2e;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            width: 100%;
-            margin-top: 10px;
+            background: linear-gradient(135deg, #ffd700, #ffb700); color: #1a1a2e;
+            border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;
+            font-weight: bold; font-size: 13px; width: 100%; margin-top: 10px;
         }
         .btn:hover { opacity: 0.9; }
+        .btn-secondary { background: #f5f5f5; color: #333; }
         .legend { margin-top: 20px; padding: 10px; background: #f9f9f9; border-radius: 6px; }
         .legend h4 { font-size: 12px; margin-bottom: 8px; }
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 5px; }
@@ -76,16 +59,9 @@
         .sha-icon.mild { background: #ffc107; }
         #map { flex: 1; position: relative; }
         .info-panel {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.95);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            max-width: 280px;
-            z-index: 1000;
-            font-size: 12px;
+            position: absolute; bottom: 20px; right: 20px;
+            background: rgba(255,255,255,0.95); padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); max-width: 280px; z-index: 1000; font-size: 12px;
         }
         .info-panel h4 { font-size: 13px; margin-bottom: 8px; color: #1a1a2e; }
         .stat-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
@@ -104,57 +80,131 @@
         .tag.mountain { background: #e8f5e9; color: #388e3c; }
         .tag.yun { background: #fff3e0; color: #f57c00; }
         .tag.facing { background: #f3e5f5; color: #7b1fa2; }
+        .tag.data-missing { background: #ffebee; color: #c62828; }
+        .tag.data-ok { background: #e8f5e9; color: #2e7d32; }
+
+        /* ===== 詳情面板（Phase 4 新增） ===== */
+        #detailPanel {
+            display: none; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;
+        }
+        #detailPanel.active { display: block; }
+        .detail-section { margin-bottom: 15px; }
+        .detail-section h4 {
+            font-size: 13px; color: #1a1a2e; margin-bottom: 8px; padding-bottom: 4px;
+            border-bottom: 1px solid #ffd700; display: flex; align-items: center; gap: 6px;
+        }
+        .score-bar { display: flex; align-items: center; margin-bottom: 6px; font-size: 12px; }
+        .score-bar-label { width: 70px; color: #666; }
+        .score-bar-track { flex: 1; height: 14px; background: #f0f0f0; border-radius: 7px; overflow: hidden; margin: 0 8px; }
+        .score-bar-fill {
+            height: 100%; border-radius: 7px; transition: width 0.5s ease;
+        }
+        .score-bar-fill.high { background: linear-gradient(90deg, #4CAF50, #8BC34A); }
+        .score-bar-fill.medium { background: linear-gradient(90deg, #FF9800, #FFC107); }
+        .score-bar-fill.low { background: linear-gradient(90deg, #f44336, #ff5722); }
+        .score-bar-value { width: 40px; text-align: right; font-weight: bold; }
+        .score-bar-value.positive { color: #2e7d32; }
+        .score-bar-value.negative { color: #c62828; }
+        .data-coverage {
+            display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px;
+        }
+        .data-coverage-item {
+            font-size: 10px; padding: 2px 6px; border-radius: 3px; border: 1px solid;
+        }
+        .data-coverage-item.ok { background: #e8f5e9; color: #2e7d32; border-color: #81c784; }
+        .data-coverage-item.warn { background: #fff3e0; color: #f57c00; border-color: #ffb74d; }
+        .data-coverage-item.missing { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+        .rationale-box {
+            background: #f9f9f9; border-left: 3px solid #ffd700; padding: 8px 10px;
+            font-size: 11px; color: #555; line-height: 1.6; margin-top: 8px; border-radius: 0 4px 4px 0;
+        }
+
+        /* ===== SVG 雷達圖 ===== */
+        .radar-container { text-align: center; margin: 10px 0; }
+        .radar-svg { width: 100%; max-width: 260px; height: 200px; }
+
+        /* ===== 方向箭頭 Popup 樣式 ===== */
+        .direction-info { margin-top: 6px; font-size: 11px; color: #555; }
+        .direction-info .arrow-line {
+            display: inline-block; width: 20px; height: 2px; background: #333; margin: 0 2px; vertical-align: middle;
+        }
     </style>
 </head>
 <body>
     <div id="header">
-        <h1><i class="fas fa-map-marked-alt"></i> 風水樓盤 GIS 地圖 <span class="badge">v2.4</span></h1>
+        <h1><i class="fas fa-map-marked-alt"></i> 風水樓盤 GIS 地圖 <span class="badge">v2.5</span></h1>
         <div style="font-size: 12px; color: #ccc;">點擊屋苑查看詳情 | 紅色標記 = 煞氣 | 圓圈 = 屋苑</div>
     </div>
     <div id="container">
         <div id="sidebar">
-            <h3><i class="fas fa-filter"></i> 篩選條件</h3>
-            <div class="filter-group">
-                <label>地區</label>
-                <select id="districtFilter">
-                    <option value="">全部地區</option>
-                </select>
+            <div id="filterSection">
+                <h3><i class="fas fa-filter"></i> 篩選條件</h3>
+                <div class="filter-group">
+                    <label>地區</label>
+                    <select id="districtFilter"><option value="">全部地區</option></select>
+                </div>
+                <div class="filter-group">
+                    <label>坐向</label>
+                    <select id="facingFilter"><option value="">全部坐向</option></select>
+                </div>
+                <div class="filter-group">
+                    <label>元運</label>
+                    <select id="yunFilter">
+                        <option value="">全部元運</option>
+                        <option value="七運">七運</option>
+                        <option value="八運">八運</option>
+                        <option value="九運">九運</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="applyFilters()"><i class="fas fa-search"></i> 應用篩選</button>
+                <button class="btn btn-secondary" onclick="toggleHeatmap()"><i class="fas fa-fire"></i> 切換熱力圖</button>
+                <button class="btn btn-secondary" onclick="toggleShaPois()"><i class="fas fa-exclamation-triangle"></i> 切換煞氣顯示</button>
+                <div class="legend">
+                    <h4><i class="fas fa-circle"></i> 屋苑景觀</h4>
+                    <div class="legend-item"><span class="legend-dot sea-view"></span> 海景</div>
+                    <div class="legend-item"><span class="legend-dot mountain-view"></span> 山景</div>
+                    <div class="legend-item"><span class="legend-dot both-view"></span> 海景+山景</div>
+                    <div class="legend-item"><span class="legend-dot none"></span> 無景</div>
+                    <h4 style="margin-top:12px;"><i class="fas fa-skull-crossbones"></i> 煞氣等級</h4>
+                    <div class="sha-item"><span class="sha-icon critical"></span> 極重 (-10)</div>
+                    <div class="sha-item"><span class="sha-icon severe"></span> 嚴重 (-7)</div>
+                    <div class="sha-item"><span class="sha-icon moderate"></span> 中等 (-5)</div>
+                    <div class="sha-item"><span class="sha-icon mild"></span> 輕微 (-3)</div>
+                </div>
             </div>
-            <div class="filter-group">
-                <label>坐向</label>
-                <select id="facingFilter">
-                    <option value="">全部坐向</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>元運</label>
-                <select id="yunFilter">
-                    <option value="">全部元運</option>
-                    <option value="八運">八運</option>
-                    <option value="九運">九運</option>
-                </select>
-            </div>
-            <button class="btn" onclick="applyFilters()">
-                <i class="fas fa-search"></i> 應用篩選
-            </button>
-            <button class="btn" style="margin-top:8px; background:#f5f5f5; color:#333;" onclick="toggleHeatmap()">
-                <i class="fas fa-fire"></i> 切換熱力圖
-            </button>
-            <button class="btn" style="margin-top:8px; background:#f5f5f5; color:#333;" onclick="toggleShaPois()">
-                <i class="fas fa-exclamation-triangle"></i> 切換煞氣顯示
-            </button>
 
-            <div class="legend">
-                <h4><i class="fas fa-circle"></i> 屋苑景觀</h4>
-                <div class="legend-item"><span class="legend-dot sea-view"></span> 海景</div>
-                <div class="legend-item"><span class="legend-dot mountain-view"></span> 山景</div>
-                <div class="legend-item"><span class="legend-dot both-view"></span> 海景+山景</div>
-                <div class="legend-item"><span class="legend-dot none"></span> 無景</div>
-                <h4 style="margin-top:12px;"><i class="fas fa-skull-crossbones"></i> 煞氣等級</h4>
-                <div class="sha-item"><span class="sha-icon critical"></span> 極重 (-10)</div>
-                <div class="sha-item"><span class="sha-icon severe"></span> 嚴重 (-7)</div>
-                <div class="sha-item"><span class="sha-icon moderate"></span> 中等 (-5)</div>
-                <div class="sha-item"><span class="sha-icon mild"></span> 輕微 (-3)</div>
+            <!-- ===== Phase 4: 詳情面板 ===== -->
+            <div id="detailPanel">
+                <div class="detail-section">
+                    <h4><i class="fas fa-chart-radar"></i> 風水分析詳情</h4>
+                    <div id="detailEstateName" style="font-weight:bold; font-size:14px; margin-bottom:8px; color:#1a1a2e;"></div>
+                    <div id="detailTags" style="margin-bottom:10px;"></div>
+                    <div id="radarChart"></div>
+                </div>
+                <div class="detail-section">
+                    <h4><i class="fas fa-list-ol"></i> 各維度得分</h4>
+                    <div id="scoreBreakdown"></div>
+                </div>
+                <div class="detail-section">
+                    <h4><i class="fas fa-database"></i> 數據覆蓋狀態</h4>
+                    <div id="dataCoverage" class="data-coverage"></div>
+                    <div id="dataCoverageNote" class="rationale-box" style="display:none;"></div>
+                </div>
+                <div class="detail-section" id="gisDetailSection" style="display:none;">
+                    <h4><i class="fas fa-mountain"></i> GIS 地形分析</h4>
+                    <div id="gisDetail"></div>
+                </div>
+                <div class="detail-section" id="shaDetailSection" style="display:none;">
+                    <h4><i class="fas fa-exclamation-triangle"></i> 煞氣詳情</h4>
+                    <div id="shaDetail"></div>
+                </div>
+                <div class="detail-section">
+                    <h4><i class="fas fa-info-circle"></i> 分析說明</h4>
+                    <div id="rationaleBox" class="rationale-box"></div>
+                </div>
+                <button class="btn btn-secondary" onclick="closeDetailPanel()" style="margin-top:10px;">
+                    <i class="fas fa-times"></i> 關閉詳情
+                </button>
             </div>
         </div>
         <div id="map"></div>
@@ -164,224 +214,567 @@
             <div class="stat-row"><span>煞氣POI:</span> <strong id="totalShas">-</strong></div>
             <div class="stat-row"><span>當前顯示:</span> <strong id="visibleEstates">-</strong></div>
         </div>
-        <div class="loading" id="loading">
-            <i class="fas fa-spinner fa-spin"></i> 加載風水數據中...
-        </div>
+        <div class="loading" id="loading"><i class="fas fa-spinner fa-spin"></i> 加載風水數據中...</div>
     </div>
 
-    <script>
-    // ===== 配置 =====
-    const HK_CENTER = [22.3193, 114.1694];
-    const map = L.map('map').setView(HK_CENTER, 11);
+<script>
+// ===== 配置 =====
+const HK_CENTER = [22.3193, 114.1694];
+const map = L.map('map').setView(HK_CENTER, 11);
 
-    // 底圖
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>',
-        maxZoom: 18
-    }).addTo(map);
+// 底圖
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>',
+    maxZoom: 18
+}).addTo(map);
 
-    // 圖層容器
-    let estateLayer = L.layerGroup().addTo(map);
-    let shaLayer = L.layerGroup().addTo(map);
-    let heatLayer = null;
-    let showShaPois = true;
+// 圖層容器
+let estateLayer = L.layerGroup().addTo(map);
+let shaLayer = L.layerGroup().addTo(map);
+let arrowLayer = L.layerGroup().addTo(map);
+let radiusLayer = L.layerGroup().addTo(map);
+let heatLayer = null;
+let showShaPois = true;
+let showArrows = true;
 
-    // 景觀顏色
-    function getEstateColor(props) {
-        const hasSea = props.has_sea_view === 'True' || props.has_sea_view === 'true';
-        const hasMountain = props.has_mountain_view === 'True' || props.has_mountain_view === 'true';
-        if (hasSea && hasMountain) return '#FF9800';
-        if (hasSea) return '#2196F3';
-        if (hasMountain) return '#4CAF50';
-        return '#9E9E9E';
+// 坐向 → 角度（度）
+const FACING_DEGREES = {
+    '子': 0, '癸': 15, '丑': 30, '艮': 45, '寅': 60, '甲': 75,
+    '卯': 90, '乙': 105, '辰': 120, '巽': 135, '巳': 150, '丙': 165,
+    '午': 180, '丁': 195, '未': 210, '坤': 225, '申': 240, '庚': 255,
+    '酉': 270, '辛': 285, '戌': 300, '乾': 315, '亥': 330, '壬': 345
+};
+
+function parseFacing(facingStr) {
+    if (!facingStr || !facingStr.includes('山')) return null;
+    const mountain = facingStr.split('山')[0].trim();
+    return FACING_DEGREES[mountain] !== undefined ? FACING_DEGREES[mountain] : null;
+}
+
+// 景觀顏色
+function getEstateColor(props) {
+    const hasSea = props.has_sea_view === 'True' || props.has_sea_view === 'true';
+    const hasMountain = props.has_mountain_view === 'True' || props.has_mountain_view === 'true';
+    if (hasSea && hasMountain) return '#FF9800';
+    if (hasSea) return '#2196F3';
+    if (hasMountain) return '#4CAF50';
+    return '#9E9E9E';
+}
+
+function getEstateRadius(props) {
+    const tr = parseInt(props.transport_rating) || 3;
+    return 6 + tr * 2;
+}
+
+// 煞氣圖標
+function getShaIcon(severity) {
+    const colors = { critical: '#d32f2f', severe: '#f44336', moderate: '#ff9800', mild: '#ffc107' };
+    return L.divIcon({
+        className: 'sha-marker',
+        html: `<div style="background:${colors[severity] || '#999'};width:14px;height:14px;border-radius:3px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>`,
+        iconSize: [14, 14], iconAnchor: [7, 7]
+    });
+}
+
+// ===== 坐向方向箭頭（Phase 4 核心） =====
+function drawFacingArrow(lat, lng, facingDeg, estateName) {
+    if (facingDeg === null) return null;
+
+    const rad = (facingDeg * Math.PI) / 180;
+    const length = 0.004; // 約 400-500 米
+
+    // 前方（向首）= 坐山 + 180°
+    const frontLat = lat + Math.cos(rad) * length;
+    const frontLng = lng + Math.sin(rad) * length / Math.cos(lat * Math.PI / 180);
+
+    // 後方（坐山）= 坐山方向
+    const backLat = lat - Math.cos(rad) * length * 0.6;
+    const backLng = lng - Math.sin(rad) * length * 0.6 / Math.cos(lat * Math.PI / 180);
+
+    const group = L.layerGroup();
+
+    // 前方箭頭（綠色 = 向首/明堂）
+    const frontLine = L.polyline([[lat, lng], [frontLat, frontLng]], {
+        color: '#4CAF50', weight: 2, opacity: 0.7, dashArray: '5,5'
+    }).bindTooltip(`前方（向首/明堂）`, { direction: 'top', offset: [0, -10] });
+
+    // 後方箭頭（藍色 = 坐山/靠山）
+    const backLine = L.polyline([[lat, lng], [backLat, backLng]], {
+        color: '#2196F3', weight: 2, opacity: 0.7, dashArray: '5,5'
+    }).bindTooltip(`後方（坐山/靠山）`, { direction: 'bottom', offset: [0, 10] });
+
+    // 箭頭頭部（前方）
+    const arrowHead = L.polygon([
+        [frontLat, frontLng],
+        [frontLat - 0.0003 * Math.cos(rad - 0.3), frontLng - 0.0003 * Math.sin(rad - 0.3) / Math.cos(lat * Math.PI / 180)],
+        [frontLat - 0.0003 * Math.cos(rad + 0.3), frontLng - 0.0003 * Math.sin(rad + 0.3) / Math.cos(lat * Math.PI / 180)]
+    ], { color: '#4CAF50', fillColor: '#4CAF50', fillOpacity: 0.8, weight: 1 });
+
+    group.addLayer(frontLine);
+    group.addLayer(backLine);
+    group.addLayer(arrowHead);
+    return group;
+}
+
+// ===== 煞氣影響圈 =====
+function drawShaRadius(lat, lng) {
+    return L.circle([lat, lng], {
+        radius: 500, color: '#ff9800', weight: 1, fillColor: '#ff9800', fillOpacity: 0.05,
+        dashArray: '5,5'
+    }).bindTooltip('煞氣掃描範圍（500m）', { direction: 'center' });
+}
+
+// ===== 加載屋苑 =====
+async function loadEstates() {
+    const res = await fetch('/api/geo/estates?limit=500');
+    const data = await res.json();
+    const features = data.features || [];
+
+    const districts = [...new Set(features.map(f => f.properties.district).filter(Boolean))].sort();
+    const facings = [...new Set(features.map(f => f.properties.facing).filter(Boolean))].sort();
+    const districtSelect = document.getElementById('districtFilter');
+    const facingSelect = document.getElementById('facingFilter');
+    districts.forEach(d => { const opt = document.createElement('option'); opt.value = d; opt.textContent = d; districtSelect.appendChild(opt); });
+    facings.forEach(f => { const opt = document.createElement('option'); opt.value = f; opt.textContent = f; facingSelect.appendChild(opt); });
+
+    document.getElementById('totalEstates').textContent = features.length;
+    renderEstates(features);
+    return features;
+}
+
+function renderEstates(features) {
+    estateLayer.clearLayers();
+    arrowLayer.clearLayers();
+    radiusLayer.clearLayers();
+    const heatPoints = [];
+
+    features.forEach(f => {
+        const coords = f.geometry.coordinates;
+        const p = f.properties;
+        const color = getEstateColor(p);
+        const radius = getEstateRadius(p);
+
+        let weight = 0.3;
+        if (p.has_sea_view === 'True' || p.has_sea_view === 'true') weight += 0.3;
+        if (p.has_mountain_view === 'True' || p.has_mountain_view === 'true') weight += 0.2;
+        const tr = parseInt(p.transport_rating) || 3;
+        weight += tr * 0.05;
+        heatPoints.push([coords[1], coords[0], weight]);
+
+        const marker = L.circleMarker([coords[1], coords[0]], {
+            radius: radius, fillColor: color, color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.7
+        }).bindPopup(createEstatePopup(p, coords[1], coords[0]));
+
+        // 點擊時顯示詳情面板
+        marker.on('click', () => showDetailPanel(p, coords[1], coords[0]));
+
+        estateLayer.addLayer(marker);
+
+        // 畫坐向箭頭
+        if (p.facing && showArrows) {
+            const facingDeg = parseFacing(p.facing);
+            if (facingDeg !== null) {
+                const arrow = drawFacingArrow(coords[1], coords[0], facingDeg, p.name);
+                if (arrow) arrowLayer.addLayer(arrow);
+            }
+        }
+    });
+
+    if (heatLayer) map.removeLayer(heatLayer);
+    heatLayer = L.heatLayer(heatPoints, {
+        radius: 25, blur: 15, maxZoom: 13,
+        gradient: {0.3: '#2196F3', 0.5: '#4CAF50', 0.7: '#FF9800', 0.9: '#F44336'}
+    });
+
+    document.getElementById('visibleEstates').textContent = features.length;
+}
+
+function createEstatePopup(p, lat, lng) {
+    const tags = [];
+    if (p.has_sea_view === 'True' || p.has_sea_view === 'true') tags.push('<span class="tag sea">海景</span>');
+    if (p.has_mountain_view === 'True' || p.has_mountain_view === 'true') tags.push('<span class="tag mountain">山景</span>');
+    if (p.yun) tags.push(`<span class="tag yun">${p.yun}</span>`);
+    if (p.facing) tags.push(`<span class="tag facing">${p.facing}</span>`);
+
+    const age = p.building_year ? (2026 - parseInt(p.building_year)) + '年' : '-';
+    const facingDesc = p.facing ? `
+        <div class="direction-info">
+            <div><span style="color:#2196F3;">●</span> 後方（坐山/靠山）: ${p.facing.split('山')[0]}方</div>
+            <div><span style="color:#4CAF50;">●</span> 前方（向首/明堂）: ${p.facing.split('向')[1].replace('向','')}方</div>
+        </div>` : '';
+
+    return `<div class="popup-content">
+        <h4>${p.name}</h4>
+        <div>${tags.join('')}</div>
+        <div style="margin-top:6px;">
+            <div>地區: ${p.district || '-'}</div>
+            <div>樓齡: ${age}</div>
+            <div>交通: ${p.transport_rating || '-'}/5</div>
+            <div>配套: ${p.amenities_score || '-'}/100</div>
+        </div>
+        ${facingDesc}
+        <div style="margin-top:8px; text-align:right;">
+            <a href="/" target="_blank" style="color:#1976d2; font-size:11px;">風水匹配 &rarr;</a>
+        </div>
+    </div>`;
+}
+
+// ===== Phase 4: 詳情面板 =====
+async function showDetailPanel(p, lat, lng) {
+    document.getElementById('filterSection').style.display = 'none';
+    document.getElementById('detailPanel').classList.add('active');
+
+    document.getElementById('detailEstateName').textContent = p.name;
+
+    const tags = [];
+    if (p.has_sea_view === 'True' || p.has_sea_view === 'true') tags.push('<span class="tag sea">海景</span>');
+    if (p.has_mountain_view === 'True' || p.has_mountain_view === 'true') tags.push('<span class="tag mountain">山景</span>');
+    if (p.yun) tags.push(`<span class="tag yun">${p.yun}</span>`);
+    if (p.facing) tags.push(`<span class="tag facing">${p.facing}</span>`);
+    // 數據覆蓋標記
+    const hasCoords = lat && lng;
+    const hasYear = p.building_year && p.building_year !== '';
+    const hasFacing = p.facing && p.facing !== '';
+    tags.push(`<span class="tag ${hasCoords ? 'data-ok' : 'data-missing'}">${hasCoords ? '✓' : '✗'} 坐標</span>`);
+    tags.push(`<span class="tag ${hasYear ? 'data-ok' : 'data-missing'}">${hasYear ? '✓' : '✗'} 樓齡</span>`);
+    tags.push(`<span class="tag ${hasFacing ? 'data-ok' : 'data-missing'}">${hasFacing ? '✓' : '✗'} 坐向</span>`);
+    document.getElementById('detailTags').innerHTML = tags.join('');
+
+    // 畫煞氣影響圈
+    radiusLayer.clearLayers();
+    const radiusCircle = drawShaRadius(lat, lng);
+    radiusLayer.addLayer(radiusCircle);
+
+    // 獲取 GIS 風水分析
+    let gisData = null;
+    let nearbyShas = null;
+    try {
+        const gisRes = await fetch(`/api/geo/estate/${encodeURIComponent(p.name)}/feng-shui?facing=${encodeURIComponent(p.facing || '')}`);
+        gisData = await gisRes.json();
+    } catch (e) { console.error('GIS 加載失敗:', e); }
+
+    try {
+        const shaRes = await fetch(`/api/geo/estate/${encodeURIComponent(p.name)}/nearby-shas?radius_m=500`);
+        nearbyShas = await shaRes.json();
+    } catch (e) { console.error('煞氣加載失敗:', e); }
+
+    // 生成雷達圖（使用 GIS 數據的維度）
+    renderRadarChart(gisData);
+
+    // 生成得分明細
+    renderScoreBreakdown(gisData, nearbyShas, p);
+
+    // 數據覆蓋狀態
+    renderDataCoverage(p, gisData, nearbyShas);
+
+    // GIS 地形詳情
+    if (gisData && gisData.status === 'success') {
+        renderGisDetail(gisData);
     }
 
-    function getEstateRadius(props) {
-        const tr = parseInt(props.transport_rating) || 3;
-        return 6 + tr * 2;
+    // 煞氣詳情
+    if (nearbyShas && nearbyShas.shas_found && nearbyShas.shas_found.length > 0) {
+        renderShaDetail(nearbyShas);
     }
 
-    // 煞氣圖標
-    function getShaIcon(severity) {
-        const colors = {
-            critical: '#d32f2f',
-            severe: '#f44336',
-            moderate: '#ff9800',
-            mild: '#ffc107'
-        };
-        return L.divIcon({
-            className: 'sha-marker',
-            html: `<div style="background:${colors[severity] || '#999'};width:14px;height:14px;border-radius:3px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>`,
-            iconSize: [14, 14],
-            iconAnchor: [7, 7]
-        });
+    // 說明
+    let rationale = '';
+    if (gisData && gisData.rationale) {
+        rationale += gisData.rationale + '\n\n';
+    }
+    rationale += '💡 提示：此處展示的是 GIS 地形與環境分析。完整風水匹配（飛星/八字/八宅等）需要輸入個人信息和目標後在風水匹配頁面進行。';
+    document.getElementById('rationaleBox').textContent = rationale;
+}
+
+function closeDetailPanel() {
+    document.getElementById('detailPanel').classList.remove('active');
+    document.getElementById('filterSection').style.display = 'block';
+    radiusLayer.clearLayers();
+}
+
+// ===== SVG 雷達圖 =====
+function renderRadarChart(gisData) {
+    const container = document.getElementById('radarChart');
+    if (!gisData || gisData.status !== 'success') {
+        container.innerHTML = '<div style="text-align:center; color:#999; font-size:12px; padding:20px;">GIS 數據不可用，無法生成雷達圖</div>';
+        return;
     }
 
-    // 加載屋苑
-    async function loadEstates() {
-        const res = await fetch('/api/geo/estates?limit=500');
-        const data = await res.json();
-        const features = data.features || [];
+    const dimensions = ['水法', '地形', '煞氣防禦'];
+    const scores = [
+        Math.max(0, (gisData.water_feng_shui.water_score || 0) * 10),  // 0-10 → 0-100
+        Math.max(0, (gisData.terrain_feng_shui.terrain_score || 0) * 10),
+        Math.max(0, 100 + (gisData.sha_scan.total_penalty || 0) * 5)  // -25 → 0-100
+    ];
 
-        // 填充篩選選項
-        const districts = [...new Set(features.map(f => f.properties.district).filter(Boolean))].sort();
-        const facings = [...new Set(features.map(f => f.properties.facing).filter(Boolean))].sort();
-        const districtSelect = document.getElementById('districtFilter');
-        const facingSelect = document.getElementById('facingFilter');
-        districts.forEach(d => {
-            const opt = document.createElement('option');
-            opt.value = d; opt.textContent = d;
-            districtSelect.appendChild(opt);
-        });
-        facings.forEach(f => {
-            const opt = document.createElement('option');
-            opt.value = f; opt.textContent = f;
-            facingSelect.appendChild(opt);
-        });
+    const cx = 130, cy = 90, r = 70;
+    const n = dimensions.length;
+    const angleStep = (2 * Math.PI) / n;
 
-        document.getElementById('totalEstates').textContent = features.length;
-        renderEstates(features);
-        return features;
+    let points = '';
+    for (let i = 0; i < n; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const scoreR = (scores[i] / 100) * r;
+        const x = cx + Math.cos(angle) * scoreR;
+        const y = cy + Math.sin(angle) * scoreR;
+        points += `${x},${y} `;
     }
 
-    function renderEstates(features) {
-        estateLayer.clearLayers();
-        const heatPoints = [];
-
-        features.forEach(f => {
-            const coords = f.geometry.coordinates;
-            const p = f.properties;
-            const color = getEstateColor(p);
-            const radius = getEstateRadius(p);
-
-            // 景觀權重（熱力圖）
-            let weight = 0.3;
-            if (p.has_sea_view === 'True' || p.has_sea_view === 'true') weight += 0.3;
-            if (p.has_mountain_view === 'True' || p.has_mountain_view === 'true') weight += 0.2;
-            const tr = parseInt(p.transport_rating) || 3;
-            weight += tr * 0.05;
-            heatPoints.push([coords[1], coords[0], weight]);
-
-            const marker = L.circleMarker([coords[1], coords[0]], {
-                radius: radius,
-                fillColor: color,
-                color: '#fff',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.7
-            }).bindPopup(createEstatePopup(p));
-
-            estateLayer.addLayer(marker);
-        });
-
-        // 熱力圖
-        if (heatLayer) map.removeLayer(heatLayer);
-        heatLayer = L.heatLayer(heatPoints, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 13,
-            gradient: {0.3: '#2196F3', 0.5: '#4CAF50', 0.7: '#FF9800', 0.9: '#F44336'}
-        });
-
-        document.getElementById('visibleEstates').textContent = features.length;
+    let labels = '';
+    for (let i = 0; i < n; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const lx = cx + Math.cos(angle) * (r + 18);
+        const ly = cy + Math.sin(angle) * (r + 18);
+        const score = Math.round(scores[i]);
+        let color = score >= 70 ? '#2e7d32' : score >= 40 ? '#f57c00' : '#c62828';
+        labels += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="11" fill="#333">${dimensions[i]}</text>`;
+        labels += `<text x="${lx}" y="${ly + 12}" text-anchor="middle" font-size="10" fill="${color}" font-weight="bold">${score}分</text>`;
     }
 
-    function createEstatePopup(p) {
-        const tags = [];
-        if (p.has_sea_view === 'True' || p.has_sea_view === 'true') tags.push('<span class="tag sea">海景</span>');
-        if (p.has_mountain_view === 'True' || p.has_mountain_view === 'true') tags.push('<span class="tag mountain">山景</span>');
-        if (p.yun) tags.push(`<span class="tag yun">${p.yun}</span>`);
-        if (p.facing) tags.push(`<span class="tag facing">${p.facing}</span>`);
+    let grid = '';
+    for (let level = 1; level <= 4; level++) {
+        const levelR = (level / 4) * r;
+        let levelPoints = '';
+        for (let i = 0; i < n; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const x = cx + Math.cos(angle) * levelR;
+            const y = cy + Math.sin(angle) * levelR;
+            levelPoints += `${x},${y} `;
+        }
+        grid += `<polygon points="${levelPoints}" fill="none" stroke="#e0e0e0" stroke-width="1"/>`;
+    }
 
-        return `<div class="popup-content">
-            <h4>${p.name}</h4>
-            <div>${tags.join('')}</div>
-            <div style="margin-top:6px;">
-                <div>地區: ${p.district || '-'}</div>
-                <div>樓齡: ${p.building_year ? (2026 - parseInt(p.building_year)) + '年' : '-'}</div>
-                <div>交通: ${p.transport_rating || '-'}/5</div>
-                <div>配套: ${p.amenities_score || '-'}/100</div>
-            </div>
-            <div style="margin-top:8px; text-align:right;">
-                <a href="/" target="_blank" style="color:#1976d2; font-size:11px;">風水匹配 &rarr;</a>
-            </div>
+    let axes = '';
+    for (let i = 0; i < n; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        axes += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#e0e0e0" stroke-width="1"/>`;
+    }
+
+    const svg = `<svg class="radar-svg" viewBox="0 0 260 180">
+        ${grid}${axes}
+        <polygon points="${points}" fill="rgba(255,215,0,0.2)" stroke="#ffd700" stroke-width="2"/>
+        ${labels}
+        <circle cx="${cx}" cy="${cy}" r="3" fill="#ffd700"/>
+    </svg>`;
+
+    container.innerHTML = `<div class="radar-container">${svg}</div>`;
+}
+
+// ===== 得分明細 =====
+function renderScoreBreakdown(gisData, nearbyShas, props) {
+    const container = document.getElementById('scoreBreakdown');
+    let html = '';
+
+    if (gisData && gisData.status === 'success') {
+        const waterScore = gisData.water_feng_shui.water_score || 0;
+        const terrainScore = gisData.terrain_feng_shui.terrain_score || 0;
+        const shaPenalty = gisData.sha_scan.total_penalty || 0;
+        const totalScore = gisData.score || 0;
+
+        html += renderScoreBar('水法', waterScore, 10, 'positive');
+        html += renderScoreBar('地形', terrainScore, 10, 'positive');
+        html += renderScoreBar('煞氣', shaPenalty, 0, 'negative');
+        html += `<div style="border-top:1px solid #eee; margin:8px 0; padding-top:6px; font-weight:bold; font-size:13px; color:#1a1a2e;">
+            GIS 總分: ${totalScore} / 20
+        </div>`;
+    } else {
+        html += '<div style="color:#999; font-size:12px;">GIS 分析數據不可用</div>';
+    }
+
+    container.innerHTML = html;
+}
+
+function renderScoreBar(label, score, max, type) {
+    const pct = max > 0 ? Math.min(100, Math.max(0, (score / max) * 100)) : 0;
+    if (max === 0 && score < 0) {
+        // 純扣分項
+        const penaltyPct = Math.min(100, Math.abs(score) * 5);
+        return `<div class="score-bar">
+            <span class="score-bar-label">${label}</span>
+            <div class="score-bar-track"><div class="score-bar-fill low" style="width:${penaltyPct}%"></div></div>
+            <span class="score-bar-value negative">${score}</span>
         </div>`;
     }
+    const cls = pct >= 70 ? 'high' : pct >= 40 ? 'medium' : 'low';
+    return `<div class="score-bar">
+        <span class="score-bar-label">${label}</span>
+        <div class="score-bar-track"><div class="score-bar-fill ${cls}" style="width:${pct}%"></div></div>
+        <span class="score-bar-value positive">${score}</span>
+    </div>`;
+}
 
-    // 加載煞氣
-    async function loadShaPois() {
-        const res = await fetch('/api/geo/sha-pois');
-        const data = await res.json();
-        const features = data.features || [];
-        document.getElementById('totalShas').textContent = features.length;
-        renderShaPois(features);
-        return features;
+// ===== 數據覆蓋狀態 =====
+function renderDataCoverage(p, gisData, nearbyShas) {
+    const container = document.getElementById('dataCoverage');
+    const note = document.getElementById('dataCoverageNote');
+    let html = '';
+
+    const hasCoords = p.lat && p.lng;
+    const hasYear = p.building_year && p.building_year !== '';
+    const hasFacing = p.facing && p.facing !== '';
+    const hasGis = gisData && gisData.status === 'success';
+    const hasSha = nearbyShas && nearbyShas.status === 'success';
+
+    html += `<span class="data-coverage-item ${hasCoords ? 'ok' : 'missing'}">地理坐標</span>`;
+    html += `<span class="data-coverage-item ${hasYear ? 'ok' : 'warn'}">建造年份</span>`;
+    html += `<span class="data-coverage-item ${hasFacing ? 'ok' : 'warn'}">坐向</span>`;
+    html += `<span class="data-coverage-item ${hasGis ? 'ok' : 'missing'}">GIS分析</span>`;
+    html += `<span class="data-coverage-item ${hasSha ? 'ok' : 'warn'}">煞氣POI</span>`;
+
+    container.innerHTML = html;
+
+    let noteText = '';
+    if (!hasFacing) {
+        noteText += '⚠️ 缺少坐向數據：水法分析和地形分析（靠山/明堂方向）無法進行。';
     }
-
-    function renderShaPois(features) {
-        shaLayer.clearLayers();
-        if (!showShaPois) return;
-
-        features.forEach(f => {
-            const coords = f.geometry.coordinates;
-            const p = f.properties;
-            const icon = getShaIcon(p.severity);
-
-            const marker = L.marker([coords[1], coords[0]], { icon: icon })
-                .bindPopup(`<div class="popup-content">
-                    <h4 style="color:${{critical:'#d32f2f',severe:'#f44336',moderate:'#ff9800',mild:'#ffc107'}[p.severity]}">${p.name}</h4>
-                    <div>類型: ${p.sha_type}</div>
-                    <div>嚴重: ${p.severity}</div>
-                    <div style="color:#666; margin-top:4px;">${p.feng_shui_effect || ''}</div>
-                </div>`);
-
-            shaLayer.addLayer(marker);
-        });
+    if (!hasGis) {
+        noteText += '⚠️ GIS 分析失敗：可能缺少坐標或坐向。';
     }
-
-    // 篩選
-    let allEstates = [];
-    let allShas = [];
-
-    async function applyFilters() {
-        const district = document.getElementById('districtFilter').value;
-        const facing = document.getElementById('facingFilter').value;
-        const yun = document.getElementById('yunFilter').value;
-
-        let filtered = allEstates;
-        if (district) filtered = filtered.filter(f => f.properties.district === district);
-        if (facing) filtered = filtered.filter(f => f.properties.facing === facing);
-        if (yun) filtered = filtered.filter(f => f.properties.yun === yun);
-
-        renderEstates(filtered);
+    if (noteText) {
+        note.style.display = 'block';
+        note.textContent = noteText;
+    } else {
+        note.style.display = 'none';
     }
+}
 
-    function toggleHeatmap() {
-        if (map.hasLayer(heatLayer)) {
-            map.removeLayer(heatLayer);
-        } else {
-            map.addLayer(heatLayer);
-        }
+// ===== GIS 地形詳情 =====
+function renderGisDetail(gisData) {
+    const section = document.getElementById('gisDetailSection');
+    const container = document.getElementById('gisDetail');
+    section.style.display = 'block';
+
+    const terrain = gisData.terrain_feng_shui || {};
+    const backing = terrain.backing_mountain || {};
+    const mingtang = terrain.ming_tang || {};
+    const dragon = terrain.dragon_vein || {};
+
+    let html = `<div style="font-size:12px; line-height:1.6;">`;
+    html += `<div><strong>估算高程:</strong> ${terrain.elevation || '-'}m</div>`;
+    html += `<div style="margin-top:6px;"><strong>靠山分析:</strong> ${backing.description || '-'} (得分: ${backing.score || 0})</div>`;
+    html += `<div><strong>明堂分析:</strong> ${mingtang.description || '-'} (得分: ${mingtang.score || 0})</div>`;
+    html += `<div><strong>龍脈分析:</strong> ${dragon.description || '-'} (得分: ${dragon.score || 0})</div>`;
+    html += `<div style="margin-top:6px; color:#666; font-size:11px;">
+        💡 說明：靠山/明堂/龍脈分析基於簡化地形模型（已知山峰 + 指數距離衰減）。
+        後續將接入 SRTM/ALOS 真實 DEM 數據提升精度。
+    </div>`;
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+// ===== 煞氣詳情 =====
+function renderShaDetail(nearbyShas) {
+    const section = document.getElementById('shaDetailSection');
+    const container = document.getElementById('shaDetail');
+    section.style.display = 'block';
+
+    let html = `<div style="font-size:12px; line-height:1.6;">`;
+    html += `<div style="margin-bottom:6px;"><strong>掃描範圍:</strong> ${nearbyShas.radius_m || 500}m</div>`;
+    html += `<div style="margin-bottom:6px;"><strong>發現煞氣:</strong> ${nearbyShas.shas_found.length} 個</div>`;
+
+    nearbyShas.shas_found.forEach(sha => {
+        const sevColors = { critical: '#d32f2f', severe: '#f44336', moderate: '#ff9800', mild: '#ffc107' };
+        const color = sevColors[sha.severity] || '#999';
+        html += `<div style="border-left: 3px solid ${color}; padding-left: 8px; margin-bottom: 6px;">`;
+        html += `<div style="font-weight:bold; color:${color};">${sha.name}</div>`;
+        html += `<div>類型: ${sha.sha_type} | 距離: ${Math.round(sha.distance_m)}m | 嚴重: ${sha.severity}</div>`;
+        html += `<div style="color:#666; font-size:11px;">${sha.feng_shui_effect || ''}</div>`;
+        html += `</div>`;
+    });
+
+    html += `<div style="margin-top:8px; color:#666; font-size:11px;">
+        💡 注意：此處顯示的是 GIS 環境煞氣（物理環境）。
+        飛星盤推導的煞氣（如二五交加、五黃到山向）在風水匹配報告中單獨展示。
+    </div>`;
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+// ===== 加載煞氣 =====
+async function loadShaPois() {
+    const res = await fetch('/api/geo/sha-pois');
+    const data = await res.json();
+    const features = data.features || [];
+    document.getElementById('totalShas').textContent = features.length;
+    renderShaPois(features);
+    return features;
+}
+
+function renderShaPois(features) {
+    shaLayer.clearLayers();
+    if (!showShaPois) return;
+
+    features.forEach(f => {
+        const coords = f.geometry.coordinates;
+        const p = f.properties;
+        const icon = getShaIcon(p.severity);
+        const marker = L.marker([coords[1], coords[0]], { icon: icon })
+            .bindPopup(`<div class="popup-content">
+                <h4 style="color:${{critical:'#d32f2f',severe:'#f44336',moderate:'#ff9800',mild:'#ffc107'}[p.severity]}">${p.name}</h4>
+                <div>類型: ${p.sha_type}</div>
+                <div>嚴重: ${p.severity}</div>
+                <div style="color:#666; margin-top:4px;">${p.feng_shui_effect || ''}</div>
+            </div>`);
+        shaLayer.addLayer(marker);
+    });
+}
+
+// ===== 篩選 =====
+let allEstates = [];
+let allShas = [];
+
+async function applyFilters() {
+    const district = document.getElementById('districtFilter').value;
+    const facing = document.getElementById('facingFilter').value;
+    const yun = document.getElementById('yunFilter').value;
+
+    let filtered = allEstates;
+    if (district) filtered = filtered.filter(f => f.properties.district === district);
+    if (facing) filtered = filtered.filter(f => f.properties.facing === facing);
+    if (yun) filtered = filtered.filter(f => f.properties.yun === yun);
+
+    renderEstates(filtered);
+}
+
+function toggleHeatmap() {
+    if (map.hasLayer(heatLayer)) { map.removeLayer(heatLayer); }
+    else { map.addLayer(heatLayer); }
+}
+
+function toggleShaPois() {
+    showShaPois = !showShaPois;
+    renderShaPois(allShas);
+}
+
+function toggleArrows() {
+    showArrows = !showArrows;
+    renderEstates(allEstates);
+}
+
+// 初始化
+async function init() {
+    try {
+        allEstates = await loadEstates();
+        allShas = await loadShaPois();
+
+        // 添加方向箭頭切換按鈕
+        const arrowBtn = document.createElement('button');
+        arrowBtn.className = 'btn btn-secondary';
+        arrowBtn.style.marginTop = '8px';
+        arrowBtn.innerHTML = '<i class="fas fa-arrows-alt"></i> 切換坐向箭頭';
+        arrowBtn.onclick = toggleArrows;
+        document.getElementById('filterSection').appendChild(arrowBtn);
+
+        document.getElementById('loading').style.display = 'none';
+    } catch (e) {
+        console.error('加載失敗:', e);
+        document.getElementById('loading').innerHTML = '加載失敗，請檢查 API 連接';
     }
+}
 
-    function toggleShaPois() {
-        showShaPois = !showShaPois;
-        renderShaPois(allShas);
-    }
-
-    // 初始化
-    async function init() {
-        try {
-            allEstates = await loadEstates();
-            allShas = await loadShaPois();
-            document.getElementById('loading').style.display = 'none';
-        } catch (e) {
-            console.error('加載失敗:', e);
-            document.getElementById('loading').innerHTML = '加載失敗，請檢查 API 連接';
-        }
-    }
-
-    init();
-    </script>
+init();
+</script>
 </body>
 </html>
