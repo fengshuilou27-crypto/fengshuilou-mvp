@@ -19,7 +19,9 @@
         }
         .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
         .nav a { padding: 8px 16px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; font-size: 14px; transition: all 0.2s; }
-        .nav a:hover { background: #667eea; }
+        .logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
+.logo-link img { height: 48px; width: auto; }
+.nav a:hover { background: #667eea; }
         .nav a.active { background: #e74c3c; }
 
         /* Result Card */
@@ -304,6 +306,7 @@
 </head>
 <body>
     <div class="container">
+        <a href="/" class="logo-link" title="回到主頁"><img src="/logo.png" alt="風水樓"></a>
         <div class="module-cards">
             <a href="../index.html" class="module-card" style="color: #444;">
                 <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
@@ -399,6 +402,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
+        // ===== 通用工具：帶超時的 fetch（AbortController）=====
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                if (err.name === 'AbortError') {
+                    throw new Error('請求超時，請檢查網絡連接或稍後重試');
+                }
+                throw err;
+            }
+        }
+
         const WUXING_COLORS = {
             '金': '#C0C0C0',
             '木': '#32CD32',
@@ -422,7 +442,7 @@
             // If URL has different id, fetch from API
             if (id && (!resultData || resultData.id !== id)) {
                 try {
-                    const resp = await fetch('/api/fxti/result/' + id);
+                    const resp = await fetchWithTimeout('/api/fxti/result/' + id, {}, 30000);
                     const data = await resp.json();
                     if (data.status === 'success') {
                         resultData = data.data;

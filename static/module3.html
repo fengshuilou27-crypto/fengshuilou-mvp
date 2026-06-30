@@ -14,6 +14,8 @@ h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
 .module-badge { display: inline-block; background: #28a745; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
 .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
 .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
+.logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
+.logo-link img { height: 48px; width: auto; }
 .nav a:hover { background: #667eea; color: white; }
 .nav a.active { background: #667eea; color: white; }
 .form-group { margin-bottom: 16px; }
@@ -71,6 +73,7 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 </head>
 <body>
 <div class="container">
+<a href="/" class="logo-link" title="回到主頁"><img src="/logo.png" alt="風水樓"></a>
 <h1>AI風水樓盤匹配系統 <span class="module-badge">模組3</span></h1>
 <p class="subtitle">配對物業 — 輸入個人資料，系統從樓盤數據庫匹配最適合您的具體物業</p>
 
@@ -282,6 +285,23 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 </div>
 
 <script>
+        // ===== 通用工具：帶超時的 fetch（AbortController）=====
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                if (err.name === 'AbortError') {
+                    throw new Error('請求超時，請檢查網絡連接或稍後重試');
+                }
+                throw err;
+            }
+        }
+
 const API_SEARCH_URL = '/api/search-properties';
 const API_MARKET_URL = '/api/market-list';
 const API_EVAL_URL = '/api/evaluate-from-db';
@@ -379,10 +399,10 @@ async function runMatching() {
         top_n: 15
     };
     try {
-        const resp = await fetch(API_SEARCH_URL, {
+        const resp = await fetchWithTimeout(API_SEARCH_URL, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-        });
+        }, 30000);
         const data = await resp.json();
         if (data.status === 'success') {
             currentListings = data.top_results || [];
@@ -475,7 +495,7 @@ async function showMarket() {
     const el = document.getElementById('callBuyList');
     el.innerHTML = '<div class="loading"><div class="spinner"></div><p>正在加載叫買市場...</p></div>';
     try {
-        const resp = await fetch(API_MARKET_URL);
+        const resp = await fetchWithTimeout(API_MARKET_URL, {}, 30000);
         const data = await resp.json();
         if (data.status === 'success') {
             let html = '<div style="margin-top:16px">';
@@ -519,10 +539,10 @@ async function runSelfTest(propertyId) {
         property_id: propertyId
     };
     try {
-        const resp = await fetch(API_EVAL_URL, {
+        const resp = await fetchWithTimeout(API_EVAL_URL, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-        });
+        }, 30000);
         const data = await resp.json();
         if (data.status === 'success') {
             document.getElementById('step4').style.display = 'none';

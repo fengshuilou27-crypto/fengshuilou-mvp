@@ -200,6 +200,23 @@
     </div>
 
     <script>
+        // ===== 通用工具：帶超時的 fetch（AbortController）=====
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                if (err.name === 'AbortError') {
+                    throw new Error('請求超時，請檢查網絡連接或稍後重試');
+                }
+                throw err;
+            }
+        }
+
         const QUESTIONS = [
             { q: "當你面對一個重要決定時，你通常會怎麼做？", opts: ["仔細分析利弊，列出優缺點再做決定", "聽取多方意見，尋求創新解決方案", "跟隨直覺，靜待時機成熟", "果斷行動，先做再說", "徵求信任的人的意見，穩妥為上"] },
             { q: "在團隊合作中，你通常扮演什麼角色？", opts: ["制定規則和標準，確保效率", "提出新點子，推動改變", "協調各方，化解衝突", "帶領大家，鼓舞士氣", "默默支持，穩定後方"] },
@@ -305,11 +322,11 @@
             };
 
             try {
-                const response = await fetch('/api/fxti/calculate', {
+                const response = await fetchWithTimeout('/api/fxti/calculate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
-                });
+                }, 30000);
                 const result = await response.json();
                 if (result.status === 'success') {
                     // Store result in localStorage for result page

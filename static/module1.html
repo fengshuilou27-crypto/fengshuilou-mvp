@@ -21,7 +21,9 @@
         .module-badge { display: inline-block; background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
         .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
         .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
-        .nav a:hover { background: #667eea; color: white; }
+        .logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
+.logo-link img { height: 48px; width: auto; }
+.nav a:hover { background: #667eea; color: white; }
         .nav a.active { background: #667eea; color: white; }
         .form-group { margin-bottom: 16px; }
         label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
@@ -68,6 +70,7 @@
 </head>
 <body>
 <div class="container">
+<a href="/" class="logo-link" title="回到主頁"><img src="/logo.png" alt="風水樓"></a>
     <h1>AI風水樓盤匹配系統 <span class="module-badge">模組1</span></h1>
     <p class="subtitle">自測現有住所 — 輸入您的個人資料與現有住所，獲得風水評估報告</p>
     
@@ -213,6 +216,23 @@
 </div>
 
 <script>
+        // ===== 通用工具：帶超時的 fetch（AbortController）=====
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                if (err.name === 'AbortError') {
+                    throw new Error('請求超時，請檢查網絡連接或稍後重試');
+                }
+                throw err;
+            }
+        }
+
 const API_URL = '/api/evaluate';
 
 function getGaugeClass(score) {
@@ -266,10 +286,10 @@ document.getElementById('evaluateForm').addEventListener('submit', async (e) => 
     };
 
     try {
-        const resp = await fetch(API_URL, {
+        const resp = await fetchWithTimeout(API_URL, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-        });
+        }, 30000);
         const data = await resp.json();
         if (data.status !== 'success') throw new Error(data.message || '評估失敗');
         renderResult(data.match_result);

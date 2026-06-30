@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI風水樓盤匹配系統 MVP v2.4.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -419,6 +420,23 @@
     </div>
 
     <script>
+        // ===== 通用工具：帶超時的 fetch（AbortController）=====
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                if (err.name === 'AbortError') {
+                    throw new Error('請求超時，請檢查網絡連接或稍後重試');
+                }
+                throw err;
+            }
+        }
+
         // 測試案例數據
         const TEST_CASES = {
             taikoo: {
@@ -623,11 +641,11 @@
             };
 
             try {
-                const response = await fetch('/api/evaluate', {
+                const response = await fetchWithTimeout('/api/evaluate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
-                });
+                }, 30000);
                 const result = await response.json();
                 if (result.status === 'success') {
                     displayResult(result.match_result);
@@ -929,6 +947,12 @@
                     ${flagsHtml}
                     ${remediesHtml}
 
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="exportResult()" style="width: auto; padding: 10px 24px; display: inline-block;">
+                            📥 導出報告（圖片）
+                        </button>
+                    </div>
+
                     <div class="disclaimer">
                         <strong>⚠️ 聲明：</strong>${match.disclaimer}
                     </div>
@@ -970,6 +994,39 @@
                     }
                 });
             }
+        }
+
+        function exportResult() {
+            const resultSection = document.querySelector('.result-section');
+            if (!resultSection) {
+                alert('請先生成分析結果再導出');
+                return;
+            }
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '正在生成...';
+            
+            // 短暫延遲確保 UI 更新
+            setTimeout(() => {
+                html2canvas(resultSection, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#f8f9fa'
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = '風水樓盤匹配報告_' + new Date().toISOString().slice(0, 10) + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    btn.disabled = false;
+                    btn.textContent = '📥 導出報告（圖片）';
+                }).catch(err => {
+                    console.error('導出失敗:', err);
+                    alert('導出失敗，請稍後重試');
+                    btn.disabled = false;
+                    btn.textContent = '📥 導出報告（圖片）';
+                });
+            }, 100);
         }
 
         function renderPanGrid(mountainStars, facingStars, auspicious, inauspicious, yunInfo) {
