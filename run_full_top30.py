@@ -34,10 +34,11 @@ for estate in estates:
         flying_star_result = analyze_flying_star(
             building_year=building_year, building_facing=building_facing, eval_year=2026)
         zero_main_god_result = analyze_zero_main_god(
-            building_year=building_year, north_has_water=False, south_has_mountain=False)
-        sha_result = analyze_sha(detected_shas=[])
+            building_year=building_year, building_facing=building_facing,
+            north_has_water=False, south_has_mountain=False)
+        sha_result = analyze_sha(detected_shas=[], flying_star_pan=flying_star_result)
         bazi_result = analyze_bazi(
-            birth_date="1991-03-04", floor_number=10, birth_time="18:55")
+            birth_date="1991-03-04", floor_number=10, birth_time="18:55", building_facing=building_facing)
         bagua_result = analyze_bagua(
             birth_date="1991-03-04", gender="男", building_facing=building_facing)
         goal_result = analyze_goal(
@@ -51,7 +52,11 @@ for estate in estates:
             bazi_result=bazi_result,
             bagua_result=bagua_result,
             goal_result=goal_result,
-            district=estate.get("district", ""))
+            district=estate.get("district", ""),
+            building_year=building_year,
+            building_facing=building_facing,
+            property_features={'age': 2026 - building_year},
+            floor_number=10)
         
         results.append({
             "estate": estate["name"],
@@ -77,7 +82,7 @@ report.append("Top 30 推薦")
 report.append("=" * 60)
 for i, r in enumerate(results[:30], 1):
     sb = r['score_breakdown']
-    report.append(f"{i:2}. {r['estate']:<12} ({r['district']:<8}) {r['facing']:<8} {r['year_built']}年/{r['yun']:<3} | 總分:{r['final_score']:5.1f} | 飛星{sb['飛星']:4.1f} 八字{sb['八字']:4.1f} 八宅{sb['八宅']:4.1f} 區位{sb['區位']:4.1f}")
+    report.append(f"{i:2}. {r['estate']:<12} ({r['district']:<8}) {r['facing']:<8} {r['year_built']}年/{r['yun']:<3} | 總分:{r['final_score']:5.1f} | 飛星{sb['飛星']:4.1f} 八字{sb['八字']:4.1f} 八宅{sb['八宅']:4.1f} 煞防{sb['煞氣防禦']:4.1f}")
 
 report.append("")
 report.append("=" * 60)

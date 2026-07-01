@@ -41,7 +41,8 @@ report.append("")
 bazi_info = analyze_bazi(
     birth_date=USER_BIRTH_DATE,
     floor_number=10,
-    birth_time=USER_BIRTH_TIME
+    birth_time=USER_BIRTH_TIME,
+    building_facing=None  # v2.5: 可選傳入建築坐向啟用納甲計算
 )
 report.append("=" * 60)
 report.append("八字分析")

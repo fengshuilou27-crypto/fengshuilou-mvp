@@ -257,13 +257,37 @@ def _load_terrain_model() -> dict:
     return data
 
 
-# ===== DEM 地形分析 =====
+# ===== DEM 地形分析（Phase 5: 真實 SRTM 30m DEM）=====
+
+# 導入 DEM 解析器
+try:
+    from . import dem_parser
+except ImportError:
+    import dem_parser
+
 
 def _estimate_elevation(lat: float, lng: float) -> float:
     """
-    基於簡化地形模型估算任意坐標的高程
+    查詢指定坐標的高程（米）
+    Phase 5: 優先使用真實 SRTM 30m DEM，若不可用則回退到簡化模型
+    """
+    return dem_parser.get_elevation(lat, lng)
+
+
+def _calculate_slope_around(lat: float, lng: float, radius: int = 200) -> float:
+    """
+    計算某點周邊 radius 米內的平均坡度（度）
+    Phase 5: 優先使用真實 DEM 數據，若不可用則回退到簡化模型
+    """
+    return dem_parser.get_slope(lat, lng, radius)
+
+
+# 保留舊的簡化模型函數（供參考/後備）
+def _estimate_elevation_legacy(lat: float, lng: float) -> float:
+    """
+    [Legacy] 基於簡化地形模型估算任意坐標的高程
     使用已知山峰 + 指數距離衰減模型
-    MVP 階段：簡化模型，後續可替換為真實 SRTM DEM 數據
+    保留作為後備方案
     """
     terrain = _load_terrain_model()
     peaks = terrain.get("peaks", [])
@@ -286,7 +310,6 @@ def _estimate_elevation(lat: float, lng: float) -> float:
         if dist < 50:  # 50m 內視為在山頂
             return float(peak["elevation"])
         # 指數衰減：山峰影響半徑約 2.5km
-        # contribution = peak_elev * exp(-dist / 2500) * 0.15
         contribution = peak["elevation"] * math.exp(-dist / 2500.0) * 0.15
         peak_contribution += contribution
     
@@ -295,81 +318,49 @@ def _estimate_elevation(lat: float, lng: float) -> float:
     return max(0, min(1000, estimated))
 
 
-def _calculate_slope_around(lat: float, lng: float, radius: int = 200) -> float:
-    """
-    計算某點周邊 radius 米內的平均坡度（度）
-    用於評估地形的平坦/陡峭程度
-    """
-    # 在 4 個方向採樣
-    offsets = [
-        (0, radius),    # 北
-        (radius, 0),    # 東
-        (0, -radius),   # 南
-        (-radius, 0),   # 西
-    ]
-    
-    center_elev = _estimate_elevation(lat, lng)
-    slopes = []
-    
-    # 將米轉換為度（近似：1度 ≈ 111km）
-    lat_offset_m = radius / 111000.0
-    lng_offset_m = radius / (111000.0 * math.cos(math.radians(lat)))
-    
-    directions = [
-        (lat + lat_offset_m, lng),      # 北
-        (lat, lng + lng_offset_m),      # 東
-        (lat - lat_offset_m, lng),      # 南
-        (lat, lng - lng_offset_m),      # 西
-    ]
-    
-    for dlat, dlng in directions:
-        elev = _estimate_elevation(dlat, dlng)
-        delta_elev = abs(elev - center_elev)
-        # 坡度 = arctan(高差 / 水平距離)
-        slope = math.degrees(math.atan(delta_elev / radius))
-        slopes.append(slope)
-    
-    return sum(slopes) / len(slopes) if slopes else 0.0
-
-
 def _analyze_backing_mountain(lat: float, lng: float, facing: str) -> dict:
     """
     分析「靠山」
     根據坐向，確定「後方」（坐山）方向，計算後方區域的高程特徵
+    Phase 5 修復：高地本身（>200m）視為有靠山
     """
-    # 坐向 → 坐山方向（180° 差）
-    # 子山午向 = 坐子向午 = 後方在北（0°），前方在南（180°）
+    # 解析坐向：如 "子山午向" → 坐山 = 子
+    mountain = "子"
+    if "山" in facing:
+        mountain = facing.split("山")[0].strip()
+    
     shanxiang_degrees = {
         "子": 0, "癸": 15, "丑": 30, "艮": 45, "寅": 60, "甲": 75,
         "卯": 90, "乙": 105, "辰": 120, "巽": 135, "巳": 150, "丙": 165,
         "午": 180, "丁": 195, "未": 210, "坤": 225, "申": 240, "庚": 255,
         "酉": 270, "辛": 285, "戌": 300, "乾": 315, "亥": 330, "壬": 345,
     }
-    
-    # 解析坐向：如 "子山午向" → 坐山 = 子
-    mountain = "子"  # 默認
-    if "山" in facing:
-        mountain = facing.split("山")[0].strip()
-    
     mountain_deg = shanxiang_degrees.get(mountain, 0)
+    
+    current_elev = _estimate_elevation(lat, lng)
+    
+    # Phase 5 修復：若自身高程已 > 200m，視為有靠山（自身即為靠山/位於龍脈）
+    if current_elev >= 200:
+        return {
+            "score": 10.0,
+            "description": "位於高地之上，自身有靠，龍氣充沛",
+            "elevation_diff": round(current_elev, 1),
+            "backing_elevations": [round(current_elev, 1)],
+            "current_elevation": round(current_elev, 1)
+        }
     
     # 在後方（坐山方向）採樣 3 個點（200m, 500m, 1000m）
     backing_elevations = []
     backing_distances = [200, 500, 1000]
     
     for dist in backing_distances:
-        # 計算後方坐標
         lat_offset = (dist / 111000.0) * math.cos(math.radians(mountain_deg))
         lng_offset = (dist / (111000.0 * math.cos(math.radians(lat)))) * math.sin(math.radians(mountain_deg))
-        
         sample_lat = lat + lat_offset
         sample_lng = lng + lng_offset
-        
         elev = _estimate_elevation(sample_lat, sample_lng)
         backing_elevations.append(elev)
     
-    # 靠山評分
-    current_elev = _estimate_elevation(lat, lng)
     avg_backing_elev = sum(backing_elevations) / len(backing_elevations)
     elev_diff = avg_backing_elev - current_elev
     
@@ -511,9 +502,10 @@ def _analyze_dragon_vein(lat: float, lng: float) -> dict:
 def analyze_terrain_feng_shui(lat: float, lng: float, facing: str) -> dict:
     """
     地形風水分析（龍脈 / 靠山 / 明堂）
-    Phase 3B: 基於簡化地形模型（DEM）進行分析
+    Phase 5: 基於真實 SRTM 30m DEM 數據進行分析
     
-    後續可替換為真實 SRTM/ALOS DEM 數據
+    使用 rasterio 讀取 GeoTIFF 高程數據，提供 ~30m 分辨率的高程和坡度信息。
+    若真實 DEM 不可用，自動回退到簡化地形模型（terrain_model.json）。
     """
     # DEM 估算高程
     current_elevation = _estimate_elevation(lat, lng)
@@ -541,6 +533,11 @@ def analyze_terrain_feng_shui(lat: float, lng: float, facing: str) -> dict:
     
     terrain_score = min(10, max(0, terrain_score))
     
+    # Phase 5: 檢查是否使用真實 DEM
+    dem_available = dem_parser.is_dem_available() if hasattr(dem_parser, 'is_dem_available') else False
+    confidence = 0.75 if dem_available else 0.60
+    dem_status = "真實SRTM30m DEM" if dem_available else "簡化地形模型"
+    
     return {
         "status": "success",
         "terrain_score": round(terrain_score, 1),  # 0-10 分
@@ -562,9 +559,10 @@ def analyze_terrain_feng_shui(lat: float, lng: float, facing: str) -> dict:
             "distance_m": dragon["distance_m"]
         },
         "elevation": round(current_elevation, 1),
-        "confidence": 0.60,  # 簡化模型精度
+        "dem_source": dem_status,
+        "confidence": confidence,
         "rationale": (
-            f"靠山{backing['description']}({backing['score']:.0f}分) + "
+            f"[{dem_status}] 靠山{backing['description']}({backing['score']:.0f}分) + "
             f"明堂{ming_tang['description']}({ming_tang['score']:.0f}分) + "
             f"龍脈{dragon['description']}({dragon['score']:.0f}分) → "
             f"地形綜合{terrain_score:.1f}分"

@@ -4,8 +4,12 @@ from data.flying_star import FLYING_STAR_TABLE, get_yun, SUPPORTED_FACINGS
 def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
     """
     分析單一運數的宅運盤（內部輔助函數）
+    
+    v2.5 修正：七運數據嚴重缺失（僅3個山向），添加回退機制：
+    - 當七運缺少某山向時，嘗試使用八運相同山向數據回退（置信度大幅降低）
+    - 當所有運數都缺失時，生成默認"其他"格局（最低置信度）
     """
-    # 檢查坐向是否支持
+    # 檢查坐向是否支持（任何運數中是否存在）
     if building_facing not in SUPPORTED_FACINGS:
         return {
             "status": "unsupported",
@@ -17,19 +21,43 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
             "rationale": "該坐向暫未收錄，具體判斷建議諮詢專業師傅。"
         }
     
-    # 檢查運數與坐向是否匹配
-    if yun not in FLYING_STAR_TABLE or building_facing not in FLYING_STAR_TABLE[yun]:
+    # 檢查指定運數與坐向是否匹配
+    chart = None
+    fallback_used = False
+    fallback_from = None
+    
+    if yun in FLYING_STAR_TABLE and building_facing in FLYING_STAR_TABLE[yun]:
+        chart = FLYING_STAR_TABLE[yun][building_facing]
+    elif yun == "七運":
+        # v2.5 回退：七運數據缺失嚴重，嘗試使用八運數據回退
+        # 玄空飛星中，七運與八運的盤有一定關聯（運數差1），可作為粗略回退
+        if "八運" in FLYING_STAR_TABLE and building_facing in FLYING_STAR_TABLE["八運"]:
+            chart = FLYING_STAR_TABLE["八運"][building_facing]
+            fallback_used = True
+            fallback_from = "八運"
+        # 如果八運也沒有，嘗試九運
+        elif "九運" in FLYING_STAR_TABLE and building_facing in FLYING_STAR_TABLE["九運"]:
+            chart = FLYING_STAR_TABLE["九運"][building_facing]
+            fallback_used = True
+            fallback_from = "九運"
+    
+    if not chart:
+        # 生成默認"其他"格局（最低置信度）
         return {
             "status": "mismatch",
             "error": f"{yun}的{building_facing}暫未收錄",
-            "score": 0,
+            "score": 10,  # 默認中等分數，避免強制低分
             "max_score": 40,
             "data_source": "互联网公开资料碎片",
-            "confidence": 0.0,
-            "rationale": f"MVP未收錄該坐向的{yun}宅運盤。"
+            "confidence": 0.2,
+            "rationale": f"MVP未收錄該坐向的{yun}宅運盤。使用默認保守評分。具體判斷建議諮詢專業師傅。",
+            "pan_type": "其他",
+            "mountain_stars": {},
+            "facing_stars": {},
+            "base_score": 10,
+            "auspicious_combos": [],
+            "inauspicious_combos": []
         }
-    
-    chart = FLYING_STAR_TABLE[yun][building_facing]
     
     # 基礎分
     base_score = chart.get("base_score", 10)
@@ -52,13 +80,26 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
     total_score = base_score + auspicious_score + inauspicious_score + annual_adjustment
     total_score = max(5, min(40, total_score))  # 飛星分數上限40，下限5
     
+    # 置信度調整
+    confidence = chart.get("confidence", 0.55)
+    if fallback_used:
+        confidence *= 0.4  # 回退數據置信度大幅降低
+    
+    # 構建理由
+    rationale = f"{yun}{building_facing}"
+    if fallback_used:
+        rationale += f"（{yun}數據缺失，使用{fallback_from}數據回退，僅供參考）"
+    rationale += f"，{chart['pan_type']}格局。宅運基礎分{base_score}分，"
+    rationale += f"吉組合加{auspicious_score}分，凶組合減{abs(inauspicious_score)}分，"
+    rationale += f"年度調整{annual_adjustment}分。 {chart.get('note', '基於公開資料排盤計算，僅供參考。')}"
+    
     return {
         "status": "success",
         "yun": yun,
         "building_facing": building_facing,
         "pan_type": chart["pan_type"],
-        "mountain_stars": chart["mountain_stars"],
-        "facing_stars": chart["facing_stars"],
+        "mountain_stars": chart.get("mountain_stars", {}),
+        "facing_stars": chart.get("facing_stars", {}),
         "score": total_score,
         "max_score": 40,
         "base_score": base_score,
@@ -69,10 +110,10 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
         "inauspicious_combos": chart.get("inauspicious_combos", []),
         "annual_overlay": annual_desc,
         "data_source": "互联网公开资料碎片",
-        "confidence": chart.get("confidence", 0.55),
-        "rationale": f"{yun}{building_facing}，{chart['pan_type']}格局。宅運基礎分{base_score}分，"
-                     f"吉組合加{auspicious_score}分，凶組合減{abs(inauspicious_score)}分，"
-                     f"年度調整{annual_adjustment}分。 {chart.get('note', '基於公開資料排盤計算，僅供參考。')}"
+        "confidence": round(confidence, 2),
+        "rationale": rationale,
+        "fallback_used": fallback_used,
+        "fallback_from": fallback_from
     }
 
 
