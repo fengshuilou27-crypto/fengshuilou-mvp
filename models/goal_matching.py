@@ -228,14 +228,11 @@ def analyze_goal(building_year: int, building_facing: str, goals: list):
         goals = [{"goal": goals, "priority": 1}]
     
     if not goals:
-        return {
-            "status": "error",
-            "score": 0,
-            "max_score": 15,
-            "data_source": "三六風水網專業知識庫",
-            "confidence": 0.3,
-            "rationale": "未選擇任何目標"
-        }
+        # 默認目標：無目標時使用「財富」並標記
+        goals = [{"goal": "財富", "priority": 1}]
+        is_default = True
+    else:
+        is_default = False
     
     # 限制最多3個
     if len(goals) > 3:
@@ -309,6 +306,8 @@ def analyze_goal(building_year: int, building_facing: str, goals: list):
     if len(goals) >= 3:
         warning = " 注意：選擇過多目標會稀釋分析精度，建議選取最關鍵的1-3項。"
     
+    default_notice = "（系統已默認使用「財富」作為目標，您可返回修改）" if is_default else ""
+    
     return {
         "status": "success",
         "goals": results,
@@ -320,5 +319,7 @@ def analyze_goal(building_year: int, building_facing: str, goals: list):
         "rationale": f"多目標加權分析：共選{len(goals)}項目標，總權重{total_weight}。{' '.join(all_rationales)}"
                      + (f" 綜合吉星發現{len(unique_stars)}處，有利組合{len(all_combos)}處。" if unique_stars or all_combos else "")
                      + warning
-                     + " 基於三六風水網專業知識庫計算，僅供參考，具體判斷建議諮詢專業師傅。"
+                     + default_notice
+                     + " 基於三六風水網專業知識庫計算，僅供參考，具體判斷建議諮詢專業師傅。",
+        "is_default": is_default
     }

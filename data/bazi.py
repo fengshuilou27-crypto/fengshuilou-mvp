@@ -21,7 +21,7 @@ ZHI_WUXING = {
     "申": "金", "酉": "金", "戌": "土", "亥": "水"
 }
 
-# 樓層尾數 -> 五行
+# 樓層尾數 -> 五行 (河圖系統)
 FLOOR_WUXING = {
     "1": "水", "6": "水",
     "2": "火", "7": "火",
@@ -30,8 +30,95 @@ FLOOR_WUXING = {
     "5": "土", "0": "土"
 }
 
+# v2.5: 建築坐向 -> 八卦 -> 五行 (天干納甲系統)
+# 建築坐向決定本宅卦象，納甲後各樓層按八卦序循環
+FACING_TO_TRIGRAM = {
+    "坐北向南": "坎", "子山午向": "坎", "癸山丁向": "坎", "壬山丙向": "坎",
+    "坐南向北": "離", "午山子向": "離", "丁山癸向": "離", "丙山壬向": "離",
+    "坐東向西": "震", "卯山酉向": "震", "乙山辛向": "震", "甲山庚向": "震",
+    "坐西向东": "兌", "酉山卯向": "兌", "辛山乙向": "兌", "庚山甲向": "兌",
+    "坐東北向西南": "艮", "丑山未向": "艮", "艮山坤向": "艮", "寅山申向": "艮",
+    "坐西南向東北": "坤", "未山丑向": "坤", "坤山艮向": "坤", "申山寅向": "坤",
+    "坐東南向西北": "巽", "辰山戌向": "巽", "巽山乾向": "巽", "巳山亥向": "巽",
+    "坐西北向東南": "乾", "戌山辰向": "乾", "乾山巽向": "乾", "亥山巳向": "乾",
+}
+
+TRIGRAM_WUXING = {
+    "坎": "水", "離": "火", "震": "木", "巽": "木",
+    "乾": "金", "兌": "金", "艮": "土", "坤": "土"
+}
+
+# 八卦順序 (後天八卦序): 坎(1) → 坤(2) → 震(3) → 巽(4) → 中宮(5) → 乾(6) → 兌(7) → 艮(8) → 離(9)
+TRIGRAM_SEQUENCE = ["坎", "坤", "震", "巽", "中宮", "乾", "兌", "艮", "離"]
+
+
+def calculate_floor_wuxing_na_jia(floor_number: int, building_facing: str = None):
+    """
+    計算樓層五行 (v2.5 河圖 + 天干納甲)
+    
+    1. 河圖 (He Tu): 以樓層尾數定五行 (1,6=水; 2,7=火; 3,8=木; 4,9=金; 5,0=土)
+    2. 納甲 (Na Jia): 以建築坐向定本宅卦象，樓層按後天八卦序循環
+    
+    Returns:
+        {
+            "hetu_wuxing": str,      # 河圖五行
+            "najia_wuxing": str,     # 納甲五行 (None if building_facing not provided)
+            "combined_wuxing": str,  # 綜合五行 (河圖為主，納甲為輔)
+            "method": str,           # 計算方法說明
+            "trigram": str,          # 納甲卦象 (None if unavailable)
+        }
+    """
+    # 河圖五行 (尾數法)
+    floor_suffix = str(floor_number)[-1]
+    hetu_wuxing = FLOOR_WUXING.get(floor_suffix, "未知")
+    
+    # 納甲五行 (需建築坐向)
+    najia_wuxing = None
+    trigram = None
+    method = "河圖尾數法"
+    
+    if building_facing and building_facing in FACING_TO_TRIGRAM:
+        # 建築本宅卦象
+        base_trigram = FACING_TO_TRIGRAM[building_facing]
+        trigram = base_trigram
+        
+        # 樓層在八卦序中的位置：以本宅卦為起點，按後天八卦序循環
+        # 例如：坎宅(1樓=坎, 2樓=坤, 3樓=震, 4樓=巽, 5樓=中宮, 6樓=乾, 7樓=兌, 8樓=艮, 9樓=離, 10樓=坎...)
+        base_idx = TRIGRAM_SEQUENCE.index(base_trigram)
+        # 樓層數對應的八卦序偏移 (1樓=0偏移, 2樓=1偏移...)
+        trigram_idx = (base_idx + floor_number - 1) % 9
+        floor_trigram = TRIGRAM_SEQUENCE[trigram_idx]
+        
+        if floor_trigram == "中宮":
+            # 中宮屬土，但過渡到下一卦
+            najia_wuxing = "土"
+        else:
+            najia_wuxing = TRIGRAM_WUXING.get(floor_trigram, "未知")
+        
+        method = f"河圖+納甲(本宅{base_trigram}卦)"
+    
+    # 綜合五行：河圖為主，納甲為輔
+    # 如果兩者一致，則為強五行；如果不一致，以河圖為主但標記為"雜氣"
+    combined_wuxing = hetu_wuxing
+    if najia_wuxing and najia_wuxing != hetu_wuxing:
+        # 兩種方法結果不一致，以河圖為主，但置信度降低
+        combined_wuxing = hetu_wuxing  # 保持河圖為主
+        method += f"，納甲為{najia_wuxing}(不一致，以河圖為主)"
+    elif najia_wuxing and najia_wuxing == hetu_wuxing:
+        method += "，兩法一致"
+    
+    return {
+        "hetu_wuxing": hetu_wuxing,
+        "najia_wuxing": najia_wuxing,
+        "combined_wuxing": combined_wuxing,
+        "method": method,
+        "trigram": trigram
+    }
+
+
 # 職業 -> 五行映射（18個職業分類）
 CAREER_WUXING = {
+    "退休/無業": "土",
     "金融/銀行/投資": "金",
     "法律/司法": "金",
     "軍警/安保": "金",

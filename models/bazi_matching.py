@@ -1,21 +1,19 @@
 from data.bazi import (
     GAN_WUXING, FLOOR_WUXING, WUXING_RELATIONS,
     calculate_bazi, get_year_ganzhi, CAREER_WUXING,
-    calculate_wang_shuai, get_yong_shen_floor_match
+    calculate_wang_shuai, get_yong_shen_floor_match,
+    calculate_floor_wuxing_na_jia
 )
 
 
-def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, user_job: str = None):
+def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, user_job: str = None, building_facing: str = None):
     """
-    八字匹配模組（v2.2 完整版 + 旺衰分析 + 喜用神）
+    八字匹配模組（v2.5 修正版：樓層五行加入納甲計算）
     
-    使用年、月、日、時四柱完整八字，以日主（日柱天干）為命主五行
-    新增：
-    1. 月令旺衰分析 (得令/失令/休囚)
-    2. 通根判斷 (地支藏干)
-    3. 喜用神計算 (日主旺則喜克泄耗，弱則喜生扶)
-    4. 基於喜用神的樓層匹配
-    5. 職業五行與喜用神匹配加成
+    v2.5 修正：
+    1. 樓層五行從單純河圖尾數法，擴展為河圖+天干納甲雙系統
+    2. 當提供建築坐向時，納甲系統以本宅卦象為基礎，按後天八卦序循環定各樓層五行
+    3. 兩系統不一致時，以河圖為主，置信度降低
     """
     # 解析出生日期
     try:
@@ -50,11 +48,13 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
     # 計算旺衰和喜用神
     wang_shuai = calculate_wang_shuai(bazi_result)
     
-    # 樓層五行
-    floor_suffix = str(floor_number)[-1]
-    floor_wuxing = FLOOR_WUXING.get(floor_suffix, "未知")
+    # v2.5: 樓層五行 (河圖 + 納甲)
+    floor_wuxing_info = calculate_floor_wuxing_na_jia(floor_number, building_facing)
+    floor_wuxing = floor_wuxing_info["combined_wuxing"]
+    hetu_wuxing = floor_wuxing_info["hetu_wuxing"]
+    najia_wuxing = floor_wuxing_info["najia_wuxing"]
     
-    # 基於喜用神的樓層匹配 (v2.2 核心改進)
+    # 基於喜用神的樓層匹配
     score = 0
     relation = "未知"
     match_detail = {}
@@ -85,7 +85,7 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
     
     score = min(20, max(0, score))
     
-    # 職業五行加成 (v2.2: 改為與喜用神匹配)
+    # 職業五行加成
     career_bonus = 0
     career_wuxing = None
     career_relation = None
@@ -94,21 +94,17 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
         if wang_shuai and wang_shuai.get("yong_shen"):
             yong_shen = wang_shuai["yong_shen"]
             if career_wuxing == yong_shen:
-                # 職業五行 = 喜用神 → 大吉
                 career_bonus = 3
                 career_relation = "職業即喜用神"
             elif WUXING_RELATIONS["生"].get(career_wuxing) == yong_shen:
-                # 職業五行生喜用神 → 吉
                 career_bonus = 2
                 career_relation = "職業生喜用神"
             elif career_wuxing == wang_shuai.get("ji_shen"):
-                # 職業五行 = 忌神 → 凶
                 career_bonus = -2
                 career_relation = "職業即忌神"
             else:
                 career_relation = "無明顯生克"
         else:
-            # 回退到舊邏輯
             if WUXING_RELATIONS["生"].get(career_wuxing) == day_master_wuxing or career_wuxing == day_master_wuxing:
                 career_bonus = 2
                 career_relation = "相生/比劫"
@@ -142,7 +138,15 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
     if match_detail:
         floor_rationale = f"{match_detail['desc']}"
     else:
-        floor_rationale = f"樓層{floor_number}屬{floor_wuxing}，與日主{day_master_wuxing}關係為「{relation}」"
+        floor_rationale = f"樓層{floor_number}屬{floor_wuxing}（河圖{hetu_wuxing}"
+        if najia_wuxing:
+            floor_rationale += f"，納甲{najia_wuxing}"
+        floor_rationale += f"），與日主{day_master_wuxing}關係為「{relation}」"
+    
+    # v2.5 置信度：納甲系統可用時置信度更高，僅河圖時置信度較低
+    confidence = 0.75
+    if not najia_wuxing:
+        confidence = 0.6  # 缺少建築坐向，納甲系統無法使用
     
     return {
         "status": "success",
@@ -150,13 +154,17 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
         "day_master_wuxing": day_master_wuxing,
         "floor_number": floor_number,
         "floor_wuxing": floor_wuxing,
+        "hetu_wuxing": hetu_wuxing,
+        "najia_wuxing": najia_wuxing,
         "relation": relation,
         "score": final_score,
         "base_score": score,
         "career_bonus": career_bonus,
+        "career_wuxing": career_wuxing,
+        "career_relation": career_relation,
         "max_score": 20,
         "data_source": "三六風水網專業知識庫",
-        "confidence": 0.75,
+        "confidence": confidence,
         "bazi_full": {
             "year_pillar": f"{pillars['year_pillar']['gan']}{pillars['year_pillar']['zhi']}",
             "month_pillar": f"{pillars['month_pillar']['gan']}{pillars['month_pillar']['zhi']}",
@@ -172,5 +180,6 @@ def analyze_bazi(birth_date: str, floor_number: int, birth_time: str = None, use
                      f"{wang_shuai_rationale}"
                      f"{floor_rationale}，基礎得分{score}分。{career_rationale}"
                      f"最終八字得分{final_score}分。"
+                     f" 樓層五行計算方法：{floor_wuxing_info['method']}。"
                      " 基於三六風水網專業知識庫計算，僅供參考，具體判斷建議諮詢專業師傅。"
     }

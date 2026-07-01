@@ -232,6 +232,7 @@
                 <label>職業</label>
                 <select name="user_job">
                     <option value="">請選擇職業（可選）</option>
+                    <option value="退休/無業">退休/無業</option>
                     <option value="金融/銀行/投資">金融/銀行/投資</option>
                     <option value="法律/司法">法律/司法</option>
                     <option value="軍警/安保">軍警/安保</option>
@@ -306,6 +307,7 @@
                         <label>同住人職業</label>
                         <select name="cohabitant_user_job">
                             <option value="">請選擇職業（可選）</option>
+                            <option value="退休/無業">退休/無業</option>
                             <option value="金融/銀行/投資">金融/銀行/投資</option>
                             <option value="法律/司法">法律/司法</option>
                             <option value="軍警/安保">軍警/安保</option>
@@ -393,14 +395,26 @@
             </div>
             <div class="sha-upload-row">
                 <div class="tooltip" style="flex:1">
-                    <button type="button" class="btn btn-coming" disabled>上傳照片分析煞氣</button>
+                    <button type="button" class="btn btn-secondary" id="photoShaxiBtn" onclick="alert('AI 視覺分析煞氣功能正在開發中，敬請期待！')">上傳照片分析煞氣</button>
                     <span class="tooltip-text">AI 視覺分析煞氣正在開發中，即將推出</span>
                 </div>
                 <div class="tooltip" style="flex:1">
-                    <button type="button" class="btn btn-coming" disabled>分析煞氣</button>
-                    <span class="tooltip-text">即將推出</span>
+                    <button type="button" class="btn btn-secondary" id="analyzeShaxiBtn" onclick="analyzeSelectedShas()">分析煞氣</button>
+                    <span class="tooltip-text">分析已勾選的煞氣影響</span>
                 </div>
             </div>
+
+            <script>
+                function analyzeSelectedShas() {
+                    const checked = document.querySelectorAll('input[name="sha"]:checked');
+                    if (checked.length === 0) {
+                        alert('請先勾選至少一項煞氣');
+                        return;
+                    }
+                    const shas = Array.from(checked).map(cb => cb.value).join('、');
+                    alert('已選煞氣：' + shas + '\n\n這些煞氣將在提交分析時計入風水評分。');
+                }
+            </script>
 
             <button type="submit" class="btn" id="submitBtn">開始匹配</button>
         </form>
@@ -496,7 +510,13 @@
             if (!userBirthPlace) {
                 document.querySelector('input[name="birth_place"]').value = data.birth_place || '';
             }
-            // 性別和職業通常由用戶明確選擇，保留用戶選擇
+            // 性別和職業：保留用戶選擇（除非未選擇）
+            if (!userGender || userGender === '') {
+                document.querySelector('select[name="user_gender"]').value = data.user_gender || '男';
+            }
+            if (!userJob || userJob === '') {
+                document.querySelector('select[name="user_job"]').value = data.user_job || '';
+            }
             
             // 同住人
             document.querySelector('input[name="cohabitant_enabled"]').checked = data.cohabitant_enabled || false;
@@ -509,16 +529,20 @@
                 document.querySelector('select[name="cohabitant_weight_ratio"]').value = data.cohabitant_weight_ratio || '0.5';
             }
 
-            // 目標
-            clearGoals();
-            if (data.goals) {
-                data.goals.forEach((g, i) => {
-                    if (i === 0) {
-                        setGoal(document.querySelector('.goal-item'), g.goal, g.priority);
-                    } else {
-                        addGoal(g.goal, g.priority);
-                    }
-                });
+            // 目標：保留用戶已選的目標（除非用戶未選擇任何目標）
+            const currentGoals = getGoals();
+            const hasUserGoals = currentGoals.some(g => g.goal && g.goal !== '');
+            if (!hasUserGoals) {
+                clearGoals();
+                if (data.goals) {
+                    data.goals.forEach((g, i) => {
+                        if (i === 0) {
+                            setGoal(document.querySelector('.goal-item'), g.goal, g.priority);
+                        } else {
+                            addGoal(g.goal, g.priority);
+                        }
+                    });
+                }
             }
 
             // 煞氣
@@ -962,37 +986,48 @@
             resultDiv.classList.remove('hidden');
 
             if (match.radar_chart) {
-                const ctx = document.getElementById('radarChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: match.radar_chart.dimensions,
-                        datasets: [{
-                            label: '匹配分數',
-                            data: match.radar_chart.scores,
-                            fill: true,
-                            backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                            borderColor: 'rgb(102, 126, 234)',
-                            pointBackgroundColor: 'rgb(102, 126, 234)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(102, 126, 234)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                max: 100,
-                                ticks: { stepSize: 20 }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
+                const canvas = document.getElementById('radarChart');
+                if (!canvas) {
+                    console.warn('Radar chart canvas not found');
+                } else {
+                    // 销毁旧 Chart 实例（避免重复创建）
+                    const existingChart = Chart.getChart(canvas);
+                    if (existingChart) {
+                        existingChart.destroy();
                     }
-                });
+                    
+                    const ctx = canvas.getContext('2d');
+                    new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: match.radar_chart.dimensions,
+                            datasets: [{
+                                label: '匹配分數',
+                                data: match.radar_chart.scores,
+                                fill: true,
+                                backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                                borderColor: 'rgb(102, 126, 234)',
+                                pointBackgroundColor: 'rgb(102, 126, 234)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgb(102, 126, 234)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                r: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    ticks: { stepSize: 20 }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }
             }
         }
 

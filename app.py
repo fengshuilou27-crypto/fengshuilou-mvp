@@ -319,12 +319,13 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         flying_star_pan=flying_star_result if flying_star_result.get("status") == "success" else None
     )
 
-    # 4. 八字（含職業）
+    # 4. 八字（含職業 + v2.5 納甲樓層五行）
     bazi_result = analyze_bazi(
         birth_date=birth_date,
         floor_number=floor_number,
         birth_time=birth_time,
-        user_job=user_job
+        user_job=user_job,
+        building_facing=building_facing
     )
 
     # 5. 八宅
@@ -442,7 +443,8 @@ def run_single_match(meta: RequestMeta, district: str = None):
         bagua_dual = analyze_bagua_dual(
             meta.birth_date, meta.user_gender,
             meta.cohabitant_birth_date, meta.cohabitant_gender,
-            meta.building_facing, weight_a, weight_b
+            meta.building_facing,
+            weight_a=weight_a, weight_b=weight_b
         )
 
         # 合併分數：宅客觀分不變，人主觀分加權
