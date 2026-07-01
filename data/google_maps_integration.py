@@ -27,7 +27,7 @@ if not API_KEY:
 
 if not API_KEY:
     # 用戶已啟用 Google Maps Platform API，使用提供的 key
-    API_KEY = "AIzaSyCxnCUKN9PblvbQd1o1u3EM0frHW7PlY5E"
+    API_KEY = "AIzaSyC-hLYqIjpLlG9I3jf6_fQkmYKQAezyY5g"
 
 BASE_URL = "https://maps.googleapis.com/maps/api"
 RATE_LIMIT_DELAY = 0.05  # 50ms 延遲，避免速率限制
