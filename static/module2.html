@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>模組2：配對屋苑 | AI風水樓盤匹配</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; padding: 20px; color: #333; }
@@ -118,6 +119,7 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 <label>職業</label>
 <select id="userJob">
 <option value="">請選擇職業（可選）</option>
+<option value="退休/無業">退休/無業</option>
 <option value="金融/銀行/投資">金融/銀行/投資</option>
 <option value="法律/司法">法律/司法</option>
 <option value="軍警/安保">軍警/安保</option>
@@ -157,6 +159,7 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 <div class="form-group"><label>同住人職業</label>
 <select id="cohabitantUserJob">
 <option value="">請選擇職業（可選）</option>
+<option value="退休/無業">退休/無業</option>
 <option value="金融/銀行/投資">金融/銀行/投資</option>
 <option value="法律/司法">法律/司法</option>
 <option value="軍警/安保">軍警/安保</option>
@@ -450,7 +453,51 @@ function showDetail(idx) {
     for (const [k, v] of Object.entries(m.score_breakdown || {})) {
         html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee"><span>${k}</span><strong>${v}</strong></div>`;
     }
-    html += `</div>
+    html += `</div>`;
+
+    // 六維度雷達圖
+    if (m.radar_chart) {
+        html += `
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">📊 六維度分析圖</div>
+<div style="max-width:400px;margin:0 auto">
+<canvas id="radarChart"></canvas>
+</div>
+</div>`;
+    }
+
+    // 風險標記
+    const flags = m.flags || {};
+    if (flags.sha_detected || flags.severe_penalty_applied || flags.remedies_required || flags.theory_conflict_detected || flags.yun_conversion_considered) {
+        html += `
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">⚠️ 風險標記</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">`;
+        if (flags.severe_penalty_applied) html += `<span style="background:#dc3545;color:white;padding:4px 12px;border-radius:12px;font-size:12px">嚴重煞氣</span>`;
+        if (flags.sha_detected) html += `<span style="background:#ffc107;color:#333;padding:4px 12px;border-radius:12px;font-size:12px">發現煞氣</span>`;
+        if (flags.remedies_required) html += `<span style="background:#17a2b8;color:white;padding:4px 12px;border-radius:12px;font-size:12px">需要化解</span>`;
+        if (flags.theory_conflict_detected) html += `<span style="background:#ffc107;color:#333;padding:4px 12px;border-radius:12px;font-size:12px">理論衝突</span>`;
+        if (flags.yun_conversion_considered) html += `<span style="background:#ffc107;color:#333;padding:4px 12px;border-radius:12px;font-size:12px">元運轉換</span>`;
+        html += `</div></div>`;
+    }
+
+    // 化解建議
+    if (m.recommended_remedies && m.recommended_remedies.length > 0) {
+        html += `
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">💡 化解建議</div>`;
+        m.recommended_remedies.forEach(remedy => {
+            html += `
+<div style="background:white;border-radius:8px;padding:12px;margin-top:8px;border-left:4px solid #667eea">
+<h4 style="margin:0 0 4px 0;font-size:14px">${remedy.item}</h4>
+<p style="margin:0;color:#666;font-size:13px">${remedy.purpose}</p>
+<span style="display:inline-block;background:#e3f2fd;color:#1976d2;padding:2px 8px;border-radius:4px;font-size:12px;margin-top:4px">成本：${remedy.cost}</span>
+</div>`;
+        });
+        html += `</div>`;
+    }
+
+    html += `
 <div style="margin-top:16px">
 <div class="section-title" style="font-size:14px">📝 AI分析</div>
 <p style="color:#444;font-size:14px;line-height:1.8">${m.ai_rationale}</p>
@@ -458,6 +505,48 @@ function showDetail(idx) {
 <button class="btn btn-secondary" onclick="backToList()" style="margin-top:20px">⬅️ 返回列表</button>
 </div>`;
     document.getElementById('estateDetail').innerHTML = html;
+
+    // 渲染雷達圖
+    if (m.radar_chart) {
+        const canvas = document.getElementById('radarChart');
+        if (canvas) {
+            const existingChart = Chart.getChart(canvas);
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const ctx = canvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: m.radar_chart.dimensions,
+                    datasets: [{
+                        label: '匹配分數',
+                        data: m.radar_chart.scores,
+                        fill: true,
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderColor: 'rgb(102, 126, 234)',
+                        pointBackgroundColor: 'rgb(102, 126, 234)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(102, 126, 234)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { stepSize: 20 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    }
 }
 
 function backToList() {
