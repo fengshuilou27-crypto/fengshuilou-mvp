@@ -96,20 +96,37 @@ def analyze_sha(detected_shas: list, flying_star_pan: dict = None):
     for ds in derived_shas:
         # 只添加尚未在 remedies 中的化解建議
         existing_items = [r["item"] for r in remedies]
-        if ds["sha_type"] == "二五交加" and "六銅錢或金屬風水物化泄" not in existing_items:
+        sha_type = ds.get("sha_type", "")
+        if sha_type == "二五交加" and "六銅錢或金屬風水物化泄" not in existing_items:
             remedies.append({
                 "item": "六銅錢或金屬風水物化泄",
                 "position": "視具體位置而定",
-                "purpose": f"化解{ds['sha_type']}",
+                "purpose": f"化解{sha_type}",
                 "cost": "低"
             })
-        elif ds["sha_type"] == "六七交劍" and "水景或植物緩和金氣" not in existing_items:
+        elif sha_type == "六七交劍" and "水景或植物緩和金氣" not in existing_items:
             remedies.append({
                 "item": "水景或植物緩和金氣",
                 "position": "視具體位置而定",
-                "purpose": f"化解{ds['sha_type']}",
+                "purpose": f"化解{sha_type}",
                 "cost": "中"
             })
+        elif sha_type == "伏吟" and "銅葫蘆或銅風鈴化泄" not in existing_items:
+            remedies.append({
+                "item": "銅葫蘆或銅風鈴化泄",
+                "position": "視具體位置而定",
+                "purpose": f"化解{sha_type}（{ds.get('description', '')}）",
+                "cost": "低"
+            })
+    
+    # v2.5-fix: 全局去重 - 基於 item 字段確保建議唯一
+    seen_items = set()
+    unique_remedies = []
+    for r in remedies:
+        if r["item"] not in seen_items:
+            seen_items.add(r["item"])
+            unique_remedies.append(r)
+    remedies = unique_remedies
     
     # v2.5: 將扣分轉換為防禦分（0-7）
     # 原始扣分範圍約 -30 ~ 0，映射到 7 ~ 0

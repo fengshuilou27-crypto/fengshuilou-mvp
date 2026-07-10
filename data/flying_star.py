@@ -1129,13 +1129,15 @@ def derive_sha_from_pan(pan: dict) -> list:
                 "penalty": -6
             })
     
-    # 去重
-    seen = set()
-    unique_shas = []
+    # 去重：合併同一類型煞氣（不同方位），保留最嚴重的一條
+    seen_types = {}
     for s in shas:
-        key = (s["sha_type"], s.get("description", ""))
-        if key not in seen:
-            seen.add(key)
-            unique_shas.append(s)
+        st = s["sha_type"]
+        if st not in seen_types:
+            seen_types[st] = s
+        else:
+            # 保留 penalty 更嚴重（更負）的
+            if s["penalty"] < seen_types[st]["penalty"]:
+                seen_types[st] = s
     
-    return unique_shas
+    return list(seen_types.values())

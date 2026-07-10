@@ -29,6 +29,13 @@ SHA_TABLE = {
         "cost": "低",
         "desc": "二黑病符+五黃大煞同宮"
     },
+    "伏吟": {
+        "severity": "中度",
+        "penalty": -6,
+        "remedy": "銅葫蘆或銅風鈴化泄",
+        "cost": "低",
+        "desc": "山星向星同宮伏吟，氣滯運衰"
+    },
     "其他": {
         "severity": "輕度",
         "penalty": -2,

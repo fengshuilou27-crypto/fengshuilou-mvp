@@ -396,7 +396,7 @@ async function runMatching() {
             let results = data.all_results.map(r => ({
                 name: r.name || r.estate, district: r.district, facing: r.facing,
                 year_built: r.year_built, yun: r.yun, property_type: r.property_type,
-                score: r.score || r.final_score, match: r
+                score: r.score || r.final_score, match: r.match || r
             }));
             results = filterResults(results, filters);
             results.sort((a, b) => b.score - a.score);
