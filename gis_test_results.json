@@ -1,0 +1,158 @@
+{
+  "太古城": {
+    "status": "success",
+    "score": 6.8,
+    "max_score": 20,
+    "water_feng_shui": {
+      "status": "success",
+      "water_score": 4,
+      "water_rating": "側對維港，財運一般",
+      "nearest_harbor": "維港東部",
+      "harbor_distance_m": 4629,
+      "harbor_direction": "酉",
+      "facing_harbor_angle_diff": 90,
+      "confidence": 0.5,
+      "rationale": "側對維港，財運一般，距離維港約4km"
+    },
+    "terrain_feng_shui": {
+      "status": "success",
+      "terrain_score": 5.2,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -60.0,
+        "current_elevation": 62.0
+      },
+      "ming_tang": {
+        "score": 4.0,
+        "description": "前方有丘陵，明堂略受限制",
+        "front_slope": 4.3
+      },
+      "dragon_vein": {
+        "score": 8.0,
+        "description": "承接柏架山龍脈餘氣",
+        "nearest_peak": "柏架山",
+        "distance_m": 2653
+      },
+      "elevation": 62.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方有丘陵，明堂略受限制(4分) + 龍脈承接柏架山龍脈餘氣(8分) → 地形綜合5.2分"
+    },
+    "sha_scan": {
+      "status": "success",
+      "shas_found": [],
+      "total_penalty": 0,
+      "nearest_sha_distance": null,
+      "scan_radius": 500,
+      "confidence": 0.5,
+      "rationale": "周邊500m內未檢測到已知煞氣"
+    },
+    "confidence": 0.55,
+    "rationale": "GIS風水分析：水法側對維港，財運一般(3.2分) + 地形5.2分(3.6分) + 煞氣0.0分 = 總分6.8分"
+  },
+  "嘉湖山莊": {
+    "status": "success",
+    "score": 5.3,
+    "max_score": 20,
+    "water_feng_shui": {
+      "status": "success",
+      "water_score": 1,
+      "water_rating": "背對維港，財運受限",
+      "nearest_harbor": "維港西部",
+      "harbor_distance_m": 22500,
+      "harbor_direction": "巽",
+      "facing_harbor_angle_diff": 135,
+      "confidence": 0.5,
+      "rationale": "背對維港，財運受限，距離維港約22km"
+    },
+    "terrain_feng_shui": {
+      "status": "success",
+      "terrain_score": 6.5,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -3.7,
+        "current_elevation": 8.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 0.6
+      },
+      "dragon_vein": {
+        "score": 6.0,
+        "description": "距離九逕山龍脈較遠",
+        "nearest_peak": "九逕山",
+        "distance_m": 6256
+      },
+      "elevation": 8.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈距離九逕山龍脈較遠(6分) → 地形綜合6.5分"
+    },
+    "sha_scan": {
+      "status": "success",
+      "shas_found": [],
+      "total_penalty": 0,
+      "nearest_sha_distance": null,
+      "scan_radius": 500,
+      "confidence": 0.5,
+      "rationale": "周邊500m內未檢測到已知煞氣"
+    },
+    "confidence": 0.55,
+    "rationale": "GIS風水分析：水法背對維港，財運受限(0.8分) + 地形6.5分(4.5分) + 煞氣0.0分 = 總分5.3分"
+  },
+  "屯門市廣場": {
+    "status": "success",
+    "score": 6.0,
+    "max_score": 20,
+    "water_feng_shui": {
+      "status": "success",
+      "water_score": 1,
+      "water_rating": "背對維港，財運受限",
+      "nearest_harbor": "維港西部",
+      "harbor_distance_m": 20783,
+      "harbor_direction": "辰",
+      "facing_harbor_angle_diff": 120,
+      "confidence": 0.5,
+      "rationale": "背對維港，財運受限，距離維港約20km"
+    },
+    "terrain_feng_shui": {
+      "status": "success",
+      "terrain_score": 7.5,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -15.7,
+        "current_elevation": 26.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 2.6
+      },
+      "dragon_vein": {
+        "score": 10.0,
+        "description": "位於青山龍脈近處，龍氣充沛",
+        "nearest_peak": "青山",
+        "distance_m": 1987
+      },
+      "elevation": 26.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈位於青山龍脈近處，龍氣充沛(10分) → 地形綜合7.5分"
+    },
+    "sha_scan": {
+      "status": "success",
+      "shas_found": [],
+      "total_penalty": 0,
+      "nearest_sha_distance": null,
+      "scan_radius": 500,
+      "confidence": 0.5,
+      "rationale": "周邊500m內未檢測到已知煞氣"
+    },
+    "confidence": 0.55,
+    "rationale": "GIS風水分析：水法背對維港，財運受限(0.8分) + 地形7.5分(5.2分) + 煞氣0.0分 = 總分6.0分"
+  }
+}

@@ -294,8 +294,11 @@ def get_month_ganzhi(year: int, month: int):
     # 月地支索引
     zhi_idx = ZHI_LIST.index(month_zhi_map.get(month, "寅"))
     
-    # 月干索引：起點 + 月地支索引（寅=0, 卯=1, ...）
-    gan_idx = (start_gan_idx + zhi_idx) % 10
+    # v3.2 修復：月干索引計算公式修正
+    # 原公式: gan_idx = (start_gan_idx + zhi_idx) % 10
+    # Bug: zhi_idx 是地支在 ZHI_LIST 中的索引（寅=2, 卯=3...），但正月（寅月）的偏移應為 0
+    # 修正: gan_idx = (start_gan_idx + (zhi_idx - 2)) % 10
+    gan_idx = (start_gan_idx + (zhi_idx - 2)) % 10
     
     return GAN_LIST[gan_idx], ZHI_LIST[zhi_idx]
 

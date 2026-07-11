@@ -263,7 +263,10 @@ def _load_terrain_model() -> dict:
 try:
     from . import dem_parser
 except ImportError:
-    import dem_parser
+    try:
+        from data import dem_parser
+    except ImportError:
+        dem_parser = None
 
 
 def _estimate_elevation(lat: float, lng: float) -> float:

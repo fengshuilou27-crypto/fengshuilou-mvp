@@ -1,0 +1,290 @@
+{
+  "dem_info": {
+    "available": true,
+    "path": "C:\\Users\\LENOVO\\Documents\\kimi\\FSL workspace\\mvp_code\\data\\dem\\hong_kong_dem.tif",
+    "width": 2342,
+    "height": 1621,
+    "crs": "EPSG:4326",
+    "bounds": [
+      113.79977783948902,
+      22.129963898916966,
+      114.45015273535128,
+      22.580116634268258
+    ],
+    "resolution": [
+      0.00027770063871146905,
+      0.00027770063871146905
+    ],
+    "elevation_min": -67.0,
+    "elevation_max": 956.0,
+    "elevation_mean": 41.756874084472656
+  },
+  "elevation_comparison": [
+    {
+      "name": "太古城",
+      "lat": 22.288,
+      "lng": 114.22,
+      "dem_elevation": 8.0,
+      "fallback_elevation": 87.83021945412335,
+      "description": "港島東臨海"
+    },
+    {
+      "name": "嘉湖山莊",
+      "lat": 22.45,
+      "lng": 113.995,
+      "dem_elevation": 6.0,
+      "fallback_elevation": 22.056561338709727,
+      "description": "天水圍低地"
+    },
+    {
+      "name": "屯門市廣場",
+      "lat": 22.391,
+      "lng": 113.978,
+      "dem_elevation": 50.0,
+      "fallback_elevation": 104.61586579578514,
+      "description": "屯門靠山"
+    },
+    {
+      "name": "山頂",
+      "lat": 22.271,
+      "lng": 114.15,
+      "dem_elevation": 399.0,
+      "fallback_elevation": 147.04909890196694,
+      "description": "港島高海拔"
+    },
+    {
+      "name": "大帽山",
+      "lat": 22.412,
+      "lng": 114.123,
+      "dem_elevation": 916.0,
+      "fallback_elevation": 182.94555839316723,
+      "description": "香港最高峰"
+    },
+    {
+      "name": "西貢",
+      "lat": 22.381,
+      "lng": 114.273,
+      "dem_elevation": 9.0,
+      "fallback_elevation": 76.8739749130551,
+      "description": "西貢郊野"
+    },
+    {
+      "name": "荃灣",
+      "lat": 22.37,
+      "lng": 114.115,
+      "dem_elevation": 10.0,
+      "fallback_elevation": 66.0536741548015,
+      "description": "荃灣谷地"
+    },
+    {
+      "name": "沙田",
+      "lat": 22.383,
+      "lng": 114.188,
+      "dem_elevation": 16.0,
+      "fallback_elevation": 103.81076548104927,
+      "description": "沙田平原"
+    }
+  ],
+  "terrain_analysis": {
+    "太古城": {
+      "status": "success",
+      "terrain_score": 5.2,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -5.0,
+        "current_elevation": 8.0
+      },
+      "ming_tang": {
+        "score": 4.0,
+        "description": "前方有丘陵，明堂略受限制",
+        "front_slope": 1.8
+      },
+      "dragon_vein": {
+        "score": 8.0,
+        "description": "承接柏架山龍脈餘氣",
+        "nearest_peak": "柏架山",
+        "distance_m": 2756
+      },
+      "elevation": 8.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方有丘陵，明堂略受限制(4分) + 龍脈承接柏架山龍脈餘氣(8分) → 地形綜合5.2分"
+    },
+    "嘉湖山莊": {
+      "status": "success",
+      "terrain_score": 6.5,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -2.0,
+        "current_elevation": 6.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 0.5
+      },
+      "dragon_vein": {
+        "score": 6.0,
+        "description": "距離九逕山龍脈較遠",
+        "nearest_peak": "九逕山",
+        "distance_m": 6633
+      },
+      "elevation": 6.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈距離九逕山龍脈較遠(6分) → 地形綜合6.5分"
+    },
+    "屯門市廣場": {
+      "status": "success",
+      "terrain_score": 7.5,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -35.7,
+        "current_elevation": 50.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 4.2
+      },
+      "dragon_vein": {
+        "score": 10.0,
+        "description": "位於青山龍脈近處，龍氣充沛",
+        "nearest_peak": "青山",
+        "distance_m": 1967
+      },
+      "elevation": 50.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈位於青山龍脈近處，龍氣充沛(10分) → 地形綜合7.5分"
+    },
+    "山頂": {
+      "status": "success",
+      "terrain_score": 8.9,
+      "backing_mountain": {
+        "score": 10.0,
+        "description": "位於高地之上，自身有靠，龍氣充沛",
+        "elevation_diff": 399.0,
+        "current_elevation": 399.0
+      },
+      "ming_tang": {
+        "score": 7.0,
+        "description": "前方微緩，明堂尚可",
+        "front_slope": 5.4
+      },
+      "dragon_vein": {
+        "score": 10.0,
+        "description": "位於太平山龍脈近處，龍氣充沛",
+        "nearest_peak": "太平山",
+        "distance_m": 514
+      },
+      "elevation": 399.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山位於高地之上，自身有靠，龍氣充沛(10分) + 明堂前方微緩，明堂尚可(7分) + 龍脈位於太平山龍脈近處，龍氣充沛(10分) → 地形綜合8.9分"
+    },
+    "大帽山": {
+      "status": "success",
+      "terrain_score": 9.2,
+      "backing_mountain": {
+        "score": 10.0,
+        "description": "位於高地之上，自身有靠，龍氣充沛",
+        "elevation_diff": 916.0,
+        "current_elevation": 916.0
+      },
+      "ming_tang": {
+        "score": 5.0,
+        "description": "前方有坡，明堂一般",
+        "front_slope": 16.0
+      },
+      "dragon_vein": {
+        "score": 10.0,
+        "description": "位於大帽山龍脈近處，龍氣充沛",
+        "nearest_peak": "大帽山",
+        "distance_m": 302
+      },
+      "elevation": 916.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山位於高地之上，自身有靠，龍氣充沛(10分) + 明堂前方有坡，明堂一般(5分) + 龍脈位於大帽山龍脈近處，龍氣充沛(10分) → 地形綜合9.2分"
+    },
+    "西貢": {
+      "status": "success",
+      "terrain_score": 6.0,
+      "backing_mountain": {
+        "score": 2.0,
+        "description": "無靠山，後方低窪（背後空虛）",
+        "elevation_diff": -2.3,
+        "current_elevation": 9.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 0.4
+      },
+      "dragon_vein": {
+        "score": 8.0,
+        "description": "承接馬鞍山龍脈餘氣",
+        "nearest_peak": "馬鞍山",
+        "distance_m": 3272
+      },
+      "elevation": 9.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山無靠山，後方低窪（背後空虛）(2分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈承接馬鞍山龍脈餘氣(8分) → 地形綜合6.0分"
+    },
+    "荃灣": {
+      "status": "success",
+      "terrain_score": 8.6,
+      "backing_mountain": {
+        "score": 6.0,
+        "description": "有小山為靠，略有支撐",
+        "elevation_diff": 48.0,
+        "current_elevation": 10.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 2.6
+      },
+      "dragon_vein": {
+        "score": 8.0,
+        "description": "承接大帽山龍脈餘氣",
+        "nearest_peak": "大帽山",
+        "distance_m": 4565
+      },
+      "elevation": 10.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山有小山為靠，略有支撐(6分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈承接大帽山龍脈餘氣(8分) → 地形綜合8.6分"
+    },
+    "沙田": {
+      "status": "success",
+      "terrain_score": 9.3,
+      "backing_mountain": {
+        "score": 8.0,
+        "description": "有良好靠山，氣場穩定",
+        "elevation_diff": 75.7,
+        "current_elevation": 16.0
+      },
+      "ming_tang": {
+        "score": 9.0,
+        "description": "前方平坦開闊，明堂極佳",
+        "front_slope": 4.2
+      },
+      "dragon_vein": {
+        "score": 8.0,
+        "description": "承接獅子山龍脈餘氣",
+        "nearest_peak": "獅子山",
+        "distance_m": 3682
+      },
+      "elevation": 16.0,
+      "dem_source": "真實SRTM30m DEM",
+      "confidence": 0.75,
+      "rationale": "[真實SRTM30m DEM] 靠山有良好靠山，氣場穩定(8分) + 明堂前方平坦開闊，明堂極佳(9分) + 龍脈承接獅子山龍脈餘氣(8分) → 地形綜合9.3分"
+    }
+  }
+}

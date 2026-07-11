@@ -1,0 +1,7 @@
+INFO:     Will watch for changes in these directories: ['C:\\Users\\LENOVO\\Documents\\kimi\\FSL workspace\\mvp_code']
+INFO: Loading listings data: C:\Users\LENOVO\Documents\kimi\FSL workspace\mvp_code\data\listings_28hse.csv
+INFO: Listings loaded: 452 records
+INFO: Loading estates data: C:\Users\LENOVO\Documents\kimi\FSL workspace\mvp_code\data\estates_28hse.csv
+INFO: Estates loaded: 95 records
+INFO: ESTATE_YEAR_LOOKUP built: 95 estates
+ERROR:    [WinError 10013] \u5617\u8a66\u5b58\u53d6\u901a\u8a0a\u7aef\u88ab\u62d2\u7d55\uff0c\u56e0\u70ba\u5b58\u53d6\u6b0a\u9650\u4e0d\u8db3\u3002

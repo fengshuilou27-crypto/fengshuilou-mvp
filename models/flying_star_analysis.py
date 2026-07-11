@@ -5,15 +5,15 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
     """
     分析單一運數的宅運盤（內部輔助函數）
     
-    v2.5 修正：七運數據嚴重缺失（僅3個山向），添加回退機制：
-    - 當七運缺少某山向時，嘗試使用八運相同山向數據回退（置信度大幅降低）
-    - 當所有運數都缺失時，生成默認"其他"格局（最低置信度）
+    v3.2 修正：移除危險的七運→八運回退機制。
+    不同運數的飛星盤完全不同，使用其他運數數據回退會導致嚴重錯誤判斷。
+    當數據缺失時，正確做法是返回低置信度的默認格局，而非回退到錯誤運數。
     """
     # 檢查坐向是否支持（任何運數中是否存在）
     if building_facing not in SUPPORTED_FACINGS:
         return {
             "status": "unsupported",
-            "error": f"該坐向'{building_facing}'暫未收錄。MVP 支持: {', '.join(SUPPORTED_FACINGS)}",
+            "error": f"該坐向'{building_facing}'暫未收錄。支持: {', '.join(SUPPORTED_FACINGS)}",
             "score": 0,
             "max_score": 40,
             "data_source": "互联网公开资料碎片",
@@ -23,34 +23,20 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
     
     # 檢查指定運數與坐向是否匹配
     chart = None
-    fallback_used = False
-    fallback_from = None
     
     if yun in FLYING_STAR_TABLE and building_facing in FLYING_STAR_TABLE[yun]:
         chart = FLYING_STAR_TABLE[yun][building_facing]
-    elif yun == "七運":
-        # v2.5 回退：七運數據缺失嚴重，嘗試使用八運數據回退
-        # 玄空飛星中，七運與八運的盤有一定關聯（運數差1），可作為粗略回退
-        if "八運" in FLYING_STAR_TABLE and building_facing in FLYING_STAR_TABLE["八運"]:
-            chart = FLYING_STAR_TABLE["八運"][building_facing]
-            fallback_used = True
-            fallback_from = "八運"
-        # 如果八運也沒有，嘗試九運
-        elif "九運" in FLYING_STAR_TABLE and building_facing in FLYING_STAR_TABLE["九運"]:
-            chart = FLYING_STAR_TABLE["九運"][building_facing]
-            fallback_used = True
-            fallback_from = "九運"
     
     if not chart:
         # 生成默認"其他"格局（最低置信度）
         return {
             "status": "mismatch",
             "error": f"{yun}的{building_facing}暫未收錄",
-            "score": 10,  # 默認中等分數，避免強制低分
+            "score": 10,
             "max_score": 40,
             "data_source": "互联网公开资料碎片",
             "confidence": 0.2,
-            "rationale": f"MVP未收錄該坐向的{yun}宅運盤。使用默認保守評分。具體判斷建議諮詢專業師傅。",
+            "rationale": f"未收錄該坐向的{yun}宅運盤。使用默認保守評分。具體判斷建議諮詢專業師傅。",
             "pan_type": "其他",
             "mountain_stars": {},
             "facing_stars": {},
@@ -80,16 +66,11 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
     total_score = base_score + auspicious_score + inauspicious_score + annual_adjustment
     total_score = max(5, min(40, total_score))  # 飛星分數上限40，下限5
     
-    # 置信度調整
+    # 置信度
     confidence = chart.get("confidence", 0.55)
-    if fallback_used:
-        confidence *= 0.4  # 回退數據置信度大幅降低
     
     # 構建理由
-    rationale = f"{yun}{building_facing}"
-    if fallback_used:
-        rationale += f"（{yun}數據缺失，使用{fallback_from}數據回退，僅供參考）"
-    rationale += f"，{chart['pan_type']}格局。宅運基礎分{base_score}分，"
+    rationale = f"{yun}{building_facing}，{chart['pan_type']}格局。宅運基礎分{base_score}分，"
     rationale += f"吉組合加{auspicious_score}分，凶組合減{abs(inauspicious_score)}分，"
     rationale += f"年度調整{annual_adjustment}分。 {chart.get('note', '基於公開資料排盤計算，僅供參考。')}"
     
@@ -111,9 +92,7 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
         "annual_overlay": annual_desc,
         "data_source": "互联网公开资料碎片",
         "confidence": round(confidence, 2),
-        "rationale": rationale,
-        "fallback_used": fallback_used,
-        "fallback_from": fallback_from
+        "rationale": rationale
     }
 
 
@@ -162,7 +141,7 @@ def analyze_flying_star(building_year: int, building_facing: str, eval_year: int
     
     # 如果當運盤查詢失敗，退化为單一建造運盤（降低置信度）
     if current_chart.get("status") != "success":
-        building_chart["score"] = max(5, building_chart.get("score", 0) - 5)  # 異運但無當運數據，扣5分保守處理
+        building_chart["score"] = max(5, building_chart.get("score", 0) - 5)
         building_chart["dual_period"] = {
             "enabled": True,
             "building_yun": building_yun,
@@ -180,18 +159,15 @@ def analyze_flying_star(building_year: int, building_facing: str, eval_year: int
     building_score = building_chart.get("score", 0)
     current_score = current_chart.get("score", 0)
     
-    # 加權計算
     combined_score = round(building_score * 0.7 + current_score * 0.3, 1)
     combined_score = max(5, min(40, combined_score))
     
-    # 雙周期風水判斷
     yun_transition_note = (
         f"該樓宇建於{building_yun}，當前為{current_yun}。"
         "元運已轉換，建議進行大裝修換天心以適應新運氣場。"
         "以下評分綜合建造運盤（70%）與當運盤（30%）計算。"
     )
     
-    # 格局變化判斷（如建造運到山到向，當運變上山下水）
     pan_type_change = ""
     if building_chart.get("pan_type") != current_chart.get("pan_type"):
         pan_type_change = (
@@ -200,20 +176,18 @@ def analyze_flying_star(building_year: int, building_facing: str, eval_year: int
             "運過即衰，建議重新佈局。"
         )
     
-    # 置信度：取兩盤中較低者（異運情況複雜度更高）
     combined_confidence = min(
         building_chart.get("confidence", 0.55),
         current_chart.get("confidence", 0.55)
-    ) * 0.9  # 異運情況降低10%置信度
+    ) * 0.9
     
-    # 綜合理由
     combined_rationale = (
         f"【雙周期分析】{yun_transition_note}\n"
         f"建造運（{building_yun}）：{building_chart.get('rationale', '')}\n"
         f"當運（{current_yun}）：{current_chart.get('rationale', '')}\n"
         f"加權評分：建造運{building_score}×0.7 + 當運{current_score}×0.3 = {combined_score}分。"
         f" {pan_type_change}"
-        " ⚠️ 雙周期計算為MVP簡化版，具體風水判斷建議諮詢專業師傅。"
+        " ⚠️ 雙周期計算為簡化版，具體風水判斷建議諮詢專業師傅。"
     )
     
     return {

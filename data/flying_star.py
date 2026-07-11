@@ -1,5 +1,10 @@
-# 硬編碼查表數據 - 飛星宅運盤 (v2.2 擴展版)
+# 硬編碼查表數據 - 飛星宅運盤 (v3.2 修復版)
 # 支持24山向，基於三六風水網專業知識庫
+# ⚠️ v3.2 重要修復說明：
+#   - 修復了部分中宮數字錯誤（中宮必須等於運星）
+#   - 修復了八運子山午向的格局判定（非到山到向）
+#   - 標記了山盤=向盤的數據為低置信度（理論上兩者不應完全相同）
+#   - 建議未來實現算法動態排盤以完全替代硬編碼
 # ⚠️ 數據基於公開資料，具體需專業師傅確認
 
 # 運數判斷
@@ -201,16 +206,16 @@ FLYING_STAR_TABLE = {
 
         # ---- 其他常見山向 (雙星會向/雙星會坐) ----
         "子山午向": {
-            "pan_type": "到山到向", "base_score": 30, "confidence": 0.9,
-            "mountain_stars": {"north": 8, "northeast": 9, "east": 1, "southeast": 2, "south": 3, "southwest": 4, "west": 5, "northwest": 6, "center": 7},
-            "facing_stars": {"north": 8, "northeast": 9, "east": 1, "southeast": 2, "south": 3, "southwest": 4, "west": 5, "northwest": 6, "center": 7},
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.5,
+            "mountain_stars": {"north": 8, "northeast": 9, "east": 1, "southeast": 2, "south": 3, "southwest": 4, "west": 5, "northwest": 6, "center": 8},
+            "facing_stars": {"north": 8, "northeast": 9, "east": 1, "southeast": 2, "south": 3, "southwest": 4, "west": 5, "northwest": 6, "center": 8},
             "auspicious_combos": [
                 {"direction": "north", "stars": "88", "desc": "正北八八雙星會聚，旺丁旺財"}
             ],
             "inauspicious_combos": [
                 {"direction": "west", "stars": "55", "desc": "正西五黃重臨，煞氣當令"}
             ],
-            "note": "八運到山到向，丁財兩得"
+            "note": "八運雙星會向，旺財不旺丁。⚠️ 山盤向盤數據待專業核實"
         },
         "午山子向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
@@ -1141,3 +1146,105 @@ def derive_sha_from_pan(pan: dict) -> list:
                 seen_types[st] = s
     
     return list(seen_types.values())
+
+
+
+# ============================================================
+# 數據驗證函數 (v3.2 新增)
+# ============================================================
+
+def validate_flying_star_data() -> dict:
+    """
+    驗證飛星數據的內部一致性。
+    
+    檢查項：
+    1. 中宮數字是否等於運星（當運星已知時）
+    2. 山盤與向盤是否完全相同（理論上不可能）
+    3. 格局判定與數據一致性（上山下水應有明顯凶組合）
+    
+    Returns:
+        {
+            "issues": list[str],      # 發現的問題列表
+            "issue_count": int,       # 問題總數
+            "checked_entries": int,   # 檢查的條目總數
+            "checked_yuns": list[str] # 檢查的運數
+        }
+    """
+    issues = []
+    checked_entries = 0
+    checked_yuns = list(FLYING_STAR_TABLE.keys())
+    
+    for yun, mountains in FLYING_STAR_TABLE.items():
+        expected_center = CURRENT_LING_STAR.get(yun)
+        
+        for mountain, data in mountains.items():
+            checked_entries += 1
+            entry_id = f"{yun} {mountain}"
+            
+            # 1. 檢查中宮數字是否等於運星
+            mountain_center = data.get("mountain_stars", {}).get("center")
+            facing_center = data.get("facing_stars", {}).get("center")
+            
+            if expected_center is not None:
+                if mountain_center != expected_center:
+                    issues.append(
+                        f"{entry_id}: 山盤中宮{mountain_center} != 運星{expected_center}"
+                    )
+                if facing_center != expected_center:
+                    issues.append(
+                        f"{entry_id}: 向盤中宮{facing_center} != 運星{expected_center}"
+                    )
+            
+            # 2. 檢查山盤與向盤是否完全相同
+            m_stars = data.get("mountain_stars", {})
+            f_stars = data.get("facing_stars", {})
+            if m_stars == f_stars and len(m_stars) > 0:
+                # 理論上山盤≠向盤，但大量數據暫時如此標記低置信度
+                confidence = data.get("confidence", 1.0)
+                if confidence >= 0.7:
+                    issues.append(
+                        f"{entry_id}: 山盤=向盤但置信度{confidence}過高，應<=0.5"
+                    )
+            
+            # 3. 檢查上山下水格局是否有凶組合
+            pan_type = data.get("pan_type", "")
+            inauspicious = data.get("inauspicious_combos", [])
+            if pan_type == "上山下水" and len(inauspicious) == 0:
+                issues.append(
+                    f"{entry_id}: 上山下水格局但無凶組合記錄"
+                )
+            
+            # 4. 檢查到山到向格局是否有吉組合
+            auspicious = data.get("auspicious_combos", [])
+            if pan_type == "到山到向" and len(auspicious) == 0:
+                issues.append(
+                    f"{entry_id}: 到山到向格局但無吉組合記錄"
+                )
+    
+    return {
+        "issues": issues,
+        "issue_count": len(issues),
+        "checked_entries": checked_entries,
+        "checked_yuns": checked_yuns
+    }
+
+
+def print_validation_report():
+    """打印驗證報告到控制台（用於開發調試）"""
+    result = validate_flying_star_data()
+    print(f"\n=== 飛星數據驗證報告 ===")
+    print(f"檢查運數: {', '.join(result['checked_yuns'])}")
+    print(f"檢查條目: {result['checked_entries']}")
+    print(f"發現問題: {result['issue_count']}")
+    if result['issues']:
+        print("\n問題列表:")
+        for i, issue in enumerate(result['issues'], 1):
+            print(f"  {i}. {issue}")
+    else:
+        print("\n✓ 所有數據通過驗證")
+    print("=" * 30)
+
+
+# 模組載入時自動執行驗證（僅開發環境）
+if __name__ == "__main__":
+    print_validation_report()

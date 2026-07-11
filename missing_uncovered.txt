@@ -1,0 +1,69 @@
+Total missing estates: 123
+Covered by lookup: 59
+Not covered: 64
+
+Not covered estates:
+  
+  Grand Austin
+  Grand Marini
+  I CITY
+  One Madison
+  One Soho
+  SKYPARK
+  The Campton 1B期
+  一號西九龍
+  九洲大廈
+  亮賢居
+  元朗村屋
+  凱帆軒
+  利奧坊曉岸
+  利奧坊首隅
+  加州花園
+  卓爾居
+  原築
+  名日九肚山
+  嘉御山
+  嘉熙
+  嘉華星濤灣
+  嘉豐花園
+  壹號雲頂
+  奕翠園
+  安居閣
+  尚悅方
+  彩興苑
+  恆麗園
+  新葵芳花園
+  星凱堤岸
+  星堤
+  晉名峰
+  朗城滙
+  朗日峰
+  村屋
+  柏豐28
+  欣翠花園
+  浪翠園
+  海悅豪園
+  海日灣 II
+  海柏花園
+  海澄軒
+  漣山
+  玖瓏山
+  現崇山
+  畢架山峰
+  碧堤半島
+  立坊
+  綠悅
+  綠悠軒
+  綠悠雅苑
+  縉皇居
+  翠峰小築
+  翠濤閣
+  荃景花園
+  荃灣廣場
+  華都花園
+  觀海別墅
+  逸峯
+  錦繡花園
+  錦華花園
+  雍翠豪園
+  龍豐花園
