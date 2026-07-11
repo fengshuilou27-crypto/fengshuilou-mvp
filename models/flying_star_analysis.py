@@ -28,6 +28,30 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
         chart = FLYING_STAR_TABLE[yun][building_facing]
     
     if not chart:
+        # v3.5: 嘗試動態排盤作為後備方案
+        try:
+            from data.flying_star_dynamic import calculate_flying_star_pan, yun_to_number
+            # 估算建築年份（運數中點年份）
+            yun_num = yun_to_number(yun)
+            estimated_year = 1864 + (yun_num - 1) * 20 + 10
+            dynamic_result = calculate_flying_star_pan(
+                building_year=estimated_year,
+                mountain_facing=building_facing
+            )
+            if dynamic_result.get("status") == "success":
+                # 使用動態排盤結果，但標記低置信度
+                dynamic_result["confidence"] = round(dynamic_result.get("confidence", 0.45) * 0.5, 2)
+                dynamic_result["data_source"] = "動態排盤算法（後備方案）"
+                dynamic_result["rationale"] = (
+                    f"未收錄該坐向的{yun}宅運盤。"
+                    f"使用動態排盤算法生成近似結果（置信度降低）。"
+                    f"{dynamic_result.get('rationale', '')}"
+                )
+                return dynamic_result
+        except Exception:
+            # 動態排盤失敗，返回默認格局
+            pass
+        
         # 生成默認"其他"格局（最低置信度）
         return {
             "status": "mismatch",
