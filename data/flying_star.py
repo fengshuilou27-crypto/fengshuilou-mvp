@@ -1,10 +1,10 @@
-# 硬編碼查表數據 - 飛星宅運盤 (v3.4 專業數據版)
+# 硬編碼查表數據 - 飛星宅運盤 (v3.5 專業數據+自動組合版)
 # 支持24山向，基於福山堂(fushantang.com)專業玄空飛星盤
 # ⚠️ v3.4 重要更新說明：
 #   - 從福山堂提取專業玄空飛星盤數據
 #   - 八運和九運 24 山向數據已全面更新
 #   - 所有數據山盤和向盤均獨立，符合玄空飛星理論
-#   - 七運數據待後續更新，格局判定基於飛星組合
+#   - 自動生成飛星組合（auspicious/inauspicious）
 # ⚠️ 數據基於公開資料，具體需專業師傅確認
 
 # 運數判斷
@@ -62,39 +62,519 @@ MOUNTAIN_FACING_MAP = {
 # 飛星宅運盤 (v2.2 擴展版 - 24山向覆蓋)
 # ============================================================
 FLYING_STAR_TABLE = {
-    # ============================
-    # 八運 (2004-2023) - 福山堂專業數據
-    # ============================
+    "七運": {
+        "丁山癸向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.5,
+            "mountain_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
+            "facing_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
+            "auspicious_combos": [
+                {"direction": "southwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "west", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "northwest", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "northeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運雙星會向，與午山子向類似 ⚠️ 數據需專業確認"
+        },
+        "丑山未向": {
+            "pan_type": "雙星會坐", "base_score": 15, "confidence": 0.6,
+            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "east", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "southwest", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "northwest", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運雙星會坐，旺丁不旺財 ⚠️ 數據需專業確認"
+        },
+        "丙山壬向": {
+            "pan_type": "其他", "base_score": 15, "confidence": 0.5,
+            "mountain_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
+            "facing_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
+            "auspicious_combos": [
+                {"direction": "southwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "west", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "northwest", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "northeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運偏位 ⚠️ 數據需專業確認"
+        },
+        "乙山辛向": {
+            "pan_type": "雙星會向", "base_score": 14, "confidence": 0.5,
+            "mountain_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
+            "facing_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "southwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "west", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運雙星會向，與卯山酉向類似 ⚠️ 數據需專業確認"
+        },
+        "乾山巽向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.8,
+            "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
+            "facing_stars": {"northwest": 7, "north": 2, "northeast": 9, "west": 8, "center": 6, "east": 3, "southwest": 4, "south": 1, "southeast": 5},
+            "auspicious_combos": [
+                {"direction": "southeast", "stars": "77", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "west", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "center", "stars": "86", "desc": "八六會合，財丁兩旺"},
+                {"direction": "center", "stars": "68", "desc": "六八會合，貴人扶持"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "53", "desc": "五三同宮，災禍連連"},
+                {"direction": "east", "stars": "35", "desc": "三五同宮，五黃三煞"},
+                {"direction": "southeast", "stars": "75", "desc": "七五同宮，災禍損財"},
+                {"direction": "southeast", "stars": "57", "desc": "五七同宮，破財傷丁"},
+            ],
+            "note": "七運上山下水，損財傷丁"
+        },
+        "亥山巳向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
+            "mountain_stars": {"northwest": 7, "north": 2, "northeast": 9, "west": 8, "center": 6, "east": 3, "southwest": 4, "south": 1, "southeast": 5},
+            "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
+            "auspicious_combos": [
+                {"direction": "southeast", "stars": "77", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "west", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "center", "stars": "68", "desc": "六八會合，貴人扶持"},
+                {"direction": "center", "stars": "86", "desc": "八六會合，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "35", "desc": "三五同宮，五黃三煞"},
+                {"direction": "east", "stars": "53", "desc": "五三同宮，災禍連連"},
+                {"direction": "southeast", "stars": "57", "desc": "五七同宮，破財傷丁"},
+                {"direction": "southeast", "stars": "75", "desc": "七五同宮，災禍損財"},
+            ],
+            "note": "七運上山下水，與乾山巽向類似 ⚠️ 數據需專業確認"
+        },
+        "午山子向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
+            "mountain_stars": {"northwest": 3, "north": 7, "northeast": 9, "west": 4, "center": 2, "east": 6, "southwest": 8, "south": 1, "southeast": 5},
+            "facing_stars": {"northwest": 2, "north": 7, "northeast": 5, "west": 6, "center": 1, "east": 8, "southwest": 4, "south": 9, "southeast": 3},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八會合，喜慶盈門"},
+                {"direction": "southwest", "stars": "84", "desc": "運星組合: 八四會合，文財兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "19", "desc": "一九同宮，水火相戰"},
+                {"direction": "northwest", "stars": "32", "desc": "三二鬥牛，官非口舌"},
+                {"direction": "southeast", "stars": "53", "desc": "五三煞氣，災禍連連"},
+            ],
+            "note": "七運雙星會向，旺財不旺丁。坐南朝北，與子山午向互為鏡像"
+        },
+        "卯山酉向": {
+            "pan_type": "雙星會向", "base_score": 14, "confidence": 0.3,
+            "mountain_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
+            "facing_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "southwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "west", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運雙星會向，旺財不旺丁"
+        },
+        "坤山艮向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.6,
+            "mountain_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
+            "facing_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "center", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "center", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "center", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "southeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "southwest", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運上山下水，與艮山坤向相對 ⚠️ 數據需專業確認"
+        },
+        "壬山丙向": {
+            "pan_type": "其他", "base_score": 15, "confidence": 0.5,
+            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "east", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "southwest", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "northwest", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運偏位 ⚠️ 數據需專業確認"
+        },
+        "子山午向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
+            "mountain_stars": {"northwest": 4, "north": 8, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
+            "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 9, "center": 2, "east": 4, "southwest": 5, "south": 7, "southeast": 3},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "south", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "23", "desc": "二三斗牛，鬥爭是非"},
+                {"direction": "southeast", "stars": "32", "desc": "三二鬥牛，官非口舌"},
+                {"direction": "west", "stars": "59", "desc": "五九同宮，災禍連連"},
+            ],
+            "note": "七運雙星會向，旺財不旺丁。坐北朝南，福山堂專業數據"
+        },
+        "寅山申向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
+            "mountain_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
+            "facing_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "center", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "center", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "center", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "southeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "southwest", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運上山下水，與艮山坤向類似 ⚠️ 數據需專業確認"
+        },
+        "巳山亥向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
+            "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
+            "facing_stars": {"northwest": 7, "north": 2, "northeast": 9, "west": 8, "center": 6, "east": 3, "southwest": 4, "south": 1, "southeast": 5},
+            "auspicious_combos": [
+                {"direction": "southeast", "stars": "77", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "west", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "west", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "center", "stars": "86", "desc": "八六會合，財丁兩旺"},
+                {"direction": "center", "stars": "68", "desc": "六八會合，貴人扶持"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "53", "desc": "五三同宮，災禍連連"},
+                {"direction": "east", "stars": "35", "desc": "三五同宮，五黃三煞"},
+                {"direction": "southeast", "stars": "75", "desc": "七五同宮，災禍損財"},
+                {"direction": "southeast", "stars": "57", "desc": "五七同宮，破財傷丁"},
+            ],
+            "note": "七運上山下水，與巽山乾向類似 ⚠️ 數據需專業確認"
+        },
+        "巽山乾向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.7,
+            "mountain_stars": {"northwest": 7, "north": 3, "northeast": 9, "west": 5, "center": 6, "east": 8, "southwest": 4, "south": 2, "southeast": 1},
+            "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
+            "auspicious_combos": [
+                {"direction": "east", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "east", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "southeast", "stars": "77", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "center", "stars": "68", "desc": "六八會合，貴人扶持"},
+                {"direction": "center", "stars": "86", "desc": "八六會合，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "23", "desc": "二三斗牛，鬥爭是非"},
+                {"direction": "south", "stars": "32", "desc": "三二鬥牛，官非口舌"},
+            ],
+            "note": "七運上山下水，與乾山巽向相對 ⚠️ 數據需專業確認"
+        },
+        "庚山甲向": {
+            "pan_type": "到山到向", "base_score": 30, "confidence": 0.5,
+            "mountain_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
+            "facing_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northeast", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "southeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "center", "stars": "22", "desc": "二黑重臨，病符纏身"},
+            ],
+            "note": "七運到山到向，與酉山卯向類似 ⚠️ 數據需專業確認"
+        },
+        "戌山辰向": {
+            "pan_type": "其他", "base_score": 12, "confidence": 0.5,
+            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "east", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "southwest", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "northwest", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運普通格局 ⚠️ 數據需專業確認"
+        },
+        "未山丑向": {
+            "pan_type": "雙星會坐", "base_score": 15, "confidence": 0.6,
+            "mountain_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
+            "facing_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
+            "auspicious_combos": [
+                {"direction": "south", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "southwest", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "center", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "east", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "northwest", "stars": "22", "desc": "二黑重臨，病符纏身"},
+            ],
+            "note": "七運雙星會坐，旺丁不旺財 ⚠️ 數據需專業確認"
+        },
+        "甲山庚向": {
+            "pan_type": "雙星會向", "base_score": 14, "confidence": 0.5,
+            "mountain_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
+            "facing_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "southwest", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "west", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運雙星會向，與卯山酉向類似 ⚠️ 數據需專業確認"
+        },
+        "申山寅向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
+            "mountain_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
+            "facing_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
+            "auspicious_combos": [
+                {"direction": "east", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "southeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "west", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "northwest", "stars": "33", "desc": "三碧重臨，口舌是非"},
+            ],
+            "note": "七運上山下水，與坤山艮向類似 ⚠️ 數據需專業確認"
+        },
+        "癸山丁向": {
+            "pan_type": "到山到向", "base_score": 30, "confidence": 0.5,
+            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "east", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "southwest", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "northwest", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+            ],
+            "note": "七運到山到向，與子山午向類似 ⚠️ 數據需專業確認"
+        },
+        "艮山坤向": {
+            "pan_type": "上山下水", "base_score": 8, "confidence": 0.6,
+            "mountain_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
+            "facing_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
+            "auspicious_combos": [
+                {"direction": "east", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "southeast", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "west", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "northwest", "stars": "33", "desc": "三碧重臨，口舌是非"},
+            ],
+            "note": "七運上山下水，損財傷丁 ⚠️ 數據需專業確認"
+        },
+        "辛山乙向": {
+            "pan_type": "到山到向", "base_score": 30, "confidence": 0.5,
+            "mountain_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
+            "facing_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northeast", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "southeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "center", "stars": "22", "desc": "二黑重臨，病符纏身"},
+            ],
+            "note": "七運到山到向，與酉山卯向類似 ⚠️ 數據需專業確認"
+        },
+        "辰山戌向": {
+            "pan_type": "其他", "base_score": 12, "confidence": 0.5,
+            "mountain_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
+            "facing_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
+            "auspicious_combos": [
+                {"direction": "south", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "southwest", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "center", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "east", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "northwest", "stars": "22", "desc": "二黑重臨，病符纏身"},
+            ],
+            "note": "七運普通格局 ⚠️ 數據需專業確認"
+        },
+        "酉山卯向": {
+            "pan_type": "到山到向", "base_score": 30, "confidence": 0.3,
+            "mountain_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
+            "facing_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
+            "auspicious_combos": [
+                {"direction": "north", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "77", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northeast", "stars": "55", "desc": "五黃重臨，煞氣當令"},
+                {"direction": "southeast", "stars": "33", "desc": "三碧重臨，口舌是非"},
+                {"direction": "center", "stars": "22", "desc": "二黑重臨，病符纏身"},
+            ],
+            "note": "七運到山到向，丁財兩得。與卯山酉向相對 ⚠️ 數據需專業確認"
+        },
+    },
     "八運": {
         "丁山癸向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 4, "north": 8, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
             "facing_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "south", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運雙星會向，旺財不旺丁。丁山癸向正卦"
         },
         "丑山未向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 3, "northeast": 1, "west": 9, "center": 5, "east": 7, "southwest": 4, "south": 6, "southeast": 2},
             "facing_stars": {"northwest": 8, "north": 1, "northeast": 6, "west": 7, "center": 2, "east": 9, "southwest": 3, "south": 4, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "east", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "east", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "east", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "east", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運到山到向，丁財兩得。坐東北朝西南，正卦"
         },
         "丙山壬向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 1, "northeast": 3, "west": 4, "center": 8, "east": 6, "southwest": 9, "south": 7, "southeast": 2},
             "facing_stars": {"northwest": 6, "north": 8, "northeast": 4, "west": 5, "center": 3, "east": 1, "southwest": 7, "south": 9, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "east", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "east", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "east", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "south", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "west", "stars": "45", "desc": "四五同宮，官非口舌"},
+                {"direction": "west", "stars": "54", "desc": "五四同宮，病災損財"},
+            ],
             "note": "八運丙山壬向正卦"
         },
         "乙山辛向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 5, "north": 6, "northeast": 4, "west": 3, "center": 1, "east": 9, "southwest": 8, "south": 7, "southeast": 2},
-            "auspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "north", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "east", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
             "inauspicious_combos": [],
             "note": "八運雙星會向，旺財不旺丁。乙山辛向正卦"
         },
@@ -102,31 +582,80 @@ FLYING_STAR_TABLE = {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運到山到向，丁財兩得。乾山巽向正卦"
         },
         "亥山巳向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運到山到向，丁財兩得。亥山巳向正卦"
         },
         "午山子向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 4, "north": 8, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
             "facing_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "south", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運雙星會向，旺財不旺丁。坐南朝北，正卦"
         },
         "卯山酉向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 5, "north": 6, "northeast": 4, "west": 3, "center": 1, "east": 9, "southwest": 8, "south": 7, "southeast": 2},
-            "auspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "north", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "east", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
             "inauspicious_combos": [],
             "note": "八運雙星會向，旺財不旺丁。坐東朝西，正卦"
         },
@@ -134,111 +663,291 @@ FLYING_STAR_TABLE = {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
             "facing_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "north", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "southeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "southeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southwest", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運上山下水，損財傷丁。坐西南朝東北，正卦"
         },
         "壬山丙向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 8, "northeast": 4, "west": 5, "center": 3, "east": 1, "southwest": 7, "south": 9, "southeast": 2},
             "facing_stars": {"northwest": 5, "north": 1, "northeast": 3, "west": 4, "center": 8, "east": 6, "southwest": 9, "south": 7, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "east", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "east", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "east", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "south", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "22", "desc": "二黑重臨，病符纏身"},
+                {"direction": "west", "stars": "54", "desc": "五四同宮，病災損財"},
+                {"direction": "west", "stars": "45", "desc": "四五同宮，官非口舌"},
+            ],
             "note": "八運壬山丙向正卦"
         },
         "子山午向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
             "facing_stars": {"northwest": 4, "north": 8, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "south", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運雙星會向，旺財不旺丁。坐北朝南，正卦"
         },
         "寅山申向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
             "facing_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "north", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "southeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "southeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southwest", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運上山下水，損財傷丁。寅山申向正卦"
         },
         "巳山亥向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運到山到向，丁財兩得。巳山亥向正卦"
         },
         "巽山乾向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運到山到向，丁財兩得。巽山乾向正卦"
         },
         "庚山甲向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 7, "north": 9, "northeast": 2, "west": 1, "center": 5, "east": 3, "southwest": 4, "south": 6, "southeast": 8},
             "facing_stars": {"northwest": 8, "north": 4, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "67", "desc": "六七交劍，刑傷破財"},
+                {"direction": "south", "stars": "76", "desc": "七六交劍，官非手術"},
+                {"direction": "center", "stars": "53", "desc": "五三同宮，災禍連連"},
+                {"direction": "center", "stars": "35", "desc": "三五同宮，五黃三煞"},
+            ],
             "note": "八運庚山甲向正卦"
         },
         "戌山辰向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 7, "north": 9, "northeast": 5, "west": 6, "center": 4, "east": 2, "southwest": 1, "south": 3, "southeast": 8},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "east", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "east", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "northeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "west", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "west", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+            ],
             "note": "八運上山下水，損財傷丁。戌山辰向正卦"
         },
         "未山丑向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 1, "northeast": 6, "west": 7, "center": 2, "east": 9, "southwest": 3, "south": 4, "southeast": 5},
             "facing_stars": {"northwest": 8, "north": 3, "northeast": 1, "west": 9, "center": 5, "east": 7, "southwest": 4, "south": 6, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "east", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "east", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "east", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "east", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運到山到向，丁財兩得。坐西南朝東北，正卦"
         },
         "甲山庚向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 4, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
             "facing_stars": {"northwest": 7, "north": 9, "northeast": 2, "west": 1, "center": 5, "east": 3, "southwest": 4, "south": 6, "southeast": 8},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "south", "stars": "76", "desc": "七六交劍，官非手術"},
+                {"direction": "south", "stars": "67", "desc": "六七交劍，刑傷破財"},
+                {"direction": "center", "stars": "35", "desc": "三五同宮，五黃三煞"},
+                {"direction": "center", "stars": "53", "desc": "五三同宮，災禍連連"},
+            ],
             "note": "八運甲山庚向正卦"
         },
         "申山寅向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
             "facing_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "north", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "southeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "southeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southwest", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運上山下水，損財傷丁。申山寅向正卦"
         },
         "癸山丁向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
             "facing_stars": {"northwest": 4, "north": 8, "northeast": 6, "west": 5, "center": 3, "east": 1, "southwest": 9, "south": 7, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "northeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "south", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "八運雙星會向，旺財不旺丁。癸山丁向正卦"
         },
         "艮山坤向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
             "facing_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "north", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "southeast", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "southeast", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southwest", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "八運上山下水，損財傷丁。坐東南朝西北，正卦"
         },
         "辛山乙向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 6, "northeast": 4, "west": 3, "center": 1, "east": 9, "southwest": 8, "south": 7, "southeast": 2},
             "facing_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "north", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "east", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
             "inauspicious_combos": [],
             "note": "八運雙星會向，旺財不旺丁。辛山乙向正卦"
         },
@@ -246,419 +955,480 @@ FLYING_STAR_TABLE = {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 7, "north": 9, "northeast": 5, "west": 6, "center": 4, "east": 2, "southwest": 1, "south": 3, "southeast": 8},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "east", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "east", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "southeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "northeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "west", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "west", "stars": "63", "desc": "六三同宮，刑傷官非"},
+            ],
             "note": "八運上山下水，損財傷丁。辰山戌向正卦"
         },
         "酉山卯向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 6, "northeast": 4, "west": 3, "center": 1, "east": 9, "southwest": 8, "south": 7, "southeast": 2},
             "facing_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "north", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "north", "stars": "86", "desc": "運星組合: 八六會合，財丁兩旺"},
+                {"direction": "north", "stars": "68", "desc": "運星組合: 六八會合，貴人扶持"},
+                {"direction": "northeast", "stars": "88", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "east", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "east", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "south", "stars": "87", "desc": "運星組合: 八七同宮，財源廣進"},
+                {"direction": "south", "stars": "78", "desc": "運星組合: 七八同宮，財丁兩旺"},
+            ],
             "inauspicious_combos": [],
             "note": "八運雙星會向，旺財不旺丁。坐西朝東，正卦"
         },
     },
-    # ============================
-    # 九運 (2024-2043) - 福山堂專業數據
-    # ============================
     "九運": {
         "丁山癸向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
             "facing_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。丁山癸向正卦"
         },
         "丑山未向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
             "facing_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "89", "desc": "八九成雙，旺財旺丁"},
+                {"direction": "southwest", "stars": "98", "desc": "九八成雙，喜慶旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運上山下水，損財傷丁。丑山未向正卦"
         },
         "丙山壬向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運丙山壬向正卦"
         },
         "乙山辛向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運到山到向，丁財兩得。乙山辛向正卦"
         },
         "乾山巽向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
             "facing_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。乾山巽向正卦"
         },
         "亥山巳向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
             "facing_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。亥山巳向正卦"
         },
         "午山子向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
             "facing_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。午山子向正卦"
         },
         "卯山酉向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運到山到向，丁財兩得。卯山酉向正卦"
         },
         "坤山艮向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 1, "northeast": 6, "west": 7, "center": 2, "east": 9, "southwest": 3, "south": 4, "southeast": 5},
             "facing_stars": {"northwest": 8, "north": 3, "northeast": 1, "west": 9, "center": 5, "east": 7, "southwest": 4, "south": 6, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "east", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northwest", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運到山到向，丁財兩得。坤山艮向正卦"
         },
         "壬山丙向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運壬山丙向正卦"
         },
         "子山午向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
             "facing_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。子山午向正卦"
         },
         "寅山申向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 3, "northeast": 1, "west": 9, "center": 5, "east": 7, "southwest": 4, "south": 6, "southeast": 2},
             "facing_stars": {"northwest": 8, "north": 1, "northeast": 6, "west": 7, "center": 2, "east": 9, "southwest": 3, "south": 4, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "east", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northwest", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運到山到向，丁財兩得。寅山申向正卦"
         },
         "巳山亥向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
             "facing_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。巳山亥向正卦"
         },
         "巽山乾向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
             "facing_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。巽山乾向正卦"
         },
         "庚山甲向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
             "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運庚山甲向正卦"
         },
         "戌山辰向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
             "facing_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "98", "desc": "九八成雙，喜慶旺財"},
+                {"direction": "southwest", "stars": "89", "desc": "八九成雙，旺財旺丁"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運上山下水，損財傷丁。戌山辰向正卦"
         },
         "未山丑向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
             "facing_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "98", "desc": "九八成雙，喜慶旺財"},
+                {"direction": "southwest", "stars": "89", "desc": "八九成雙，旺財旺丁"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運上山下水，損財傷丁。未山丑向正卦"
         },
         "甲山庚向": {
             "pan_type": "其他", "base_score": 15, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運甲山庚向正卦"
         },
         "申山寅向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 1, "northeast": 6, "west": 7, "center": 2, "east": 9, "southwest": 3, "south": 4, "southeast": 5},
             "facing_stars": {"northwest": 8, "north": 3, "northeast": 1, "west": 9, "center": 5, "east": 7, "southwest": 4, "south": 6, "southeast": 2},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "east", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northwest", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運到山到向，丁財兩得。申山寅向正卦"
         },
         "癸山丁向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
             "mountain_stars": {"northwest": 6, "north": 1, "northeast": 8, "west": 7, "center": 5, "east": 3, "southwest": 2, "south": 9, "southeast": 4},
             "facing_stars": {"northwest": 3, "north": 8, "northeast": 1, "west": 2, "center": 4, "east": 6, "southwest": 7, "south": 9, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "north", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "south", "stars": "99", "desc": "雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "east", "stars": "36", "desc": "三六同宮，交劍煞臨"},
+                {"direction": "east", "stars": "63", "desc": "六三同宮，刑傷官非"},
+                {"direction": "southeast", "stars": "45", "desc": "四五同宮，官非口舌"},
+                {"direction": "southeast", "stars": "54", "desc": "五四同宮，病災損財"},
+            ],
             "note": "九運雙星會向，旺財不旺丁。癸山丁向正卦"
         },
         "艮山坤向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 8, "north": 3, "northeast": 1, "west": 9, "center": 5, "east": 7, "southwest": 4, "south": 6, "southeast": 2},
             "facing_stars": {"northwest": 8, "north": 1, "northeast": 6, "west": 7, "center": 2, "east": 9, "southwest": 3, "south": 4, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "north", "stars": "91", "desc": "運星組合: 九一連珠，貴人相助"},
+                {"direction": "north", "stars": "19", "desc": "運星組合: 一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "16", "desc": "一六同宮，官貴清顯"},
+                {"direction": "northeast", "stars": "61", "desc": "六一會合，貴人扶持"},
+                {"direction": "east", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "88", "desc": "雙星會聚，旺丁旺財"},
+                {"direction": "northwest", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northwest", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southeast", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "southeast", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運到山到向，丁財兩得。艮山坤向正卦"
         },
         "辛山乙向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運到山到向，丁財兩得。辛山乙向正卦"
         },
         "辰山戌向": {
             "pan_type": "上山下水", "base_score": 8, "confidence": 0.85,
             "mountain_stars": {"northwest": 2, "north": 7, "northeast": 9, "west": 1, "center": 5, "east": 3, "southwest": 8, "south": 6, "southeast": 4},
             "facing_stars": {"northwest": 5, "north": 3, "northeast": 1, "west": 2, "center": 8, "east": 7, "southwest": 9, "south": 4, "southeast": 6},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "northeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "northeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+                {"direction": "southwest", "stars": "89", "desc": "八九成雙，旺財旺丁"},
+                {"direction": "southwest", "stars": "98", "desc": "九八成雙，喜慶旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "northwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+                {"direction": "northwest", "stars": "52", "desc": "五二交加，病痛破財"},
+            ],
             "note": "九運上山下水，損財傷丁。辰山戌向正卦"
         },
         "酉山卯向": {
             "pan_type": "到山到向", "base_score": 30, "confidence": 0.85,
             "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 3, "center": 8, "east": 6, "southwest": 5, "south": 7, "southeast": 1},
             "facing_stars": {"northwest": 1, "north": 6, "northeast": 8, "west": 7, "center": 3, "east": 5, "southwest": 2, "south": 4, "southeast": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
+            "auspicious_combos": [
+                {"direction": "northeast", "stars": "98", "desc": "運星組合: 九八成雙，喜慶旺財"},
+                {"direction": "northeast", "stars": "89", "desc": "運星組合: 八九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "19", "desc": "一九成雙，旺財旺丁"},
+                {"direction": "southeast", "stars": "91", "desc": "九一連珠，貴人相助"},
+                {"direction": "southeast", "stars": "99", "desc": "運星組合: 雙星會聚，旺丁旺財"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "southwest", "stars": "52", "desc": "五二交加，病痛破財"},
+                {"direction": "southwest", "stars": "25", "desc": "二五交加，損財傷丁"},
+            ],
             "note": "九運到山到向，丁財兩得。酉山卯向正卦"
         },
     },
-    # ============================
-    # 七運 (1984-2003) - 保留原有數據
-    # ============================
-    "七運": {
-        # ---- 到山到向格局 (七運旺山旺向) ----
-        "子山午向": {
-            "pan_type": "到山到向", "base_score": 30, "confidence": 0.3,
-            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "auspicious_combos": [{"direction": "north", "stars": "77", "desc": "正北七七雙星會聚，旺丁旺財"}],
-            "inauspicious_combos": [{"direction": "south", "stars": "22", "desc": "正南二黑重臨，病符纏身"}],
-            "note": "七運到山到向，丁財兩得"
-        },
-        "午山子向": {
-            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.3,
-            "mountain_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
-            "facing_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
-            "auspicious_combos": [{"direction": "southwest", "stars": "77", "desc": "西南七七雙星會向，旺財之局"}],
-            "inauspicious_combos": [{"direction": "north", "stars": "22", "desc": "正北二黑重臨，病符纏身"}],
-            "note": "七運雙星會向，旺財不旺丁。與子山午向相對"
-        },
-        "卯山酉向": {
-            "pan_type": "雙星會向", "base_score": 14, "confidence": 0.3,
-            "mountain_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
-            "facing_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
-            "auspicious_combos": [{"direction": "west", "stars": "55", "desc": "正西雙星會向，旺財之局"}],
-            "inauspicious_combos": [{"direction": "north", "stars": "33", "desc": "正北三碧重臨，口舌是非"}],
-            "note": "七運雙星會向，旺財不旺丁"
-        },
-        "酉山卯向": {
-            "pan_type": "到山到向", "base_score": 30, "confidence": 0.3,
-            "mountain_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
-            "facing_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
-            "auspicious_combos": [{"direction": "east", "stars": "77", "desc": "正東七七雙星會聚，旺丁旺財"}],
-            "inauspicious_combos": [{"direction": "south", "stars": "88", "desc": "正南八白重臨，運過即衰"}],
-            "note": "七運到山到向，丁財兩得。與卯山酉向相對 ⚠️ 數據需專業確認"
-        },
-        "乾山巽向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.8,
-            "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
-            "facing_stars": {"northwest": 7, "north": 2, "northeast": 9, "west": 8, "center": 6, "east": 3, "southwest": 4, "south": 1, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [
-                {"direction": "west", "stars": "18", "desc": "正西一白八白，財丁不聚"},
-                {"direction": "center", "stars": "86", "desc": "中宮八白六白，運過即衰"}
-            ],
-            "note": "七運上山下水，損財傷丁"
-        },
-        "巽山乾向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.7,
-            "mountain_stars": {"northwest": 7, "north": 3, "northeast": 9, "west": 5, "center": 6, "east": 8, "southwest": 4, "south": 2, "southeast": 1},
-            "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "southeast", "stars": "11", "desc": "東南一白重臨，桃花劫臨"}],
-            "note": "七運上山下水，與乾山巽向相對 ⚠️ 數據需專業確認"
-        },
-        "艮山坤向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.6,
-            "mountain_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
-            "facing_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "north", "stars": "55", "desc": "正北五黃重臨，大凶之局"}],
-            "note": "七運上山下水，損財傷丁 ⚠️ 數據需專業確認"
-        },
-        "坤山艮向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.6,
-            "mountain_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
-            "facing_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "southwest", "stars": "55", "desc": "西南五黃重臨，大凶之局"}],
-            "note": "七運上山下水，與艮山坤向相對 ⚠️ 數據需專業確認"
-        },
-
-        # ---- 其他常見山向 (雙星會坐/雙星會向/其他) ----
-        "丑山未向": {
-            "pan_type": "雙星會坐", "base_score": 15, "confidence": 0.6,
-            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "auspicious_combos": [{"direction": "northeast", "stars": "88", "desc": "東北八八旺丁"}],
-            "inauspicious_combos": [{"direction": "south", "stars": "22", "desc": "正南二黑病符"}],
-            "note": "七運雙星會坐，旺丁不旺財 ⚠️ 數據需專業確認"
-        },
-        "未山丑向": {
-            "pan_type": "雙星會坐", "base_score": 15, "confidence": 0.6,
-            "mountain_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
-            "facing_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
-            "auspicious_combos": [{"direction": "southwest", "stars": "88", "desc": "西南八八旺丁"}],
-            "inauspicious_combos": [{"direction": "east", "stars": "55", "desc": "正東五黃煞氣"}],
-            "note": "七運雙星會坐，旺丁不旺財 ⚠️ 數據需專業確認"
-        },
-        "辰山戌向": {
-            "pan_type": "其他", "base_score": 12, "confidence": 0.5,
-            "mountain_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
-            "facing_stars": {"north": 3, "northeast": 4, "east": 5, "southeast": 6, "south": 7, "southwest": 8, "west": 1, "northwest": 2, "center": 9},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "east", "stars": "55", "desc": "正東五黃重臨"}],
-            "note": "七運普通格局 ⚠️ 數據需專業確認"
-        },
-        "戌山辰向": {
-            "pan_type": "其他", "base_score": 12, "confidence": 0.5,
-            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "west", "stars": "44", "desc": "正西四綠重臨"}],
-            "note": "七運普通格局 ⚠️ 數據需專業確認"
-        },
-        "乙山辛向": {
-            "pan_type": "雙星會向", "base_score": 14, "confidence": 0.5,
-            "mountain_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
-            "facing_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
-            "auspicious_combos": [{"direction": "west", "stars": "55", "desc": "正西雙星會向"}],
-            "inauspicious_combos": [{"direction": "north", "stars": "33", "desc": "正北三碧重臨"}],
-            "note": "七運雙星會向，與卯山酉向類似 ⚠️ 數據需專業確認"
-        },
-        "辛山乙向": {
-            "pan_type": "到山到向", "base_score": 30, "confidence": 0.5,
-            "mountain_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
-            "facing_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
-            "auspicious_combos": [{"direction": "east", "stars": "77", "desc": "正東七七雙星會聚"}],
-            "inauspicious_combos": [{"direction": "south", "stars": "88", "desc": "正南八白重臨"}],
-            "note": "七運到山到向，與酉山卯向類似 ⚠️ 數據需專業確認"
-        },
-        "癸山丁向": {
-            "pan_type": "到山到向", "base_score": 30, "confidence": 0.5,
-            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "auspicious_combos": [{"direction": "north", "stars": "77", "desc": "正北七七雙星會聚"}],
-            "inauspicious_combos": [{"direction": "south", "stars": "22", "desc": "正南二黑重臨"}],
-            "note": "七運到山到向，與子山午向類似 ⚠️ 數據需專業確認"
-        },
-        "丁山癸向": {
-            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.5,
-            "mountain_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
-            "facing_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
-            "auspicious_combos": [{"direction": "southwest", "stars": "77", "desc": "西南七七雙星會向"}],
-            "inauspicious_combos": [{"direction": "north", "stars": "22", "desc": "正北二黑重臨"}],
-            "note": "七運雙星會向，與午山子向類似 ⚠️ 數據需專業確認"
-        },
-        "壬山丙向": {
-            "pan_type": "其他", "base_score": 15, "confidence": 0.5,
-            "mountain_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "facing_stars": {"north": 7, "northeast": 8, "east": 9, "southeast": 1, "south": 2, "southwest": 3, "west": 4, "northwest": 5, "center": 6},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
-            "note": "七運偏位 ⚠️ 數據需專業確認"
-        },
-        "丙山壬向": {
-            "pan_type": "其他", "base_score": 15, "confidence": 0.5,
-            "mountain_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
-            "facing_stars": {"north": 2, "northeast": 3, "east": 4, "southeast": 5, "south": 6, "southwest": 7, "west": 8, "northwest": 9, "center": 1},
-            "auspicious_combos": [],
-            "inauspicious_combos": [],
-            "note": "七運偏位 ⚠️ 數據需專業確認"
-        },
-        "甲山庚向": {
-            "pan_type": "雙星會向", "base_score": 14, "confidence": 0.5,
-            "mountain_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
-            "facing_stars": {"north": 3, "northeast": 8, "east": 1, "southeast": 6, "south": 2, "southwest": 7, "west": 5, "northwest": 9, "center": 4},
-            "auspicious_combos": [{"direction": "west", "stars": "55", "desc": "正西雙星會向"}],
-            "inauspicious_combos": [{"direction": "north", "stars": "33", "desc": "正北三碧重臨"}],
-            "note": "七運雙星會向，與卯山酉向類似 ⚠️ 數據需專業確認"
-        },
-        "庚山甲向": {
-            "pan_type": "到山到向", "base_score": 30, "confidence": 0.5,
-            "mountain_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
-            "facing_stars": {"north": 9, "northeast": 5, "east": 7, "southeast": 3, "south": 8, "southwest": 1, "west": 6, "northwest": 4, "center": 2},
-            "auspicious_combos": [{"direction": "east", "stars": "77", "desc": "正東七七雙星會聚"}],
-            "inauspicious_combos": [{"direction": "south", "stars": "88", "desc": "正南八白重臨"}],
-            "note": "七運到山到向，與酉山卯向類似 ⚠️ 數據需專業確認"
-        },
-        "寅山申向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
-            "mountain_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
-            "facing_stars": {"north": 9, "northeast": 1, "east": 2, "southeast": 3, "south": 4, "southwest": 5, "west": 6, "northwest": 7, "center": 8},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "southwest", "stars": "55", "desc": "西南五黃重臨"}],
-            "note": "七運上山下水，與艮山坤向類似 ⚠️ 數據需專業確認"
-        },
-        "申山寅向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
-            "mountain_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
-            "facing_stars": {"north": 5, "northeast": 6, "east": 7, "southeast": 8, "south": 9, "southwest": 1, "west": 2, "northwest": 3, "center": 4},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "north", "stars": "55", "desc": "正北五黃重臨"}],
-            "note": "七運上山下水，與坤山艮向類似 ⚠️ 數據需專業確認"
-        },
-        "亥山巳向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
-            "mountain_stars": {"northwest": 7, "north": 2, "northeast": 9, "west": 8, "center": 6, "east": 3, "southwest": 4, "south": 1, "southeast": 5},
-            "facing_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "west", "stars": "18", "desc": "正西一白八白，財丁不聚"}],
-            "note": "七運上山下水，與乾山巽向類似 ⚠️ 數據需專業確認"
-        },
-        "巳山亥向": {
-            "pan_type": "上山下水", "base_score": 8, "confidence": 0.5,
-            "mountain_stars": {"northwest": 9, "north": 4, "northeast": 2, "west": 1, "center": 8, "east": 5, "southwest": 6, "south": 3, "southeast": 7},
-            "facing_stars": {"northwest": 7, "north": 2, "northeast": 9, "west": 8, "center": 6, "east": 3, "southwest": 4, "south": 1, "southeast": 5},
-            "auspicious_combos": [],
-            "inauspicious_combos": [{"direction": "southeast", "stars": "55", "desc": "東南五黃重臨"}],
-            "note": "七運上山下水，與巽山乾向類似 ⚠️ 數據需專業確認"
-        },
-    }
 }
 
 # 支持的坐向列表
