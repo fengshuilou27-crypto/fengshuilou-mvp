@@ -13,7 +13,7 @@ DATABASE_URL = os.environ.get(
 )
 
 # 是否使用數據庫（環境變量控制）
-USE_DATABASE = os.environ.get("USE_DATABASE", "false").lower() == "true"
+USE_DATABASE = os.environ.get("USE_DATABASE", "true").lower() == "true"
 
 
 def _get_db_connection():
