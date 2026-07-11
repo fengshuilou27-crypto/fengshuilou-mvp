@@ -93,7 +93,7 @@ from data.fxti_relationship import analyze_relationship
 app = FastAPI(
     title="AI風水樓盤匹配系統",
     description="v3.1 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算 + 多運交叉分析 + 自動SHA推導 + GIS地理風水分析 + FXTI五行性格",
-    version="3.3.0"
+    version="3.5.0"
 )
 
 app.add_middleware(
@@ -1142,7 +1142,7 @@ def get_supported_facings():
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "version": "3.3.0", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
+    return {"status": "ok", "version": "3.5.0", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
 
 
 # ==================== FXTI Routes ====================
