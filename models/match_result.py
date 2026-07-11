@@ -1,6 +1,5 @@
 from data.district_scores import get_district_score
 from data.flying_star import analyze_multi_yun
-from data.gis_analysis import analyze_gis_feng_shui
 
 
 def _get_district_tier(score: float) -> str:
@@ -93,6 +92,9 @@ def aggregate_match_result(
     gis_norm = 0.0
     if estate_name or district:
         try:
+            # Lazy import to avoid startup failure if numpy/shapely not installed
+            from data.gis_analysis import analyze_gis_feng_shui
+            
             # 優先使用 estate_name，否則嘗試用 district 作為 fallback
             lookup_name = estate_name if estate_name else district
             gis_result = analyze_gis_feng_shui(
