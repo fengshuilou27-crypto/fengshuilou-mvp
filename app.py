@@ -1441,13 +1441,15 @@ def api_db_status():
     """數據庫連接狀態和數據統計"""
     try:
         status = get_db_status()
+        estates_count = len(ALL_ESTATES) if 'ALL_ESTATES' in globals() else 0
+        listings_count = len(ALL_LISTINGS) if 'ALL_LISTINGS' in globals() else 0
         return {
             "status": "success",
             "data": {
                 **status,
                 "app_version": VERSION,
-                "estates_csv_loaded": len(ALL_ESTATES),
-                "listings_csv_loaded": len(ALL_LISTINGS)
+                "estates_csv_loaded": estates_count,
+                "listings_csv_loaded": listings_count
             }
         }
     except Exception as e:
@@ -1455,8 +1457,8 @@ def api_db_status():
             "status": "error",
             "message": str(e),
             "app_version": VERSION,
-            "estates_csv_loaded": len(ALL_ESTATES),
-            "listings_csv_loaded": len(ALL_LISTINGS)
+            "estates_csv_loaded": len(ALL_ESTATES) if 'ALL_ESTATES' in globals() else 0,
+            "listings_csv_loaded": len(ALL_LISTINGS) if 'ALL_LISTINGS' in globals() else 0
         }
 
 
