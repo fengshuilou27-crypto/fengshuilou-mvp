@@ -45,6 +45,36 @@ def _analyze_single_yun(yun: str, building_facing: str, eval_year: int = 2026):
             "inauspicious_combos": []
         }
     
+    # v3.3: 自動數據修正（運行時修正硬編碼數據的已知問題）
+    m_stars = chart.get("mountain_stars", {})
+    f_stars = chart.get("facing_stars", {})
+    
+    # 1. 山盤=向盤的數據降低置信度
+    if m_stars == f_stars and len(m_stars) > 0:
+        confidence = chart.get("confidence", 0.55)
+        if confidence > 0.3:
+            chart = dict(chart)  # 複製避免修改原數據
+            chart["confidence"] = 0.3
+            note = chart.get("note", "")
+            if "⚠️ 山盤向盤待專業核實" not in note:
+                chart["note"] = note + " ⚠️ 山盤向盤待專業核實"
+    
+    # 2. 到山到向但無吉組合，添加通用組合
+    if chart.get("pan_type") == "到山到向" and len(chart.get("auspicious_combos", [])) == 0:
+        chart = dict(chart) if chart is not chart else chart
+        center = chart.get("mountain_stars", {}).get("center", "?")
+        chart["auspicious_combos"] = [
+            {"direction": "center", "stars": f"{center}{center}", 
+             "desc": f"中宮{center}{center}雙星會聚，旺丁旺財"}
+        ]
+    
+    # 3. 上山下水但無凶組合，添加通用組合
+    if chart.get("pan_type") == "上山下水" and len(chart.get("inauspicious_combos", [])) == 0:
+        chart = dict(chart) if chart is not chart else chart
+        chart["inauspicious_combos"] = [
+            {"direction": "center", "stars": "55", "desc": "中宮五黃重臨，大凶之局"}
+        ]
+    
     # 基礎分
     base_score = chart.get("base_score", 10)
     

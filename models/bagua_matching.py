@@ -1,3 +1,4 @@
+from data.solar_term import get_lunar_year_for_ming_gua
 from data.bagua import (
     ZHAIGUA_TABLE, GUA_WUXING, MING_GUA_MAP,
     EAST_FOUR_GUA, WEST_FOUR_GUA,
@@ -16,14 +17,6 @@ def calc_ming_gua(birth_year: int, gender: str) -> int:
     例如：1991年1月15日公曆 = 庚午年農曆（非辛未年）。
     未來版本應增加農曆年轉換功能以提高準確度。
     
-    男命：(100 - 出生年後兩位) ÷ 9，取餘數（整除取9）
-    女命：(出生年後兩位 - 4) ÷ 9，取餘數（整除取9）
-    餘5：男命寄艮(2)，女命寄坤(8)
-    命卦數：1坎 2坤 3震 4巽 6乾 7兌 8艮 9離
-    """
-    year_last_two = int(str(birth_year)[-2:])
-    """
-    命卦計算公式（100年算法）
     男命：(100 - 出生年後兩位) ÷ 9，取餘數（整除取9）
     女命：(出生年後兩位 - 4) ÷ 9，取餘數（整除取9）
     餘5：男命寄艮(2)，女命寄坤(8)
@@ -234,11 +227,13 @@ def _analyze_single_bagua(birth_year: int, gender: str, building_facing: str,
 def analyze_bagua(birth_date: str, gender: str, building_facing: str, 
                   room_positions: dict = None, goal: str = ""):
     """
-    八宅匹配模組（單人版）v2.2
+    八宅匹配模組（單人版）v3.3
     計算命卦、宅卦，判斷宅命匹配度，並分析九宮房間吉凶
+    
+    v3.3 更新：引入立春分界，1-2月出生的用戶命卦計算更準確
     """
     try:
-        birth_year = int(birth_date.split("-")[0])
+        birth_year = get_lunar_year_for_ming_gua(birth_date)
     except (ValueError, IndexError):
         return {
             "status": "error",
@@ -249,7 +244,23 @@ def analyze_bagua(birth_date: str, gender: str, building_facing: str,
             "rationale": "出生日期格式错误，无法计算命卦"
         }
     
-    return _analyze_single_bagua(birth_year, gender, building_facing, room_positions, goal, "")
+    result = _analyze_single_bagua(birth_year, gender, building_facing, room_positions, goal, "")
+    
+    # v3.3: 如果年份有調整，在結果中說明
+    original_year = int(birth_date.split("-")[0])
+    if birth_year != original_year:
+        result["lunar_year_adjusted"] = True
+        result["original_year"] = original_year
+        result["lunar_year"] = birth_year
+        result["rationale"] = (
+            f"【立春分界調整】您出生於{original_year}年，"
+            f"但當年立春在出生日期之後，命卦按{birth_year}年（上一年）計算。"
+            f"{result.get('rationale', '')}"
+        )
+    else:
+        result["lunar_year_adjusted"] = False
+    
+    return result
 
 
 def analyze_bagua_dual(person_a_birth_date: str, person_a_gender: str,
@@ -257,12 +268,14 @@ def analyze_bagua_dual(person_a_birth_date: str, person_a_gender: str,
                        building_facing: str, room_positions: dict = None, 
                        goal: str = "", weight_a: float = 0.5, weight_b: float = 0.5):
     """
-    八宅匹配模組（雙人版）v2.2
+    八宅匹配模組（雙人版）v3.3
     分別計算兩人命卦、宅卦，加權合併，並列顯示吉位凶位對照表
+    
+    v3.3 更新：引入立春分界
     """
     try:
-        birth_year_a = int(person_a_birth_date.split("-")[0])
-        birth_year_b = int(person_b_birth_date.split("-")[0])
+        birth_year_a = get_lunar_year_for_ming_gua(person_a_birth_date)
+        birth_year_b = get_lunar_year_for_ming_gua(person_b_birth_date)
     except (ValueError, IndexError):
         return {
             "status": "error",

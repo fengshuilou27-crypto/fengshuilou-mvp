@@ -1150,26 +1150,25 @@ def derive_sha_from_pan(pan: dict) -> list:
 
 
 # ============================================================
-# 數據驗證函數 (v3.2 新增)
+# 數據驗證函數 (v3.3 更新)
 # ============================================================
 
 def validate_flying_star_data() -> dict:
     """
     驗證飛星數據的內部一致性。
     
-    檢查項：
-    1. 中宮數字是否等於運星（當運星已知時）
-    2. 山盤與向盤是否完全相同（理論上不可能）
-    3. 格局判定與數據一致性（上山下水應有明顯凶組合）
+    v3.3 更新：
+    - 移除了錯誤的「中宮=運星」檢查（山盤/向盤中宮是山星/向星入中數字，非運星）
+    - 使用 flying_star_algorithm 模組進行算法級驗證
+    - 新增缺少方位數據檢查
     
-    Returns:
-        {
-            "issues": list[str],      # 發現的問題列表
-            "issue_count": int,       # 問題總數
-            "checked_entries": int,   # 檢查的條目總數
-            "checked_yuns": list[str] # 檢查的運數
-        }
+    檢查項：
+    1. 山盤與向盤是否完全相同（理論上應有差異）
+    2. 格局判定與數據一致性（上山下水應有凶組合，到山到向應有吉組合）
+    3. 算法級驗證：使用 quick_verify_pan 進行一致性檢查
     """
+    from data.flying_star_algorithm import quick_verify_pan
+    
     issues = []
     checked_entries = 0
     checked_yuns = list(FLYING_STAR_TABLE.keys())
@@ -1181,21 +1180,12 @@ def validate_flying_star_data() -> dict:
             checked_entries += 1
             entry_id = f"{yun} {mountain}"
             
-            # 1. 檢查中宮數字是否等於運星
-            mountain_center = data.get("mountain_stars", {}).get("center")
-            facing_center = data.get("facing_stars", {}).get("center")
+            # 1. v3.3 修正：中宮數字驗證
+            # 玄空飛星中，山盤/向盤的中宮是山星/向星入中數字，
+            # 不一定等於運星。只有「運盤（元旦盤）」中宮=運星。
+            # 因此此項檢查已移除，避免誤報。
             
-            if expected_center is not None:
-                if mountain_center != expected_center:
-                    issues.append(
-                        f"{entry_id}: 山盤中宮{mountain_center} != 運星{expected_center}"
-                    )
-                if facing_center != expected_center:
-                    issues.append(
-                        f"{entry_id}: 向盤中宮{facing_center} != 運星{expected_center}"
-                    )
-            
-            # 2. 檢查山盤與向盤是否完全相同
+            # 1. 檢查山盤與向盤是否完全相同
             m_stars = data.get("mountain_stars", {})
             f_stars = data.get("facing_stars", {})
             if m_stars == f_stars and len(m_stars) > 0:
@@ -1206,7 +1196,7 @@ def validate_flying_star_data() -> dict:
                         f"{entry_id}: 山盤=向盤但置信度{confidence}過高，應<=0.5"
                     )
             
-            # 3. 檢查上山下水格局是否有凶組合
+            # 2. 檢查上山下水格局是否有凶組合
             pan_type = data.get("pan_type", "")
             inauspicious = data.get("inauspicious_combos", [])
             if pan_type == "上山下水" and len(inauspicious) == 0:
@@ -1214,11 +1204,18 @@ def validate_flying_star_data() -> dict:
                     f"{entry_id}: 上山下水格局但無凶組合記錄"
                 )
             
-            # 4. 檢查到山到向格局是否有吉組合
+            # 3. 檢查到山到向格局是否有吉組合
             auspicious = data.get("auspicious_combos", [])
             if pan_type == "到山到向" and len(auspicious) == 0:
                 issues.append(
                     f"{entry_id}: 到山到向格局但無吉組合記錄"
+                )
+            
+            # 4. v3.3 新增：算法級快速驗證
+            algo_check = quick_verify_pan(m_stars, f_stars, expected_center or 0)
+            if not algo_check["has_all_directions"]:
+                issues.append(
+                    f"{entry_id}: 缺少{9 - algo_check.get('diff_count', 0)}個方位數據"
                 )
     
     return {
