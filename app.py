@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.6.6"
+VERSION = "3.6.7"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
@@ -96,7 +96,7 @@ from data.fxti_relationship import analyze_relationship
 app = FastAPI(
     title="AI風水樓盤匹配系統",
     description="v3.6 - 24山向飛星表 + 八宅遊年 + 納甲樓層 + 羅盤工具 + 風水集成層 + 數據庫適配",
-    version="3.6.6"
+    version="3.6.7"
 )
 
 app.add_middleware(
@@ -671,6 +671,19 @@ def run_single_match(meta: RequestMeta, district: str = None):
             estate_name=meta.estate_name,
             room_layout=meta.room_layout
         )
+
+
+@app.get("/logo.png")
+def serve_logo():
+    """提供 logo 圖片"""
+    logo_path = Path("static/logo.png")
+    if logo_path.exists():
+        return FileResponse(str(logo_path), media_type="image/png")
+    # 回退到 SVG
+    svg_path = Path("frontend/public/logo.svg")
+    if svg_path.exists():
+        return FileResponse(str(svg_path), media_type="image/svg+xml")
+    raise HTTPException(status_code=404, detail="Logo not found")
 
 
 @app.get("/")

@@ -19,12 +19,65 @@
         h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
         .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
         .module-badge { display: inline-block; background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
-        .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
-        .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
-        .logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
-.logo-link img { height: 48px; width: auto; }
-.nav a:hover { background: #667eea; color: white; }
-        .nav a.active { background: #667eea; color: white; }
+
+/* ===== 頂部導航欄 v3.6.7 ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .top-nav .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .top-nav .logo-area img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+        .top-nav .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+            letter-spacing: -0.5px;
+        }
+        .top-nav .logo-text span {
+            color: #667eea;
+        }
+        .top-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .top-nav .nav-links a {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .top-nav .nav-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+        .top-nav .nav-links a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .top-nav { flex-direction: column; align-items: flex-start; }
+            .top-nav .nav-links { width: 100%; overflow-x: auto; }
+        }
         .form-group { margin-bottom: 16px; }
         label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
         input, select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s; }
@@ -70,8 +123,19 @@
 </head>
 <body>
 <div class="container">
-<a href="/" class="logo-link" title="回到主頁"><img src="/logo.png" alt="風水樓"></a>
-    <h1>AI風水樓盤匹配系統 <span class="module-badge">模組1</span></h1>
+<div class="top-nav">
+            <a href="/" class="logo-area" title="回到主頁">
+                <img src="/logo.png" alt="風水樓" onerror="this.style.display='none'">
+                <span class="logo-text">風水<span>樓</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active">模組1</a>
+                <a href="module2.html">模組2</a>
+                <a href="module3.html">模組3</a>
+                <a href="fxti/index.html">FXTI</a>
+            </div>
+        </div>
+<h1>AI風水樓盤匹配系統 <span class="module-badge">模組1</span></h1>
     <p class="subtitle">自測現有住所 — 輸入您的個人資料與現有住所，獲得風水評估報告</p>
     
     <div class="module-cards">
@@ -97,13 +161,6 @@
         </a>
     </div>
     
-    <div class="nav">
-        <a href="module1.html" class="active">模組1：自測住所</a>
-        <a href="module2.html">模組2：配對屋苑</a>
-        <a href="module3.html">模組3：配對物業</a>
-        <a href="fxti/index.html">模組4：FXTI人格</a>
-    </div>
-
     <form id="evaluateForm">
         <div class="section-title">👤 個人資料</div>
         <div class="two-col">
