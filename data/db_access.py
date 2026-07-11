@@ -115,21 +115,63 @@ def load_estates():
 # ============================================================
 
 def load_listings_from_db():
-    """從數據庫加載樓盤數據"""
+    """從數據庫加載樓盤數據（v3.6.5 修復版：兼容缺失列）"""
     conn = _get_db_connection()
     if not conn:
         return None
     
     try:
         cur = conn.cursor()
+        
+        # v3.6.5: 先檢查 listings 表有哪些列，避免查詢不存在的列
         cur.execute("""
-            SELECT title, district, estate_name as estate, unit_info,
-                   price_raw, price_num as price, build_area, usable_area,
-                   rooms, facing, year_built, yun, agent, posted_time,
-                   listing_url as url, has_sea_view, has_mountain_view,
-                   views, features, decoration
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'listings';
+        """)
+        existing_cols = {row[0] for row in cur.fetchall()}
+        
+        # 構建安全的 SELECT 列列表
+        desired_cols = [
+            "title", "district", "estate_name", "unit_info",
+            "price_raw", "price_num", "build_area", "usable_area",
+            "rooms", "facing", "year_built", "yun", "agent", "posted_time",
+            "listing_url", "has_sea_view", "has_mountain_view",
+            "views", "features", "decoration", "created_at"
+        ]
+        
+        select_cols = []
+        alias_map = {}  # db_col -> output_key
+        for col in desired_cols:
+            if col in existing_cols:
+                select_cols.append(col)
+                alias_map[col] = col
+            elif col == "estate_name":
+                # 嘗試兼容舊 schema
+                if "estate" in existing_cols:
+                    select_cols.append("estate")
+                    alias_map["estate"] = "estate"
+            elif col == "price_num":
+                if "price" in existing_cols:
+                    select_cols.append("price")
+                    alias_map["price"] = "price"
+            elif col == "listing_url":
+                if "url" in existing_cols:
+                    select_cols.append("url")
+                    alias_map["url"] = "url"
+        
+        if not select_cols:
+            print("No recognizable columns found in listings table")
+            return None
+        
+        # 構建查詢
+        col_sql = ", ".join(select_cols)
+        order_col = "created_at" if "created_at" in existing_cols else select_cols[0]
+        
+        cur.execute(f"""
+            SELECT {col_sql}
             FROM listings
-            ORDER BY created_at DESC;
+            ORDER BY {order_col} DESC;
         """)
         
         columns = [desc[0] for desc in cur.description]
@@ -138,10 +180,13 @@ def load_listings_from_db():
             row_dict = {}
             for i, col in enumerate(columns):
                 val = row[i]
-                # Convert None to empty string
                 if val is None:
                     val = ""
                 row_dict[col] = str(val)
+            # 確保關鍵字段存在（如果不存在則設為空字符串）
+            for key in ["year_built", "yun", "estate", "price", "url"]:
+                if key not in row_dict:
+                    row_dict[key] = ""
             rows.append(row_dict)
         
         cur.close()

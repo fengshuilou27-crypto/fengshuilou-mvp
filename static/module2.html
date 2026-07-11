@@ -388,7 +388,7 @@ async function runMatching() {
             cohabitant_birth_time: userProfile.cohabitantEnabled ? userProfile.cohabitantBirthTime : null,
             cohabitant_user_job: userProfile.cohabitantEnabled ? userProfile.cohabitantUserJob : null,
             cohabitant_weight_ratio: userProfile.cohabitantEnabled ? parseFloat(userProfile.cohabitantWeightRatio) : 0.5,
-            household_weight_mode: userProfile.cohabitantEnabled ? 'couple' : 'single'
+            household_weight_mode: userProfile.cohabitantEnabled ? 'balanced' : 'single'
         },
         top_n: 50
     };
