@@ -571,6 +571,21 @@ def fxti_share_html():
     return FileResponse("static/fxti/share.html")
 
 
+@app.get("/disclaimer")
+def disclaimer_page():
+    return FileResponse("static/disclaimer.html")
+
+
+@app.get("/privacy")
+def privacy_page():
+    return FileResponse("static/privacy.html")
+
+
+@app.get("/terms")
+def terms_page():
+    return FileResponse("static/terms.html")
+
+
 @app.post("/api/evaluate")
 def evaluate(request: EvaluateRequest):
     """模組1：自測現有住所 — 單一評估"""
