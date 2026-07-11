@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-noto-sans: 'Noto Sans TC', system-ui, sans-serif;
+    --font-noto-serif: 'Noto Serif TC', serif;
+    
+    /* 品牌 CSS 變量 */
+    --brand-primary: #1a3c2a;
+    --brand-secondary: #c9a961;
+    --brand-accent: #2d6a4f;
+    --brand-paper: #f5f0e8;
+    --brand-ink: #1a1a2e;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 選中文本樣式 */
+  ::selection {
+    @apply bg-brand-200 text-brand-900;
+  }
+
+  /* 滾動條樣式 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-brand-50;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-400;
+  }
+}
+
+@layer components {
+  /* 品牌容器 */
+  .container-brand {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* 品牌卡片 */
+  .card-brand {
+    @apply bg-white rounded-2xl shadow-card border border-brand-100 
+           transition-all duration-300 hover:shadow-card-hover;
+  }
+
+  /* 品牌按鈕 */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 
+           bg-brand-500 text-white font-medium rounded-xl
+           transition-all duration-200 hover:bg-brand-600 
+           hover:shadow-lg hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-white text-brand-500 font-medium rounded-xl border-2 border-brand-500
+           transition-all duration-200 hover:bg-brand-50
+           hover:shadow-md active:translate-y-0;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-gradient-gold text-brand-900 font-semibold rounded-xl
+           transition-all duration-200 hover:shadow-glow hover:-translate-y-0.5
+           active:translate-y-0;
+  }
+
+  /* 品牌標題樣式 */
+  .heading-display {
+    @apply font-display font-bold text-brand-900 leading-tight tracking-tight;
+  }
+
+  .heading-section {
+    @apply font-display font-semibold text-brand-800 text-2xl md:text-3xl mb-4;
+  }
+
+  /* 風水分隔線 */
+  .divider-ornament {
+    @apply flex items-center gap-4 my-8;
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: '';
+    @apply flex-1 h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent;
+  }
+
+  /* 評分顯示 */
+  .score-ring {
+    @apply relative w-24 h-24 rounded-full flex items-center justify-center;
+    background: conic-gradient(var(--score-color) var(--score-deg), #e5e7eb 0deg);
+  }
+  .score-ring::before {
+    content: '';
+    @apply absolute w-20 h-20 rounded-full bg-white;
+  }
+  .score-ring span {
+    @apply relative z-10 text-2xl font-bold;
+    color: var(--score-color);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
