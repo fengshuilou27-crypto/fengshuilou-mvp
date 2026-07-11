@@ -8,114 +8,57 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; padding: 20px; color: #333; }
-.container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
-.subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
-.module-badge { display: inline-block; background: #28a745; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;  min-height: 100vh; padding: 20px; color: #fff; }
+.container { max-width: 900px; margin: 0 auto;  border-radius: 16px; padding: 32px;  }
+h1 { text-align: center; color: #fff; margin-bottom: 8px; font-size: 28px; }
+.subtitle { text-align: center; color: #808080; margin-bottom: 24px; font-size: 14px; }
+.module-badge { display: inline-block; background: #E50914; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
 
-/* ===== 頂部導航欄 v3.6.7 ===== */
-        .top-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .top-nav .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .top-nav .logo-area img {
-            height: 40px;
-            width: auto;
-            display: block;
-        }
-        .top-nav .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-            letter-spacing: -0.5px;
-        }
-        .top-nav .logo-text span {
-            color: #667eea;
-        }
-        .top-nav .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .top-nav .nav-links a {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #555;
-            text-decoration: none;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .top-nav .nav-links a:hover {
-            background: #667eea;
-            color: white;
-        }
-        .top-nav .nav-links a.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        @media (max-width: 600px) {
-            .top-nav { flex-direction: column; align-items: flex-start; }
-            .top-nav .nav-links { width: 100%; overflow-x: auto; }
-        }
+
 .form-group { margin-bottom: 16px; }
-label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
-input, select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; }
-input:focus, select:focus { outline: none; border-color: #667eea; }
-.btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+label { display: block; margin-bottom: 6px; color: #bcbcbc; font-weight: 500; font-size: 14px; }
+input, select { width: 100%; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 15px; }
+input:focus, select:focus { outline: none; border-color: #E50914; }
+.btn { width: 100%; padding: 14px; background: #E50914; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(229,9,20,0.4); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn-secondary { background: #f0f0f0; color: #444; }
-.btn-secondary:hover { background: #e0e0e0; }
-.section-title { font-size: 18px; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #667eea; }
+.btn-secondary { background: rgba(255,255,255,0.1); color: #bcbcbc; }
+.btn-secondary:hover { background: #2D2D2D; }
+.section-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #E50914; }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
 .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 @media (max-width: 600px) { .three-col { grid-template-columns: 1fr; } }
-.listing-card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
-.listing-card:hover { border-color: #667eea; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
-.listing-title { font-size: 16px; font-weight: 600; color: #1a1a2e; }
-.listing-meta { font-size: 13px; color: #666; margin-top: 4px; }
+.listing-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+.listing-card:hover { border-color: #E50914; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
+.listing-title { font-size: 16px; font-weight: 600; color: #fff; }
+.listing-meta { font-size: 13px; color: #808080; margin-top: 4px; }
 .listing-price { font-size: 18px; font-weight: 700; color: #e74c3c; margin-top: 8px; }
 .listing-score { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 600; margin-top: 8px; }
-.score-high { background: #d4edda; color: #155724; }
-.score-mid { background: #d1ecf1; color: #0c5460; }
-.score-low { background: #fff3cd; color: #856404; }
-.loading { text-align: center; padding: 40px; color: #666; }
-.spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+.score-high { background: rgba(70,211,105,0.15); color: #46D369; }
+.score-mid { background: rgba(212,168,67,0.15); color: #D4A843; }
+.score-low { background: rgba(229,9,20,0.15); color: #E50914; }
+.loading { text-align: center; padding: 40px; color: #808080; }
+.spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #E50914; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.result-section { margin-top: 24px; padding: 24px; background: #f8f9fa; border-radius: 12px; }
+.result-section { margin-top: 24px; padding: 24px; background: #1F1F1F; border-radius: 12px; }
 #step1 { display: block; }
 #step2 { display: none; }
 #step3 { display: none; }
 #step4 { display: none; }
-.filter-section { background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
-.call-buy-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 12px; padding: 20px; margin-top: 20px; }
-.call-buy-box h3 { color: #856404; margin-bottom: 8px; }
-.call-buy-box p { color: #856404; font-size: 14px; }
-.market-card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s; }
-.market-card:hover { border-color: #667eea; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
-.data-warning { color: #856404; font-size: 12px; background: #fff3cd; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+.filter-section { background: #1F1F1F; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+.call-buy-box { background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.3); border-radius: 12px; padding: 20px; margin-top: 20px; }
+.call-buy-box h3 { color: #D4A843; margin-bottom: 8px; }
+.call-buy-box p { color: #D4A843; font-size: 14px; }
+.market-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s; }
+.market-card:hover { border-color: #E50914; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
+.data-warning { color: #D4A843; font-size: 12px; background: #fff3cd; padding: 4px 8px; border-radius: 4px; display: inline-block; }
 .hidden { display: none; }
 .goal-item { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
 .goal-item select { flex: 1; }
 .goal-item .priority-select { width: 100px; }
-.goal-item .remove-btn { background: #f8d7da; color: #721c24; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
-.coming-soon-badge { display: inline-block; background: #e0e0e0; color: #666; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+.goal-item .remove-btn { background: rgba(229,9,20,0.15); color: #E50914; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
+.coming-soon-badge { display: inline-block; background: #2D2D2D; color: #808080; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
 .checkbox-group { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
 .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 14px; }
 .checkbox-item input { width: auto; }
@@ -124,31 +67,35 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 .module-card:hover { transform: translateY(-3px); }
 @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
 </style>
+    <link rel="stylesheet" href="css/netflix-theme.css">
 </head>
 <body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="netflix-logo" title="回到主頁">
+        <div class="logo-icon">風</div>
+        <span class="logo-text">風水<span>樓</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html">首頁</a>
+        <a href="module1.html">自測</a>
+        <a href="module2.html">配對</a>
+        <a href="module3.html" class="active">物業</a>
+        <a href="fxti/index.html">FXTI</a>
+    </div>
+</nav>
 <div class="container">
-<div class="top-nav">
-            <a href="/" class="logo-area" title="回到主頁">
-                <img src="/logo.png" alt="風水樓" onerror="this.style.display='none'">
-                <span class="logo-text">風水<span>樓</span></span>
-            </a>
-            <div class="nav-links">
-                <a href="index.html">模組1</a>
-                <a href="module2.html">模組2</a>
-                <a href="module3.html" class="active">模組3</a>
-                <a href="fxti/index.html">FXTI</a>
-            </div>
-        </div>
+
 <h1>AI風水樓盤匹配系統 <span class="module-badge">模組3</span></h1>
 <p class="subtitle">配對物業 — 輸入個人資料，系統從樓盤數據庫匹配最適合您的具體物業</p>
 
 <div class="module-cards">
-    <a href="index.html" class="module-card" style="background: #f0f0f0; color: #444;">
+    <a href="index.html" class="module-card" style="background: rgba(255,255,255,0.1); color: #bcbcbc;">
         <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
         <div style="font-size: 13px; font-weight: 600;">模組1</div>
         <div style="font-size: 11px; opacity: 0.7;">自測住所</div>
     </a>
-    <a href="module2.html" class="module-card" style="background: #f0f0f0; color: #444;">
+    <a href="module2.html" class="module-card" style="background: rgba(255,255,255,0.1); color: #bcbcbc;">
         <div style="font-size: 24px; margin-bottom: 4px;">🏢</div>
         <div style="font-size: 13px; font-weight: 600;">模組2</div>
         <div style="font-size: 11px; opacity: 0.7;">配對屋苑</div>
@@ -158,7 +105,7 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
         <div style="font-size: 13px; font-weight: 600;">模組3</div>
         <div style="font-size: 11px; opacity: 0.9;">配對物業</div>
     </a>
-    <a href="fxti/index.html" class="module-card" style="background: #f0f0f0; color: #444;">
+    <a href="fxti/index.html" class="module-card" style="background: rgba(255,255,255,0.1); color: #bcbcbc;">
         <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
         <div style="font-size: 13px; font-weight: 600;">模組4</div>
         <div style="font-size: 11px; opacity: 0.7;">FXTI人格</div>
@@ -732,33 +679,33 @@ async function runSelfTest(propertyId) {
 </script>
 
     <!-- Footer -->
-    <footer style="background: #1a3c2a; color: #c9a961; padding: 24px 20px; text-align: center; margin-top: 40px; font-size: 13px;">
+    <footer style="background: #181818; color: #D4A843; padding: 24px 20px; text-align: center; margin-top: 40px; font-size: 13px;">
         <div style="max-width: 1200px; margin: 0 auto;">
             <div style="margin-bottom: 12px;">
-                <a href="/disclaimer" style="color: #c9a961; text-decoration: none; margin: 0 12px;">免責聲明</a>
-                <a href="/privacy" style="color: #c9a961; text-decoration: none; margin: 0 12px;">私隱政策</a>
-                <a href="/terms" style="color: #c9a961; text-decoration: none; margin: 0 12px;">服務條款</a>
+                <a href="/disclaimer" style="color: #D4A843; text-decoration: none; margin: 0 12px;">免責聲明</a>
+                <a href="/privacy" style="color: #D4A843; text-decoration: none; margin: 0 12px;">私隱政策</a>
+                <a href="/terms" style="color: #D4A843; text-decoration: none; margin: 0 12px;">服務條款</a>
             </div>
-            <div style="color: #8fbc8f; font-size: 12px;">
+            <div style="color: #808080; font-size: 12px;">
                 © 2026 風水樓. 保留所有權利。 | 本系統分析結果僅供參考，不構成專業風水意見。
             </div>
         </div>
     </footer>
 
     <!-- Disclaimer Modal -->
-    <div id="disclaimerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center;">
-        <div style="background: white; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; border-radius: 12px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-            <h2 style="color: #1a3c2a; margin-bottom: 16px; font-size: 22px;">⚠️ 重要聲明</h2>
-            <div style="color: #333; line-height: 1.7; font-size: 14px; margin-bottom: 24px;">
+    <div id="disclaimerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div style=" max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; border-radius: 12px; padding: 32px; ">
+            <h2 style="color: #D4A843; margin-bottom: 16px; font-size: 22px;">⚠️ 重要聲明</h2>
+            <div style="color: #fff; line-height: 1.7; font-size: 14px; margin-bottom: 24px;">
                 <p style="margin-bottom: 12px;"><strong>本服務性質：</strong>「風水樓」是一個基於人工智能的風水分析工具，旨在將傳統風水理論數碼化，為用戶提供便捷的樓盤風水參考信息。</p>
                 <p style="margin-bottom: 12px;"><strong>非專業意見：</strong>本系統的分析結果<strong>不構成</strong>任何專業風水意見、投資建議或法律意見。我們強烈建議您在作出任何重大置業決定前，諮詢持牌風水師或相關專業人士。</p>
                 <p style="margin-bottom: 12px;"><strong>分析準確性：</strong>人工智能分析可能存在誤差。風水學為經驗學問，不同流派的判斷標準各異。本系統採用的算法和數據僅供參考。</p>
-                <p style="margin-bottom: 12px;"><strong>數據使用：</strong>我們重視您的私隱。詳情請參閱 <a href="/privacy" style="color: #1a3c2a;" target="_blank">私隱政策</a>。</p>
+                <p style="margin-bottom: 12px;"><strong>數據使用：</strong>我們重視您的私隱。詳情請參閱 <a href="/privacy" style="color: #D4A843;" target="_blank">私隱政策</a>。</p>
                 <p><strong>使用風險：</strong>使用本服務即表示您了解並接受上述限制。對於因使用本服務而導致的任何損失，我們不承擔法律責任。</p>
             </div>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button onclick="acceptDisclaimer()" style="background: #1a3c2a; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600;">我已了解並同意</button>
-                <a href="/disclaimer" style="background: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 12px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; display: inline-block;">查看完整聲明</a>
+                <button onclick="acceptDisclaimer()" style="background: #E50914; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600;">我已了解並同意</button>
+                <a href="/disclaimer" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.08); padding: 12px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; display: inline-block;">查看完整聲明</a>
             </div>
         </div>
     </div>
@@ -779,5 +726,12 @@ async function runSelfTest(propertyId) {
             };
         })();
     </script>
+<script>
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+</script>
 </body>
 </html>

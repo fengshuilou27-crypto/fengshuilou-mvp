@@ -8,103 +8,46 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: #fff;
         }
         .container {
             max-width: 700px;
             margin: 0 auto;
-            background: white;
+            
             border-radius: 16px;
             padding: 32px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            
         }
-        h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 26px; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
+        h1 { text-align: center; color: #fff; margin-bottom: 8px; font-size: 26px; }
+        .subtitle { text-align: center; color: #808080; margin-bottom: 24px; font-size: 14px; }
 
-/* ===== 頂部導航欄 v3.6.7 ===== */
-        .top-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .top-nav .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .top-nav .logo-area img {
-            height: 40px;
-            width: auto;
-            display: block;
-        }
-        .top-nav .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-            letter-spacing: -0.5px;
-        }
-        .top-nav .logo-text span {
-            color: #667eea;
-        }
-        .top-nav .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .top-nav .nav-links a {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #555;
-            text-decoration: none;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .top-nav .nav-links a:hover {
-            background: #667eea;
-            color: white;
-        }
-        .top-nav .nav-links a.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        @media (max-width: 600px) {
-            .top-nav { flex-direction: column; align-items: flex-start; }
-            .top-nav .nav-links { width: 100%; overflow-x: auto; }
-        }
-        .version-badge { display: inline-block; background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+
+        .version-badge { display: inline-block; background: #E50914; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
 
         .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
+        label { display: block; margin-bottom: 6px; color: #bcbcbc; font-weight: 500; font-size: 14px; }
         input, select {
-            width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s;
+            width: 100%; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 15px; transition: border-color 0.2s;
         }
-        input:focus, select:focus { outline: none; border-color: #667eea; }
+        input:focus, select:focus { outline: none; border-color: #E50914; }
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
 
         .btn {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 100%; padding: 14px; background: #E50914;
             color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(229,9,20,0.4); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: #f0f0f0; color: #444; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #bcbcbc; }
 
         .quiz-section { margin-top: 24px; }
         .question-card {
-            background: #f8f9fa;
+            background: #1F1F1F;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 16px;
@@ -114,29 +57,29 @@
             font-size: 12px; color: #667eea; font-weight: 600; margin-bottom: 8px;
         }
         .question-text {
-            font-size: 15px; color: #333; font-weight: 500; margin-bottom: 12px;
+            font-size: 15px; color: #fff; font-weight: 500; margin-bottom: 12px;
         }
         .option {
             display: block;
             padding: 12px 16px;
             margin-bottom: 8px;
-            background: white;
-            border: 2px solid #e0e0e0;
+            
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 14px;
-            color: #444;
+            color: #bcbcbc;
         }
-        .option:hover { border-color: #667eea; background: #f0f4ff; }
-        .option.selected { border-color: #667eea; background: #667eea; color: white; }
+        .option:hover { border-color: #E50914; background: #f0f4ff; }
+        .option.selected { border-color: #E50914; background: #E50914; color: white; }
 
-        .loading { text-align: center; padding: 40px; color: #666; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        .loading { text-align: center; padding: 40px; color: #808080; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #E50914; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .progress-bar {
-            width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; margin-bottom: 20px; overflow: hidden;
+            width: 100%; height: 6px; background: #2D2D2D; border-radius: 3px; margin-bottom: 20px; overflow: hidden;
         }
         .progress-fill {
             height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 3px;
@@ -145,45 +88,49 @@
 
         .hidden { display: none; }
         .intro-text {
-            text-align: center; color: #666; font-size: 14px; line-height: 1.7;
-            margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px;
+            text-align: center; color: #808080; font-size: 14px; line-height: 1.7;
+            margin-bottom: 24px; padding: 16px; background: #1F1F1F; border-radius: 8px;
         }
-        .intro-text strong { color: #333; }
+        .intro-text strong { color: #fff; }
         .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
         .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s; }
         .module-card:hover { transform: translateY(-3px); }
         @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
     </style>
+    <link rel="stylesheet" href="../css/netflix-theme.css">
 </head>
 <body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="netflix-logo" title="回到主頁">
+        <div class="logo-icon">風</div>
+        <span class="logo-text">風水<span>樓</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">首頁</a>
+        <a href="../module1.html">自測</a>
+        <a href="../module2.html">配對</a>
+        <a href="../module3.html">物業</a>
+        <a href="index.html" class="active">FXTI</a>
+    </div>
+</nav>
     <div class="container">
-        <div class="top-nav">
-            <a href="/" class="logo-area" title="回到主頁">
-                <img src="/logo.png" alt="風水樓" onerror="this.style.display='none'">
-                <span class="logo-text">風水<span>樓</span></span>
-            </a>
-            <div class="nav-links">
-                <a href="../index.html">模組1</a>
-                <a href="../module2.html">模組2</a>
-                <a href="../module3.html">模組3</a>
-                <a href="index.html" class="active">FXTI</a>
-            </div>
-        </div>
+        
 <h1>FXTI 五行人格測評 <span class="version-badge">Module 4</span></h1>
         <p class="subtitle">先天八字 + 後天問卷 · 15種角色原型 · 專屬風水建議</p>
 
         <div class="module-cards">
-            <a href="../index.html" class="module-card" style="background: #f0f0f0; color: #444;">
+            <a href="../index.html" class="module-card" style="background: rgba(255,255,255,0.1); color: #bcbcbc;">
                 <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
                 <div style="font-size: 13px; font-weight: 600;">模組1</div>
                 <div style="font-size: 11px; opacity: 0.7;">自測住所</div>
             </a>
-            <a href="../module2.html" class="module-card" style="background: #f0f0f0; color: #444;">
+            <a href="../module2.html" class="module-card" style="background: rgba(255,255,255,0.1); color: #bcbcbc;">
                 <div style="font-size: 24px; margin-bottom: 4px;">🏢</div>
                 <div style="font-size: 13px; font-weight: 600;">模組2</div>
                 <div style="font-size: 11px; opacity: 0.7;">配對屋苑</div>
             </a>
-            <a href="../module3.html" class="module-card" style="background: #f0f0f0; color: #444;">
+            <a href="../module3.html" class="module-card" style="background: rgba(255,255,255,0.1); color: #bcbcbc;">
                 <div style="font-size: 24px; margin-bottom: 4px;">🔍</div>
                 <div style="font-size: 13px; font-weight: 600;">模組3</div>
                 <div style="font-size: 11px; opacity: 0.7;">配對物業</div>
@@ -204,7 +151,7 @@
         </div>
 
         <form id="fxtiForm">
-            <h3 style="margin-bottom: 16px; color: #333; font-size: 16px;">📋 基本資料</h3>
+            <h3 style="margin-bottom: 16px; color: #fff; font-size: 16px;">📋 基本資料</h3>
             <div class="two-col">
                 <div class="form-group">
                     <label>出生年份</label>
@@ -291,7 +238,7 @@
 
         function renderQuestions() {
             const container = document.getElementById('quizSection');
-            container.innerHTML = '<h3 style="margin-bottom: 16px; color: #333; font-size: 16px;">📝 情境問卷（10題）</h3>';
+            container.innerHTML = '<h3 style="margin-bottom: 16px; color: #fff; font-size: 16px;">📝 情境問卷（10題）</h3>';
 
             QUESTIONS.forEach((item, idx) => {
                 const card = document.createElement('div');
@@ -403,5 +350,12 @@
 
         renderQuestions();
     </script>
+<script>
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+</script>
 </body>
 </html>

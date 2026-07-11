@@ -2,1275 +2,220 @@
 <html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI風水樓盤匹配系統 v3.1.0</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>風水樓 | AI風水樓盤匹配系統</title>
+    <link rel="stylesheet" href="css/netflix-theme.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
+        /* 首頁特定樣式 */
+        .hero-banner {
+            position: relative;
+            padding: 60px 0 40px;
+            text-align: center;
+            overflow: hidden;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(229,9,20,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(212,168,67,0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
-        h1 { text-align: center; color: #1a1a2e; margin-bottom: 8px; font-size: 28px; }
-        /* ===== 頂部導航欄 v3.6.7 ===== */
-        .top-nav {
+        
+        .hero-banner h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 0%, #d4a843 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: textShine 4s linear infinite;
+        }
+        
+        @keyframes textShine {
+            to { background-position: 200% center; }
+        }
+        
+        .hero-banner .tagline {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-banner .cta-group {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
+            gap: 16px;
+            justify-content: center;
             flex-wrap: wrap;
-            gap: 12px;
         }
-        .top-nav .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
+        
+        .version-tag {
+            display: inline-block;
+            background: rgba(229,9,20,0.15);
+            color: var(--brand-red);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
         }
-        .top-nav .logo-area img {
-            height: 40px;
-            width: auto;
+        
+        /* 功能亮點行 */
+        .feature-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 24px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .feature-item .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
             display: block;
         }
-        .top-nav .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-            letter-spacing: -0.5px;
+        
+        .feature-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
         }
-        .top-nav .logo-text span {
-            color: #667eea;
+        
+        .feature-item p {
+            font-size: 12px;
+            color: var(--text-muted);
         }
-        .top-nav .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        
+        @media (max-width: 768px) {
+            .feature-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .hero-banner h1 {
+                font-size: 32px;
+            }
         }
-        .top-nav .nav-links a {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #555;
-            text-decoration: none;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .top-nav .nav-links a:hover {
-            background: #667eea;
-            color: white;
-        }
-        .top-nav .nav-links a.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        @media (max-width: 600px) {
-            .top-nav { flex-direction: column; align-items: flex-start; }
-            .top-nav .nav-links { width: 100%; overflow-x: auto; }
-        }
-
-        .logo-link { display: block; text-align: center; margin-bottom: 8px; text-decoration: none; }
-        .logo-link img { height: 48px; width: auto; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 14px; }
-        .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
-        .nav a { padding: 8px 16px; border-radius: 8px; background: #f0f0f0; color: #444; text-decoration: none; font-size: 14px; transition: all 0.2s; }
-        .nav a:hover { background: #667eea; color: white; }
-        .version-badge { display: inline-block; background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
-
-        .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; color: #444; font-weight: 500; font-size: 14px; }
-        input, select, textarea {
-            width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s;
-        }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #667eea; }
-        .checkbox-group { display: flex; gap: 20px; margin-top: 8px; flex-wrap: wrap; }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; }
-        .checkbox-item input[type="checkbox"] { width: auto; }
-        .btn {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px;
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: #f0f0f0; color: #444; }
-        .btn-secondary:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .btn-coming { background: #e0e0e0; color: #999; cursor: not-allowed; }
-        .btn-coming:hover { transform: none; box-shadow: none; }
-
-        .loading { text-align: center; padding: 40px; color: #666; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .result-section { margin-top: 24px; padding: 24px; background: #f8f9fa; border-radius: 12px; }
-        .score-display { text-align: center; margin-bottom: 24px; padding: 24px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .score-number { font-size: 72px; font-weight: 700; color: #667eea; line-height: 1; }
-        .score-label { font-size: 14px; color: #666; margin-top: 4px; }
-        .score-gauge { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; margin-top: 16px; overflow: hidden; }
-        .score-gauge-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-        .gauge-excellent { background: #28a745; }
-        .gauge-good { background: #17a2b8; }
-        .gauge-average { background: #ffc107; }
-        .gauge-poor { background: #dc3545; }
-        .rating-badge { display: inline-block; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 12px; }
-        .rating-excellent { background: #d4edda; color: #155724; }
-        .rating-good { background: #d1ecf1; color: #0c5460; }
-        .rating-average { background: #fff3cd; color: #856404; }
-        .rating-poor { background: #f8d7da; color: #721c24; }
-
-        .breakdown-table { width: 100%; border-collapse: collapse; margin-top: 16px; background: white; border-radius: 8px; overflow: hidden; }
-        .breakdown-table th, .breakdown-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #f0f0f0; }
-        .breakdown-table th { color: #444; font-weight: 600; font-size: 13px; background: #fafafa; }
-        .breakdown-table td { color: #555; font-size: 14px; }
-        .score-positive { color: #28a745; font-weight: 600; }
-        .score-negative { color: #dc3545; font-weight: 600; }
-
-        .info-card { background: white; padding: 16px; border-radius: 8px; margin-top: 12px; border-left: 4px solid #667eea; }
-        .info-card h4 { font-size: 14px; color: #333; margin-bottom: 8px; }
-        .info-card p { font-size: 13px; color: #666; line-height: 1.6; }
-        .info-card .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; margin-right: 4px; margin-top: 4px; }
-        .tag-green { background: #d4edda; color: #155724; }
-        .tag-yellow { background: #fff3cd; color: #856404; }
-        .tag-red { background: #f8d7da; color: #721c24; }
-        .tag-blue { background: #d1ecf1; color: #0c5460; }
-
-        .section-title { font-size: 16px; font-weight: 600; color: #333; margin-top: 24px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #667eea; display: flex; align-items: center; gap: 8px; }
-        .section-title::before { content: ''; width: 4px; height: 18px; background: #667eea; border-radius: 2px; }
-
-        .radar-container { max-width: 500px; margin: 20px auto; }
-        .dual-period { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
-        .period-card { background: white; padding: 16px; border-radius: 8px; border: 1px solid #e0e0e0; transition: transform 0.2s, box-shadow 0.2s; }
-        .period-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .period-card h4 { font-size: 14px; color: #333; margin-bottom: 4px; }
-        .period-card .yun-label { font-size: 12px; color: #888; margin-bottom: 8px; }
-        .period-card .score-bar { height: 6px; background: #e0e0e0; border-radius: 3px; margin-bottom: 12px; overflow: hidden; }
-        .period-card .score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
-        .period-card .pan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; font-size: 12px; text-align: center; }
-        .pan-grid .cell { padding: 6px 4px; border-radius: 4px; background: #f8f9fa; transition: all 0.2s; }
-        .pan-grid .cell:hover { transform: scale(1.05); }
-        .pan-grid .cell-center { background: #667eea; color: white; font-weight: 600; }
-        .pan-grid .cell-auspicious { background: #d4edda; color: #155724; border: 1px solid #28a745; }
-        .pan-grid .cell-inauspicious { background: #f8d7da; color: #721c24; border: 1px solid #dc3545; }
-        .pan-grid .cell-direction { font-size: 10px; color: #999; margin-bottom: 2px; }
-        .pan-grid .cell-stars { font-weight: 600; font-size: 13px; }
-
-        .breakdown-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
-        .breakdown-item:hover { background: #f8f9fa; }
-        .breakdown-item:last-child { border-bottom: none; }
-        .breakdown-label { font-size: 14px; color: #444; }
-        .breakdown-bar { flex: 1; height: 6px; background: #e0e0e0; border-radius: 3px; margin: 0 16px; overflow: hidden; max-width: 200px; }
-        .breakdown-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
-        .breakdown-value { font-size: 14px; font-weight: 600; min-width: 50px; text-align: right; }
-
-        .result-section { animation: fadeInUp 0.5s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .score-number { transition: color 0.3s; }
-        .score-excellent { color: #28a745; }
-        .score-good { color: #17a2b8; }
-        .score-average { color: #ffc107; }
-        .score-poor { color: #dc3545; }
-        .hidden { display: none; }
-        .test-case-buttons { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
-        .test-case-buttons button { flex: 1; min-width: 120px; }
-        .disclaimer { margin-top: 24px; padding: 16px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107; font-size: 13px; color: #856404; line-height: 1.6; }
-        .confidence-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        .confidence-high { background: #d4edda; color: #155724; }
-        .confidence-medium { background: #fff3cd; color: #856404; }
-        .confidence-low { background: #f8d7da; color: #721c24; }
-
-        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } .dual-period { grid-template-columns: 1fr; } }
-        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-        @media (max-width: 600px) { .three-col { grid-template-columns: 1fr; } }
-
-        .goal-item { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-        .goal-item select { flex: 1; }
-        .goal-item .priority-select { width: 100px; }
-        .goal-item .remove-btn { background: #f8d7da; color: #721c24; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
-
-        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 12px; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; }
-        .comparison-table th, .comparison-table td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; text-align: center; }
-        .comparison-table th { background: #fafafa; font-weight: 600; color: #444; }
-        .comparison-table .conflict { background: #fff3cd; color: #856404; font-weight: 600; }
-        .comparison-table .auspicious { color: #155724; font-weight: 600; }
-        .comparison-table .inauspicious { color: #721c24; }
-
-        .sha-section { margin-top: 16px; }
-        .sha-row { margin-bottom: 12px; }
-        .sha-row label { font-size: 13px; color: #555; }
-        .sha-upload-row { display: flex; gap: 12px; margin-top: 12px; }
-        .sha-upload-row .btn { flex: 1; margin-top: 0; }
-        .tooltip { position: relative; display: inline-block; }
-        .tooltip .tooltip-text { visibility: hidden; width: 200px; background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -100px; font-size: 12px; opacity: 0; transition: opacity 0.3s; }
-        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
-        .coming-soon-badge { display: inline-block; background: #e0e0e0; color: #666; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
     </style>
 </head>
 <body>
+    <!-- 頂部導航欄 -->
+    <nav class="top-nav" id="topNav">
+        <a href="/" class="netflix-logo" title="回到主頁">
+            <div class="logo-icon">風</div>
+            <span class="logo-text">風水<span>樓</span></span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="active">首頁</a>
+            <a href="module1.html">自測</a>
+            <a href="module2.html">配對</a>
+            <a href="module3.html">物業</a>
+            <a href="fxti/index.html">FXTI</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <!-- 頂部導航欄 -->
-        <div class="top-nav">
-            <a href="/" class="logo-area" title="回到主頁">
-                <img src="/logo.png" alt="風水樓" onerror="this.style.display='none'">
-                <span class="logo-text">風水<span>樓</span></span>
-            </a>
-            <div class="nav-links">
-                <a href="index.html" class="active">模組1</a>
-                <a href="module2.html">模組2</a>
-                <a href="module3.html">模組3</a>
-                <a href="fxti/index.html">FXTI</a>
+        <!-- Hero 區域 -->
+        <section class="hero-banner">
+            <h1>AI風水樓盤匹配系統 <span class="version-tag">v3.7</span></h1>
+            <p class="tagline">雙周期飛星 · 多目標加權 · 同住人雙八字 · 六維度分析 · FXTI五行人格</p>
+            <div class="cta-group">
+                <a href="module1.html" class="btn btn-primary">🎯 開始自測住所</a>
+                <a href="module2.html" class="btn btn-secondary">🏢 配對屋苑</a>
+            </div>
+        </section>
+
+        <!-- 功能亮點 -->
+        <div class="feature-row">
+            <div class="feature-item">
+                <span class="icon">🔮</span>
+                <h4>雙周期飛星</h4>
+                <p>建造運 + 當運盤</p>
+            </div>
+            <div class="feature-item">
+                <span class="icon">⚖️</span>
+                <h4>多目標加權</h4>
+                <p>投資/健康/學業</p>
+            </div>
+            <div class="feature-item">
+                <span class="icon">👥</span>
+                <h4>雙人八字</h4>
+                <p>同住人加權匹配</p>
+            </div>
+            <div class="feature-item">
+                <span class="icon">📊</span>
+                <h4>六維度分析</h4>
+                <p>雷達圖可視化</p>
             </div>
         </div>
 
-        <h1>AI風水樓盤匹配系統 <span class="version-badge">v3.1.0</span></h1>
-        <p class="subtitle">雙周期飛星 · 多目標加權 · 同住人雙八字 · 六維度分析 · FXTI五行人格</p>
-
-        <div class="module-cards" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
-            <a href="index.html" class="module-card" style="text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s;">
-                <div style="font-size: 24px; margin-bottom: 4px;">🏠</div>
-                <div style="font-size: 13px; font-weight: 600;">模組1</div>
-                <div style="font-size: 11px; opacity: 0.9;">自測住所</div>
+        <!-- 模組選擇 -->
+        <h2 class="section-title">選擇模組</h2>
+        <div class="module-grid">
+            <a href="module1.html" class="module-card">
+                <span class="icon">🏠</span>
+                <h3>模組1：自測住所</h3>
+                <p>輸入您的住所資料，獲取詳細風水分析報告與化解建議</p>
             </a>
-            <a href="module2.html" class="module-card" style="text-decoration: none; background: #f0f0f0; color: #444; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s;">
-                <div style="font-size: 24px; margin-bottom: 4px;">🏢</div>
-                <div style="font-size: 13px; font-weight: 600;">模組2</div>
-                <div style="font-size: 11px; opacity: 0.7;">配對屋苑</div>
+            <a href="module2.html" class="module-card">
+                <span class="icon">🏢</span>
+                <h3>模組2：配對屋苑</h3>
+                <p>從屋苑數據庫匹配最適合您的屋苑，支持雙人模式</p>
             </a>
-            <a href="module3.html" class="module-card" style="text-decoration: none; background: #f0f0f0; color: #444; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s;">
-                <div style="font-size: 24px; margin-bottom: 4px;">🔍</div>
-                <div style="font-size: 13px; font-weight: 600;">模組3</div>
-                <div style="font-size: 11px; opacity: 0.7;">配對物業</div>
+            <a href="module3.html" class="module-card">
+                <span class="icon">📋</span>
+                <h3>模組3：配對物業</h3>
+                <p>針對具體樓盤進行精細化風水匹配與評分</p>
             </a>
-            <a href="fxti/index.html" class="module-card" style="text-decoration: none; background: #f0f0f0; color: #444; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s;">
-                <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
-                <div style="font-size: 13px; font-weight: 600;">模組4</div>
-                <div style="font-size: 11px; opacity: 0.7;">FXTI人格</div>
+            <a href="fxti/index.html" class="module-card">
+                <span class="icon">🧿</span>
+                <h3>模組4：FXTI人格</h3>
+                <p>五行人格測試，先天八字 + 後天問卷綜合分析</p>
             </a>
         </div>
-        <style>
-            .module-card:hover { transform: translateY(-3px); }
-            @media (max-width: 600px) {
-                .module-cards { grid-template-columns: 1fr 1fr !important; }
-            }
-        </style>
 
-        <form id="evaluateForm">
-            <h3 class="section-title">個人資料</h3>
-            <div class="two-col">
-                <div class="form-group">
-                    <label>性別</label>
-                    <select name="user_gender" required>
-                        <option value="男">男</option>
-                        <option value="女">女</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>出生日期</label>
-                    <input type="date" name="birth_date" value="1990-05-15" required>
-                </div>
+        <!-- 頁腳 -->
+        <footer style="text-align: center; padding: 32px 0; border-top: 1px solid var(--border-subtle); margin-top: 48px;">
+            <p style="font-size: 13px; color: var(--text-muted);">
+                風水樓 v3.7.0 · 僅供參考，具體決策請諮詢專業風水師傅
+            </p>
+            <div style="margin-top: 12px; display: flex; gap: 16px; justify-content: center;">
+                <a href="disclaimer.html" style="font-size: 12px; color: var(--text-muted); text-decoration: none;">免責聲明</a>
+                <a href="privacy.html" style="font-size: 12px; color: var(--text-muted); text-decoration: none;">隱私政策</a>
+                <a href="terms.html" style="font-size: 12px; color: var(--text-muted); text-decoration: none;">使用條款</a>
             </div>
-            <div class="two-col">
-                <div class="form-group">
-                    <label>出生時間</label>
-                    <input type="time" name="birth_time" value="12:00">
-                </div>
-                <div class="form-group">
-                    <label>出生地</label>
-                    <input type="text" name="birth_place" placeholder="例如：香港">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>職業</label>
-                <select name="user_job">
-                    <option value="">請選擇職業（可選）</option>
-                    <option value="退休/無業">退休/無業</option>
-                    <option value="金融/銀行/投資">金融/銀行/投資</option>
-                    <option value="法律/司法">法律/司法</option>
-                    <option value="軍警/安保">軍警/安保</option>
-                    <option value="外科/牙科醫生">外科/牙科醫生</option>
-                    <option value="機械/工程/製造">機械/工程/製造</option>
-                    <option value="教育/文化/出版">教育/文化/出版</option>
-                    <option value="醫療/中醫/藥材">醫療/中醫/藥材</option>
-                    <option value="設計/藝術/創意">設計/藝術/創意</option>
-                    <option value="園藝/農業/林業">園藝/農業/林業</option>
-                    <option value="物流/運輸/航運">物流/運輸/航運</option>
-                    <option value="旅遊/酒店/服務">旅遊/酒店/服務</option>
-                    <option value="餐飲/飲食/食品">餐飲/飲食/食品</option>
-                    <option value="傳媒/廣告/公關">傳媒/廣告/公關</option>
-                    <option value="科技/IT/電子">科技/IT/電子</option>
-                    <option value="能源/電力/化工">能源/電力/化工</option>
-                    <option value="演藝/娛樂/媒體">演藝/娛樂/媒體</option>
-                    <option value="房地產/建築/裝修">房地產/建築/裝修</option>
-                    <option value="會計/行政/文職">會計/行政/文職</option>
-                    <option value="管理/顧問/策劃">管理/顧問/策劃</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>購房目標（最多3個，可設優先級）</label>
-                <div id="goalsContainer">
-                    <div class="goal-item">
-                        <select name="goal" class="goal-select">
-                            <option value="財富">財富</option>
-                            <option value="健康">健康</option>
-                            <option value="事業">事業</option>
-                            <option value="桃花">桃花</option>
-                            <option value="家庭和睦">家庭和睦</option>
-                        </select>
-                        <select class="priority-select">
-                            <option value="1">主</option>
-                            <option value="2">次</option>
-                            <option value="3">第三</option>
-                        </select>
-                        <button type="button" class="remove-btn" onclick="removeGoal(this)" disabled>✕</button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary" id="addGoalBtn" onclick="addGoal()" style="margin-top:8px">+ 添加目標</button>
-                <p id="goalWarning" style="color:#dc3545; font-size:12px; margin-top:4px; display:none;">已達最多3個目標上限</p>
-            </div>
-
-            <h3 class="section-title">同住人設定（雙人模式）<span class="coming-soon-badge">可選</span></h3>
-            <div class="form-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" name="cohabitant_enabled" id="cohabitant_enabled">
-                    <label for="cohabitant_enabled" style="display:inline; margin:0;">啟用同住人雙人分析</label>
-                </div>
-            </div>
-            <div id="cohabitantSection" class="hidden">
-                <div class="two-col">
-                    <div class="form-group">
-                        <label>同住人性別</label>
-                        <select name="cohabitant_gender">
-                            <option value="女">女</option>
-                            <option value="男">男</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>同住人出生日期</label>
-                        <input type="date" name="cohabitant_birth_date" value="1992-03-20">
-                    </div>
-                </div>
-                <div class="two-col">
-                    <div class="form-group">
-                        <label>同住人出生時間</label>
-                        <input type="time" name="cohabitant_birth_time" value="12:00">
-                    </div>
-                    <div class="form-group">
-                        <label>同住人職業</label>
-                        <select name="cohabitant_user_job">
-                            <option value="">請選擇職業（可選）</option>
-                            <option value="退休/無業">退休/無業</option>
-                            <option value="金融/銀行/投資">金融/銀行/投資</option>
-                            <option value="法律/司法">法律/司法</option>
-                            <option value="軍警/安保">軍警/安保</option>
-                            <option value="外科/牙科醫生">外科/牙科醫生</option>
-                            <option value="機械/工程/製造">機械/工程/製造</option>
-                            <option value="教育/文化/出版">教育/文化/出版</option>
-                            <option value="醫療/中醫/藥材">醫療/中醫/藥材</option>
-                            <option value="設計/藝術/創意">設計/藝術/創意</option>
-                            <option value="園藝/農業/林業">園藝/農業/林業</option>
-                            <option value="物流/運輸/航運">物流/運輸/航運</option>
-                            <option value="旅遊/酒店/服務">旅遊/酒店/服務</option>
-                            <option value="餐飲/飲食/食品">餐飲/飲食/食品</option>
-                            <option value="傳媒/廣告/公關">傳媒/廣告/公關</option>
-                            <option value="科技/IT/電子">科技/IT/電子</option>
-                            <option value="能源/電力/化工">能源/電力/化工</option>
-                            <option value="演藝/娛樂/媒體">演藝/娛樂/媒體</option>
-                            <option value="房地產/建築/裝修">房地產/建築/裝修</option>
-                            <option value="會計/行政/文職">會計/行政/文職</option>
-                            <option value="管理/顧問/策劃">管理/顧問/策劃</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>同住人比例</label>
-                    <select name="cohabitant_weight_ratio">
-                        <option value="0.5">50/50 平均</option>
-                        <option value="0.7">70/30（主居住者70%）</option>
-                        <option value="0.3">30/70（同住人70%）</option>
-                    </select>
-                </div>
-            </div>
-
-            <h3 class="section-title">樓盤資料</h3>
-            <div class="form-group">
-                <label>物業地址</label>
-                <input type="text" name="address" placeholder="例如：太古城 金殿閣 12樓A室">
-            </div>
-            <div class="form-group">
-                <label>樓宇坐向</label>
-                <select name="building_facing" required>
-                    <option value="子山午向">子山午向（正南/九運到山到向）</option>
-                    <option value="午山子向">午山子向（正北/九運雙星會向）</option>
-                    <option value="丁山癸向">丁山癸向（正北/九運雙星會向）</option>
-                    <option value="丑山未向">丑山未向（東北/八運到山到向）</option>
-                    <option value="乾山巽向">乾山巽向（西北/八運到山到向）</option>
-                    <option value="亥山巳向">亥山巳向（西北/八運到山到向）</option>
-                    <option value="卯山酉向">卯山酉向（東向/八運雙星會向）</option>
-                    <option value="乙山辛向">乙山辛向（東向/八運雙星會向）</option>
-                </select>
-            </div>
-            <div class="two-col">
-                <div class="form-group">
-                    <label>建築年份</label>
-                    <input type="number" name="building_year" value="2019" min="1900" max="2030" required>
-                </div>
-                <div class="form-group">
-                    <label>樓層</label>
-                    <input type="number" name="floor_number" value="10" min="1" max="100" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>環境特徵</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="north_has_water" id="north_water" checked>
-                        <label for="north_water" style="display:inline; margin:0;">北方有水</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="south_has_mountain" id="south_mountain">
-                        <label for="south_mountain" style="display:inline; margin:0;">南方有山</label>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="section-title">煞氣評估</h3>
-            <div class="sha-row">
-                <label>手動勾選煞氣</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item"><input type="checkbox" name="sha" value="天斬煞"><label style="display:inline;margin:0;">天斬煞</label></div>
-                    <div class="checkbox-item"><input type="checkbox" name="sha" value="反弓煞"><label style="display:inline;margin:0;">反弓煞</label></div>
-                    <div class="checkbox-item"><input type="checkbox" name="sha" value="穿堂煞"><label style="display:inline;margin:0;">穿堂煞</label></div>
-                    <div class="checkbox-item"><input type="checkbox" name="sha" value="尖角煞"><label style="display:inline;margin:0;">尖角煞</label></div>
-                    <div class="checkbox-item"><input type="checkbox" name="sha" value="割腳煞"><label style="display:inline;margin:0;">割腳煞</label></div>
-                </div>
-            </div>
-            <div class="sha-upload-row">
-                <div class="tooltip" style="flex:1">
-                    <button type="button" class="btn btn-secondary" id="photoShaxiBtn" onclick="alert('AI 視覺分析煞氣功能正在開發中，敬請期待！')">上傳照片分析煞氣</button>
-                    <span class="tooltip-text">AI 視覺分析煞氣正在開發中，即將推出</span>
-                </div>
-                <div class="tooltip" style="flex:1">
-                    <button type="button" class="btn btn-secondary" id="analyzeShaxiBtn" onclick="analyzeSelectedShas()">分析煞氣</button>
-                    <span class="tooltip-text">分析已勾選的煞氣影響</span>
-                </div>
-            </div>
-
-            <script>
-                function analyzeSelectedShas() {
-                    const checked = document.querySelectorAll('input[name="sha"]:checked');
-                    if (checked.length === 0) {
-                        alert('請先勾選至少一項煞氣');
-                        return;
-                    }
-                    const shas = Array.from(checked).map(cb => cb.value).join('、');
-                    alert('已選煞氣：' + shas + '\n\n這些煞氣將在提交分析時計入風水評分。');
-                }
-            </script>
-
-            <button type="submit" class="btn" id="submitBtn">開始匹配</button>
-        </form>
-
-        <div class="test-case-buttons">
-            <button type="button" class="btn btn-secondary" onclick="loadTestCase('taikoo')">載入 太古城</button>
-            <button type="button" class="btn btn-secondary" onclick="loadTestCase('cityone')">載入 沙田第一城</button>
-            <button type="button" class="btn btn-secondary" onclick="loadTestCase('yoho')">載入 YOHO Town</button>
-        </div>
-
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>正在分析風水格局...</p>
-        </div>
-
-        <div id="result" class="hidden"></div>
+        </footer>
     </div>
 
     <script>
-        // ===== 通用工具：帶超時的 fetch（AbortController）=====
-        async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeoutMs);
-            try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
-                clearTimeout(id);
-                return response;
-            } catch (err) {
-                clearTimeout(id);
-                if (err.name === 'AbortError') {
-                    throw new Error('請求超時，請檢查網絡連接或稍後重試');
-                }
-                throw err;
-            }
-        }
-
-        // 測試案例數據
-        const TEST_CASES = {
-            taikoo: {
-                user_gender: "男", birth_date: "1985-08-20", birth_time: "12:00", birth_place: "香港",
-                user_job: "科技/IT/電子", cohabitant_enabled: false,
-                building_facing: "子山午向", building_year: 1986, floor_number: 15,
-                goals: [{goal: "財富", priority: 1}],
-                north_has_water: true, south_has_mountain: false, detected_shas: []
-            },
-            cityone: {
-                user_gender: "女", birth_date: "1990-03-15", birth_time: "12:00", birth_place: "香港",
-                user_job: "", cohabitant_enabled: false,
-                building_facing: "乾山巽向", building_year: 1984, floor_number: 8,
-                goals: [{goal: "家庭和睦", priority: 1}],
-                north_has_water: false, south_has_mountain: true, detected_shas: []
-            },
-            yoho: {
-                user_gender: "男", birth_date: "1992-11-08", birth_time: "12:00", birth_place: "香港",
-                user_job: "金融/銀行/投資", cohabitant_enabled: true,
-                cohabitant_gender: "女", cohabitant_birth_date: "1993-06-10", cohabitant_birth_time: "12:00",
-                cohabitant_user_job: "教育/文化/出版", cohabitant_weight_ratio: "0.5",
-                building_facing: "卯山酉向", building_year: 2004, floor_number: 22,
-                goals: [{goal: "財富", priority: 1}, {goal: "健康", priority: 2}],
-                north_has_water: true, south_has_mountain: false, detected_shas: []
-            }
-        };
-
-        function loadTestCase(name) {
-            const data = TEST_CASES[name];
-            if (!data) return;
-            
-            // 修復：保存用戶已輸入的個人資料，避免被預設覆蓋
-            const userBirthDate = document.querySelector('input[name="birth_date"]').value;
-            const userBirthTime = document.querySelector('input[name="birth_time"]').value;
-            const userBirthPlace = document.querySelector('input[name="birth_place"]').value;
-            const userGender = document.querySelector('select[name="user_gender"]').value;
-            const userJob = document.querySelector('select[name="user_job"]').value;
-            
-            // 只覆蓋樓盤相關字段，保留個人資料（除非用戶未填寫）
-            // 坐向、年份、樓層、環境特徵
-            document.querySelector('select[name="building_facing"]').value = data.building_facing;
-            document.querySelector('input[name="building_year"]').value = data.building_year;
-            document.querySelector('input[name="floor_number"]').value = data.floor_number;
-            document.querySelector('input[name="north_has_water"]').checked = data.north_has_water;
-            document.querySelector('input[name="south_has_mountain"]').checked = data.south_has_mountain;
-            document.querySelector('input[name="address"]').value = data.address || '';
-            
-            // 個人資料：只有當用戶未填寫時才使用預設值（出生日期默認值為1990-05-15，若用戶未更改則覆蓋）
-            const defaultBirthDate = '1990-05-15';
-            if (!userBirthDate || userBirthDate === defaultBirthDate) {
-                document.querySelector('input[name="birth_date"]').value = data.birth_date;
-            }
-            const defaultBirthTime = '12:00';
-            if (!userBirthTime || userBirthTime === defaultBirthTime) {
-                document.querySelector('input[name="birth_time"]').value = data.birth_time || '';
-            }
-            if (!userBirthPlace) {
-                document.querySelector('input[name="birth_place"]').value = data.birth_place || '';
-            }
-            // 性別和職業：保留用戶選擇（除非未選擇）
-            if (!userGender || userGender === '') {
-                document.querySelector('select[name="user_gender"]').value = data.user_gender || '男';
-            }
-            if (!userJob || userJob === '') {
-                document.querySelector('select[name="user_job"]').value = data.user_job || '';
-            }
-            
-            // 同住人
-            document.querySelector('input[name="cohabitant_enabled"]').checked = data.cohabitant_enabled || false;
-            toggleCohabitant();
-            if (data.cohabitant_enabled) {
-                document.querySelector('select[name="cohabitant_gender"]').value = data.cohabitant_gender || '女';
-                document.querySelector('input[name="cohabitant_birth_date"]').value = data.cohabitant_birth_date || '';
-                document.querySelector('input[name="cohabitant_birth_time"]').value = data.cohabitant_birth_time || '';
-                document.querySelector('select[name="cohabitant_user_job"]').value = data.cohabitant_user_job || '';
-                document.querySelector('select[name="cohabitant_weight_ratio"]').value = data.cohabitant_weight_ratio || '0.5';
-            }
-
-            // 目標：保留用戶已選的目標（除非用戶未選擇任何目標）
-            const currentGoals = getGoals();
-            const hasUserGoals = currentGoals.some(g => g.goal && g.goal !== '');
-            if (!hasUserGoals) {
-                clearGoals();
-                if (data.goals) {
-                    data.goals.forEach((g, i) => {
-                        if (i === 0) {
-                            setGoal(document.querySelector('.goal-item'), g.goal, g.priority);
-                        } else {
-                            addGoal(g.goal, g.priority);
-                        }
-                    });
-                }
-            }
-
-            // 煞氣
-            document.querySelectorAll('input[name="sha"]').forEach(cb => cb.checked = false);
-            
-            // 提示用戶
-            alert(`已加載「${name}」樓盤預設\n\n個人資料（出生日期等）已保留，樓盤信息已更新。`);
-        }
-
-        function toggleCohabitant() {
-            const enabled = document.querySelector('input[name="cohabitant_enabled"]').checked;
-            document.getElementById('cohabitantSection').classList.toggle('hidden', !enabled);
-        }
-        document.querySelector('input[name="cohabitant_enabled"]').addEventListener('change', toggleCohabitant);
-
-        function clearGoals() {
-            const container = document.getElementById('goalsContainer');
-            container.innerHTML = '';
-        }
-
-        function setGoal(el, goalVal, priorityVal) {
-            el.querySelector('.goal-select').value = goalVal;
-            el.querySelector('.priority-select').value = priorityVal;
-        }
-
-        function addGoal(goalVal, priorityVal) {
-            const container = document.getElementById('goalsContainer');
-            const items = container.querySelectorAll('.goal-item');
-            if (items.length >= 3) {
-                document.getElementById('goalWarning').style.display = 'block';
-                return;
-            }
-            document.getElementById('goalWarning').style.display = 'none';
-
-            const div = document.createElement('div');
-            div.className = 'goal-item';
-            div.innerHTML = `
-                <select class="goal-select">
-                    <option value="財富">財富</option>
-                    <option value="健康">健康</option>
-                    <option value="事業">事業</option>
-                    <option value="桃花">桃花</option>
-                    <option value="家庭和睦">家庭和睦</option>
-                </select>
-                <select class="priority-select">
-                    <option value="1">主</option>
-                    <option value="2">次</option>
-                    <option value="3">第三</option>
-                </select>
-                <button type="button" class="remove-btn" onclick="removeGoal(this)">✕</button>
-            `;
-            container.appendChild(div);
-            if (goalVal) setGoal(div, goalVal, priorityVal || 1);
-            updateAddGoalBtn();
-        }
-
-        function removeGoal(btn) {
-            const container = document.getElementById('goalsContainer');
-            if (container.querySelectorAll('.goal-item').length <= 1) return;
-            btn.parentElement.remove();
-            document.getElementById('goalWarning').style.display = 'none';
-            updateAddGoalBtn();
-        }
-
-        function updateAddGoalBtn() {
-            const items = document.getElementById('goalsContainer').querySelectorAll('.goal-item');
-            document.getElementById('addGoalBtn').disabled = items.length >= 3;
-        }
-
-        function getGoals() {
-            const items = document.querySelectorAll('.goal-item');
-            const goals = [];
-            items.forEach(item => {
-                goals.push({
-                    goal: item.querySelector('.goal-select').value,
-                    priority: parseInt(item.querySelector('.priority-select').value)
-                });
-            });
-            return goals;
-        }
-
-        document.getElementById('evaluateForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            const loading = document.getElementById('loading');
-            const resultDiv = document.getElementById('result');
-
-            submitBtn.disabled = true;
-            loading.classList.remove('hidden');
-            resultDiv.classList.add('hidden');
-
-            const formData = new FormData(this);
-            const goals = getGoals();
-            const shas = [];
-            document.querySelectorAll('input[name="sha"]:checked').forEach(cb => shas.push(cb.value));
-
-            const data = {
-                request_meta: {
-                    eval_year: 2026,
-                    user_gender: formData.get('user_gender'),
-                    birth_date: formData.get('birth_date'),
-                    birth_time: formData.get('birth_time') || null,
-                    birth_place: formData.get('birth_place') || null,
-                    user_job: formData.get('user_job') || null,
-                    cohabitant_enabled: formData.get('cohabitant_enabled') === 'on',
-                    cohabitant_gender: formData.get('cohabitant_gender') || null,
-                    cohabitant_birth_date: formData.get('cohabitant_birth_date') || null,
-                    cohabitant_birth_time: formData.get('cohabitant_birth_time') || null,
-                    cohabitant_user_job: formData.get('cohabitant_user_job') || null,
-                    cohabitant_weight_ratio: parseFloat(formData.get('cohabitant_weight_ratio') || '0.5'),
-                    building_year: parseInt(formData.get('building_year')),
-                    building_facing: formData.get('building_facing'),
-                    floor_number: parseInt(formData.get('floor_number')),
-                    address: formData.get('address') || null,
-                    goals: goals,
-                    north_has_water: formData.get('north_has_water') === 'on',
-                    south_has_mountain: formData.get('south_has_mountain') === 'on',
-                    detected_shas: shas
-                }
-            };
-
-            try {
-                const response = await fetchWithTimeout('/api/evaluate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                }, 30000);
-                const result = await response.json();
-                if (result.status === 'success') {
-                    displayResult(result.match_result);
-                } else {
-                    throw new Error(result.message || '評分失敗');
-                }
-            } catch (err) {
-                resultDiv.innerHTML = '<div class="info-card" style="border-left-color: #dc3545;"><p style="color: #dc3545;">分析時出現錯誤：' + err.message + '</p></div>';
-                resultDiv.classList.remove('hidden');
-            } finally {
-                submitBtn.disabled = false;
-                loading.classList.add('hidden');
+        // 導航欄滾動效果
+        const topNav = document.getElementById('topNav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                topNav.classList.add('scrolled');
+            } else {
+                topNav.classList.remove('scrolled');
             }
         });
-
-        function displayResult(match) {
-            const resultDiv = document.getElementById('result');
-
-            let ratingClass = 'rating-poor';
-            let gaugeClass = 'gauge-poor';
-            let scoreClass = 'score-poor';
-            if (match.final_score >= 80) { ratingClass = 'rating-excellent'; gaugeClass = 'gauge-excellent'; scoreClass = 'score-excellent'; }
-            else if (match.final_score >= 65) { ratingClass = 'rating-good'; gaugeClass = 'gauge-good'; scoreClass = 'score-good'; }
-            else if (match.final_score >= 50) { ratingClass = 'rating-average'; gaugeClass = 'gauge-average'; scoreClass = 'score-average'; }
-
-            let confidenceClass = 'confidence-medium';
-            if (match.confidence >= 0.8) confidenceClass = 'confidence-high';
-            else if (match.confidence < 0.5) confidenceClass = 'confidence-low';
-
-            let breakdownHtml = '';
-            const maxValues = { '飛星': 30, '八字': 20, '八宅': 15, '零正神': 10, '目標': 15, '區位': 10, '煞氣': 0 };
-            for (const [key, value] of Object.entries(match.score_breakdown)) {
-                const maxVal = maxValues[key] || 20;
-                const pct = maxVal > 0 ? Math.min(100, (value / maxVal) * 100) : 0;
-                let barColor = '#667eea';
-                if (key === '煞氣') barColor = '#dc3545';
-                else if (pct >= 80) barColor = '#28a745';
-                else if (pct >= 50) barColor = '#ffc107';
-                else if (pct > 0) barColor = '#dc3545';
-                const scoreClass = value > 0 ? 'score-positive' : value < 0 ? 'score-negative' : '';
-                breakdownHtml += `
-                    <div class="breakdown-item">
-                        <span class="breakdown-label">${key}</span>
-                        <div class="breakdown-bar">
-                            <div class="breakdown-bar-fill" style="width: ${Math.abs(pct)}%; background: ${barColor};"></div>
-                        </div>
-                        <span class="breakdown-value ${scoreClass}">${value > 0 ? '+' : ''}${value}</span>
-                    </div>
-                `;
-            }
-
-            let remediesHtml = '';
-            if (match.recommended_remedies && match.recommended_remedies.length > 0) {
-                remediesHtml = '<h3 class="section-title">化解建議</h3>';
-                match.recommended_remedies.forEach(r => {
-                    remediesHtml += `
-                        <div class="info-card">
-                            <h4>${r.item}</h4>
-                            <p>${r.purpose}</p>
-                            <span class="tag tag-blue">成本：${r.cost}</span>
-                        </div>
-                    `;
-                });
-            }
-
-            let flagsHtml = '';
-            const flags = match.flags;
-            if (flags.sha_detected || flags.severe_penalty_applied || flags.remedies_required || flags.theory_conflict_detected || flags.yun_conversion_considered) {
-                flagsHtml = '<div class="info-card" style="border-left-color: #ffc107;"><h4>風險標記</h4><div style="margin-top:8px;">';
-                if (flags.severe_penalty_applied) flagsHtml += '<span class="tag tag-red">嚴重煞氣</span>';
-                if (flags.sha_detected) flagsHtml += '<span class="tag tag-yellow">發現煞氣</span>';
-                if (flags.remedies_required) flagsHtml += '<span class="tag tag-blue">需要化解</span>';
-                if (flags.theory_conflict_detected) flagsHtml += '<span class="tag tag-yellow">理論衝突</span>';
-                if (flags.yun_conversion_considered) flagsHtml += '<span class="tag tag-yellow">元運轉換</span>';
-                flagsHtml += '</div></div>';
-            }
-
-            const radarHtml = `
-                <h3 class="section-title">六維度分析圖</h3>
-                <div class="radar-container">
-                    <canvas id="radarChart"></canvas>
-                </div>
-            `;
-
-            let dualPeriodHtml = '';
-            if (match.dual_period_flying_star) {
-                const dp = match.dual_period_flying_star;
-                const buildingPan = dp.building_yun_analysis;
-                const currentPan = dp.current_yun_analysis;
-                const bScore = buildingPan.score || 0;
-                const cScore = currentPan ? currentPan.score : null;
-                dualPeriodHtml = `
-                    <h3 class="section-title">雙期飛星對比</h3>
-                    <div class="info-card" style="border-left-color: #17a2b8;">
-                        <p><strong>${dp.yun_transition_note}</strong></p>
-                        ${dp.dual_period_enabled ? `<p style="margin-top:8px; font-size:13px; color:#666;">加權：建造運 ${(dp.building_weight*100).toFixed(0)}% + 當運 ${(dp.current_weight*100).toFixed(0)}%</p>` : ''}
-                    </div>
-                    <div class="dual-period">
-                        <div class="period-card">
-                            <h4>建造運（${dp.building_yun}）</h4>
-                            <div class="yun-label">${buildingPan.pan_type || 'N/A'} \u00b7 ${bScore}/40</div>
-                            <div class="score-bar">
-                                <div class="score-bar-fill ${bScore >= 25 ? 'gauge-excellent' : bScore >= 15 ? 'gauge-good' : bScore >= 8 ? 'gauge-average' : 'gauge-poor'}" style="width: ${(bScore/40)*100}%"></div>
-                            </div>
-                            ${renderPanGrid(buildingPan.mountain_stars, buildingPan.facing_stars, buildingPan.auspicious_combos, buildingPan.inauspicious_combos, dp.building_yun + '建造運')}
-                        </div>
-                        <div class="period-card">
-                            <h4>當運（${dp.current_yun}）</h4>
-                            <div class="yun-label">${currentPan ? currentPan.pan_type + ' \u00b7 ' + currentPan.score + '/40' : '該坐向暫未收錄'}</div>
-                            ${currentPan ? `
-                            <div class="score-bar">
-                                <div class="score-bar-fill ${currentPan.score >= 25 ? 'gauge-excellent' : currentPan.score >= 15 ? 'gauge-good' : currentPan.score >= 8 ? 'gauge-average' : 'gauge-poor'}" style="width: ${(currentPan.score/40)*100}%"></div>
-                            </div>
-                            ${renderPanGrid(currentPan.mountain_stars, currentPan.facing_stars, currentPan.auspicious_combos, currentPan.inauspicious_combos, dp.current_yun + '當運')}
-                            ` : '<p style="font-size: 12px; color: #999; padding: 20px 0;">當運該坐向暫未收錄</p>'}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 八宅對照表（雙人模式）— 優化版：預先構建方位映射，避免重複遍歷
-            let baguaComparisonHtml = '';
-            if (match.bagua_comparison) {
-                const bc = match.bagua_comparison;
-                // 預先構建方位映射：{ 方位: 吉位名稱, ... }
-                const buildDirMap = (auspicious, inauspicious) => {
-                    const map = {};
-                    Object.entries(auspicious || {}).forEach(([name, dir]) => { map[dir] = name; });
-                    Object.entries(inauspicious || {}).forEach(([name, dir]) => { map[dir + '_凶'] = name; });
-                    return map;
-                };
-                const aMap = buildDirMap(bc.person_a.auspicious, bc.person_a.inauspicious);
-                const bMap = buildDirMap(bc.person_b.auspicious, bc.person_b.inauspicious);
-                const conflictDirs = new Set((bc.conflicts || []).map(c => c.direction));
-                
-                baguaComparisonHtml = `
-                    <h3 class="section-title">八宅吉位凶位對照</h3>
-                    <div class="info-card">
-                        <p style="margin-bottom:12px;"><strong>A（${bc.person_a.ming_gua} ${bc.person_a.ming_type}）</strong> vs <strong>B（${bc.person_b.ming_gua} ${bc.person_b.ming_type}）</strong></p>
-                        <table class="comparison-table">
-                            <tr><th>方位</th><th>A吉位</th><th>A凶位</th><th>B吉位</th><th>B凶位</th><th>備註</th></tr>
-                `;
-                const directions = ['東南', '南', '東', '北', '東北', '西南', '西北', '西'];
-                directions.forEach(dir => {
-                    const aAusp = aMap[dir] || '-';
-                    const aInausp = aMap[dir + '_凶'] || '-';
-                    const bAusp = bMap[dir] || '-';
-                    const bInausp = bMap[dir + '_凶'] || '-';
-                    const isConflict = conflictDirs.has(dir);
-                    baguaComparisonHtml += `<tr class="${isConflict ? 'conflict' : ''}">
-                        <td>${dir}</td>
-                        <td class="auspicious">${aAusp}</td>
-                        <td class="inauspicious">${aInausp}</td>
-                        <td class="auspicious">${bAusp}</td>
-                        <td class="inauspicious">${bInausp}</td>
-                        <td>${isConflict ? '需調和' : ''}</td>
-                    </tr>`;
-                });
-                if (bc.conflicts && bc.conflicts.length > 0) {
-                    baguaComparisonHtml += `<tr><td colspan="6" style="text-align:left; padding:12px;"><strong>衝突方位：</strong>${bc.conflicts.map(c => c.direction + '（A' + c.a_status + ' / B' + c.b_status + '）').join('、')}</td></tr>`;
-                }
-                baguaComparisonHtml += '</table></div>';
-            }
-
-            // 多目標詳情
-            let goalDetailsHtml = '';
-            if (match.goal_details && match.goal_details.length > 0) {
-                goalDetailsHtml = '<h3 class="section-title">目標詳情</h3><div class="info-card">';
-                match.goal_details.forEach(g => {
-                    const label = g.priority === 1 ? '主' : g.priority === 2 ? '次' : '第三';
-                    goalDetailsHtml += `<p><strong>${g.goal}</strong> [${label}] 得分：${g.score} / 15 ${g.found_stars ? '（發現' + g.found_stars.length + '處吉星）' : ''}</p>`;
-                });
-                goalDetailsHtml += '</div>';
-            }
-
-            // 樓盤信息
-            let propertyInfoHtml = '';
-            if (match.property_info && match.property_info.address) {
-                propertyInfoHtml = `
-                    <h3 class="section-title">樓盤信息</h3>
-                    <div class="info-card" style="border-left-color: #28a745;">
-                        <p><strong>地址：</strong>${match.property_info.address}</p>
-                    </div>
-                `;
-            }
-
-            // 八字排盤詳情
-            let baziDetailHtml = '';
-            if (match.bazi_data && match.bazi_data.bazi_full) {
-                const bf = match.bazi_data.bazi_full;
-                const ws = match.bazi_data.wang_shuai;
-                baziDetailHtml = `
-                    <h3 class="section-title">八字排盤詳情</h3>
-                    <div class="info-card" style="border-left-color: #9b59b6;">
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center; margin-bottom: 16px;">
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">年柱</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.year_pillar}</div>
-                            </div>
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">月柱</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.month_pillar}</div>
-                            </div>
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">日柱</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.day_pillar}</div>
-                            </div>
-                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #888; margin-bottom: 4px;">時柱</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #333;">${bf.hour_pillar}</div>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; color: #555;">
-                            <div><strong>日主：</strong>${bf.day_master}</div>
-                            <div><strong>旺衰：</strong>${ws ? ws.strength : '未知'}</div>
-                            <div><strong>喜用神：</strong><span style="color: #28a745;">${ws ? ws.yong_shen : '未知'}</span></div>
-                            <div><strong>忌神：</strong><span style="color: #dc3545;">${ws ? ws.ji_shen : '未知'}</span></div>
-                        </div>
-                        ${ws ? `
-                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
-                            <strong>旺衰分析：</strong>日主${bf.day_master.split('（')[0]}在月令${ws.month_status}，
-                            月令得分${ws.month_score}，通根得分${ws.root_score}，天干生扶得分${ws.support_score}，
-                            總分${ws.strength_score}，判定為「${ws.strength}」。
-                        </div>
-                        ` : ''}
-                        ${match.bazi_data.floor_wuxing ? `
-                        <div style="margin-top: 8px; font-size: 12px; color: #666;">
-                            <strong>樓層五行：</strong>${match.bazi_data.floor_wuxing}（${match.bazi_data.hetu_wuxing}${match.bazi_data.najia_wuxing ? ' + 納甲' + match.bazi_data.najia_wuxing : ''}）
-                            <span style="color: #888;"> · 關係：${match.bazi_data.relation}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            // 八字職業加成
-            let baziCareerHtml = '';
-            if (match.bazi_data && match.bazi_data.career_bonus) {
-                baziCareerHtml = `
-                    <div class="info-card" style="border-left-color: #17a2b8;">
-                        <p><strong>八字職業加成：</strong>${match.bazi_data.career_bonus > 0 ? '+' : ''}${match.bazi_data.career_bonus}分</p>
-                    </div>
-                `;
-            }
-
-            resultDiv.innerHTML = `
-                <div class="result-section">
-                    <div class="score-display">
-                        <div class="score-number ${scoreClass}">${match.final_score}</div>
-                        <div class="score-label">/ 100 匹配分數</div>
-                        <div class="score-gauge">
-                            <div class="score-gauge-fill ${gaugeClass}" style="width: ${match.final_score}%"></div>
-                        </div>
-                        <div class="rating-badge ${ratingClass}">${match.rating}</div>
-                        <div style="margin-top: 12px;">
-                            <span class="confidence-badge ${confidenceClass}">
-                                置信度: ${Math.round(match.confidence * 100)}%
-                            </span>
-                        </div>
-                    </div>
-
-                    ${propertyInfoHtml}
-
-                    <h3 class="section-title">分項得分</h3>
-                    <div class="breakdown-table">
-                        ${breakdownHtml}
-                    </div>
-
-                    ${radarHtml}
-
-                    ${dualPeriodHtml}
-
-                    ${baguaComparisonHtml}
-
-                    ${goalDetailsHtml}
-
-                    <h3 class="section-title">分析摘要</h3>
-                    <div class="info-card">
-                        <p>${match.ai_rationale}</p>
-                    </div>
-
-                    ${baziDetailHtml}
-
-                    ${baziCareerHtml}
-
-                    ${match.yun_conversion_advice ? `
-                    <div class="info-card" style="border-left-color: #17a2b8;">
-                        <h4>元運建議</h4>
-                        <p>${match.yun_conversion_advice}</p>
-                    </div>
-                    ` : ''}
-
-                    <div class="info-card" style="border-left-color: #ffc107;">
-                        <h4>風險評估</h4>
-                        <p>家庭風險係數：<strong>${match.dynamic_risk_control.family_risk_coefficient}</strong></p>
-                        <p style="font-size:12px; color:#888; margin-top:4px;">${match.dynamic_risk_control.note}</p>
-                    </div>
-
-                    ${flagsHtml}
-                    ${remediesHtml}
-
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button type="button" class="btn btn-secondary" onclick="exportResult()" style="width: auto; padding: 10px 24px; display: inline-block;">
-                            📥 導出報告（圖片）
-                        </button>
-                    </div>
-
-                    <div class="disclaimer">
-                        <strong>⚠️ 聲明：</strong>${match.disclaimer}
-                    </div>
-                </div>
-            `;
-
-            resultDiv.classList.remove('hidden');
-
-            if (match.radar_chart) {
-                const canvas = document.getElementById('radarChart');
-                if (!canvas) {
-                    console.warn('Radar chart canvas not found');
-                } else {
-                    // 销毁旧 Chart 实例（避免重复创建）
-                    const existingChart = Chart.getChart(canvas);
-                    if (existingChart) {
-                        existingChart.destroy();
-                    }
-                    
-                    const ctx = canvas.getContext('2d');
-                    new Chart(ctx, {
-                        type: 'radar',
-                        data: {
-                            labels: match.radar_chart.dimensions,
-                            datasets: [{
-                                label: '匹配分數',
-                                data: match.radar_chart.scores,
-                                fill: true,
-                                backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                                borderColor: 'rgb(102, 126, 234)',
-                                pointBackgroundColor: 'rgb(102, 126, 234)',
-                                pointBorderColor: '#fff',
-                                pointHoverBackgroundColor: '#fff',
-                                pointHoverBorderColor: 'rgb(102, 126, 234)'
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                r: {
-                                    beginAtZero: true,
-                                    max: 100,
-                                    ticks: { stepSize: 20 }
-                                }
-                            },
-                            plugins: {
-                                legend: { display: false }
-                            }
-                        }
-                    });
-                }
-            }
-        }
-
-        function exportResult() {
-            const resultSection = document.querySelector('.result-section');
-            if (!resultSection) {
-                alert('請先生成分析結果再導出');
-                return;
-            }
-            
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = '正在生成...';
-            
-            // 短暫延遲確保 UI 更新
-            setTimeout(() => {
-                html2canvas(resultSection, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#f8f9fa'
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = '風水樓盤匹配報告_' + new Date().toISOString().slice(0, 10) + '.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    btn.disabled = false;
-                    btn.textContent = '📥 導出報告（圖片）';
-                }).catch(err => {
-                    console.error('導出失敗:', err);
-                    alert('導出失敗，請稍後重試');
-                    btn.disabled = false;
-                    btn.textContent = '📥 導出報告（圖片）';
-                });
-            }, 100);
-        }
-
-        function renderPanGrid(mountainStars, facingStars, auspicious, inauspicious, yunInfo) {
-            if (!mountainStars) return '<p style="font-size: 12px; color: #999; padding: 20px 0;">暫無排盤數據</p>';
-            
-            // 九宫飞星盘布局（洛书九宫）
-            // 4 9 2
-            // 3 5 7
-            // 8 1 6
-            const luoShuLayout = [
-                ['southeast', 'south', 'southwest'],
-                ['east', 'center', 'west'],
-                ['northeast', 'north', 'northwest']
-            ];
-            
-            const directionLabels = {
-                'north': '正北', 'northeast': '東北', 'east': '正東', 'southeast': '東南',
-                'south': '正南', 'southwest': '西南', 'west': '正西', 'northwest': '西北',
-                'center': '中宮'
-            };
-            
-            // 九宫格颜色映射（基于玄空飞星的吉凶）
-            const starColors = {
-                1: '#1e88e5',  // 一白水星 - 吉
-                2: '#8d6e63',  // 二黑土星 - 凶
-                3: '#43a047',  // 三碧木星 - 平
-                4: '#43a047',  // 四绿木星 - 吉
-                5: '#e53935',  // 五黄土星 - 大凶
-                6: '#1e88e5',  // 六白金星 - 吉
-                7: '#fb8c00',  // 七赤金星 - 平
-                8: '#fb8c00',  // 八白土星 - 大吉
-                9: '#e53935'   // 九紫火星 - 吉
-            };
-            
-            let html = '<div style="background: #fafafa; border-radius: 8px; padding: 16px; margin-top: 8px;">';
-            
-            // 运盘信息
-            if (yunInfo) {
-                html += `<div style="text-align: center; margin-bottom: 12px; font-size: 13px; color: #666;">
-                    <strong>${yunInfo}</strong> · 山星為「●」向星為「○」
-                </div>`;
-            }
-            
-            // 九宫格
-            html += '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 280px; margin: 0 auto;">';
-            
-            luoShuLayout.forEach(row => {
-                row.forEach(dir => {
-                    const m = mountainStars[dir] || '-';
-                    const f = facingStars[dir] || '-';
-                    const mNum = parseInt(m) || 0;
-                    const fNum = parseInt(f) || 0;
-                    
-                    let cellStyle = 'background: white; border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px 4px; text-align: center; position: relative; min-height: 60px; display: flex; flex-direction: column; justify-content: center;';
-                    let mColor = mNum ? (starColors[mNum] || '#666') : '#999';
-                    let fColor = fNum ? (starColors[fNum] || '#666') : '#999';
-                    
-                    // 检查吉凶组合
-                    const aCombo = auspicious && auspicious.find(c => c.direction === dir);
-                    const iCombo = inauspicious && inauspicious.find(c => c.direction === dir);
-                    
-                    if (aCombo) {
-                        cellStyle += ' border-color: #28a745; background: #d4edda;';
-                    } else if (iCombo) {
-                        cellStyle += ' border-color: #dc3545; background: #f8d7da;';
-                    } else if (dir === 'center') {
-                        cellStyle += ' border-color: #667eea; background: #f0f4ff;';
-                    }
-                    
-                    let tooltip = '';
-                    if (aCombo) tooltip = `吉：${aCombo.desc}`;
-                    if (iCombo) tooltip = `凶：${iCombo.desc}`;
-                    
-                    html += `<div style="${cellStyle}" title="${tooltip}">
-                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">${directionLabels[dir]}</div>
-                        <div style="font-size: 16px; font-weight: 700; color: ${mColor};">●${m}</div>
-                        <div style="font-size: 16px; font-weight: 700; color: ${fColor};">○${f}</div>
-                    </div>`;
-                });
-            });
-            
-            html += '</div>';
-            
-            // 图例
-            html += `
-                <div style="display: flex; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; color: #666;">
-                    <span style="color: #28a745;">■</span> 吉星
-                    <span style="color: #dc3545;">■</span> 凶星
-                    <span style="color: #667eea;">■</span> 中宮
-                </div>
-            `;
-            
-            html += '</div>';
-            return html;
-        }
-    </script>
-
-    <!-- Footer -->
-    <footer style="background: #1a3c2a; color: #c9a961; padding: 24px 20px; text-align: center; margin-top: 40px; font-size: 13px;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div style="margin-bottom: 12px;">
-                <a href="/disclaimer" style="color: #c9a961; text-decoration: none; margin: 0 12px;">免責聲明</a>
-                <a href="/privacy" style="color: #c9a961; text-decoration: none; margin: 0 12px;">私隱政策</a>
-                <a href="/terms" style="color: #c9a961; text-decoration: none; margin: 0 12px;">服務條款</a>
-            </div>
-            <div style="color: #8fbc8f; font-size: 12px;">
-                © 2026 風水樓. 保留所有權利。 | 本系統分析結果僅供參考，不構成專業風水意見。
-            </div>
-        </div>
-    </footer>
-
-    <!-- Disclaimer Modal -->
-    <div id="disclaimerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center;">
-        <div style="background: white; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; border-radius: 12px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-            <h2 style="color: #1a3c2a; margin-bottom: 16px; font-size: 22px;">⚠️ 重要聲明</h2>
-            <div style="color: #333; line-height: 1.7; font-size: 14px; margin-bottom: 24px;">
-                <p style="margin-bottom: 12px;"><strong>本服務性質：</strong>「風水樓」是一個基於人工智能的風水分析工具，旨在將傳統風水理論數碼化，為用戶提供便捷的樓盤風水參考信息。</p>
-                <p style="margin-bottom: 12px;"><strong>非專業意見：</strong>本系統的分析結果<strong>不構成</strong>任何專業風水意見、投資建議或法律意見。我們強烈建議您在作出任何重大置業決定前，諮詢持牌風水師或相關專業人士。</p>
-                <p style="margin-bottom: 12px;"><strong>分析準確性：</strong>人工智能分析可能存在誤差。風水學為經驗學問，不同流派的判斷標準各異。本系統採用的算法和數據僅供參考。</p>
-                <p style="margin-bottom: 12px;"><strong>數據使用：</strong>我們重視您的私隱。詳情請參閱 <a href="/privacy" style="color: #1a3c2a;" target="_blank">私隱政策</a>。</p>
-                <p><strong>使用風險：</strong>使用本服務即表示您了解並接受上述限制。對於因使用本服務而導致的任何損失，我們不承擔法律責任。</p>
-            </div>
-            <div style="display: flex; gap: 12px; justify-content: center;">
-                <button onclick="acceptDisclaimer()" style="background: #1a3c2a; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600;">我已了解並同意</button>
-                <a href="/disclaimer" style="background: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 12px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; display: inline-block;">查看完整聲明</a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Disclaimer Modal Logic
-        (function() {
-            const modal = document.getElementById('disclaimerModal');
-            const accepted = localStorage.getItem('fengshuiDisclaimerAccepted');
-            
-            if (!accepted) {
-                modal.style.display = 'flex';
-            }
-            
-            window.acceptDisclaimer = function() {
-                localStorage.setItem('fengshuiDisclaimerAccepted', 'true');
-                modal.style.display = 'none';
-            };
-        })();
     </script>
 </body>
 </html>
