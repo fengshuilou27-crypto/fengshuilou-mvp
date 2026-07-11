@@ -17,6 +17,9 @@ from collections import defaultdict
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
+# 版本號
+VERSION = "3.6.1"
+
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
     """簡易內存限流器（基於 IP）—— Render 無狀態實例已足夠，日後可遷移至 Redis"""
@@ -1192,7 +1195,7 @@ def get_supported_facings():
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "version": "3.6.1", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
+    return {"status": "ok", "version": VERSION, "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
 
 
 # ==================== v3.5 New API Routes ====================
