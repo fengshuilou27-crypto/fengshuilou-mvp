@@ -283,18 +283,34 @@ def _find_data_path(filename: str) -> Path:
     return None
 
 
+# v3.5: 數據庫訪問層（支持 Neon Postgres + CSV 回退）
+from data.db_access import (
+    load_estates as _db_load_estates,
+    load_listings as _db_load_listings,
+    load_estates_unified as _db_load_estates_unified,
+    get_db_status
+)
+
+
 def load_estates():
-    """載入屋苑數據"""
+    """載入屋苑數據（數據庫優先，CSV回退）"""
+    # 嘗試從數據庫加載
+    db_estates = _db_load_estates()
+    if db_estates:
+        logger.info("Estates loaded from database: %d records", len(db_estates))
+        return db_estates
+
+    # 回退到 CSV
     estates = []
     data_path = _find_data_path("estates_28hse.csv")
     if data_path:
-        logger.info("Loading estates data: %s", data_path)
+        logger.info("Loading estates data from CSV: %s", data_path)
         with open(data_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if row.get("facing") in SUPPORTED_FACINGS:
                     estates.append(row)
-        logger.info("Estates loaded: %d records", len(estates))
+        logger.info("Estates loaded from CSV: %d records", len(estates))
     else:
         logger.warning("estates_28hse.csv not found. Ensure scraper_28hse/data/estates_28hse.csv exists.")
     return estates
@@ -309,19 +325,26 @@ LISTINGS_HEADERS = [
 
 
 def load_listings():
-    """載入樓盤數據（若缺失则自动生成空文件）"""
+    """載入樓盤數據（數據庫優先，CSV回退）"""
+    # 嘗試從數據庫加載
+    db_listings = _db_load_listings()
+    if db_listings:
+        logger.info("Listings loaded from database: %d records", len(db_listings))
+        return db_listings
+
+    # 回退到 CSV
     listings = []
     data_path = _find_data_path("listings_28hse.csv")
     if data_path:
-        logger.info("Loading listings data: %s", data_path)
+        logger.info("Loading listings data from CSV: %s", data_path)
         with open(data_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if row.get("facing") in SUPPORTED_FACINGS:
                     listings.append(row)
-        logger.info("Listings loaded: %d records", len(listings))
+        logger.info("Listings loaded from CSV: %d records", len(listings))
     else:
-        # 自动在 scraper_28hse/data/ 创建空 listings 文件
+        # 自動在 scraper_28hse/data/ 創建空 listings 文件
         scraper_data = _find_data_path("estates_28hse.csv")
         if scraper_data:
             listings_dir = scraper_data.parent
@@ -1386,6 +1409,69 @@ def fxti_relationship(request: FXTIRelationshipRequest):
         "status": "success",
         "data": report
     }
+
+
+@app.get("/api/db-status")
+def api_db_status():
+    """數據庫連接狀態和數據統計"""
+    try:
+        status = get_db_status()
+        return {
+            "status": "success",
+            "data": {
+                **status,
+                "app_version": VERSION,
+                "estates_csv_loaded": len(ALL_ESTATES),
+                "listings_csv_loaded": len(ALL_LISTINGS)
+            }
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+            "app_version": VERSION,
+            "estates_csv_loaded": len(ALL_ESTATES),
+            "listings_csv_loaded": len(ALL_LISTINGS)
+        }
+
+
+@app.get("/api/fengshui/bazhai")
+def api_bazhai(year: int, facing: str):
+    """八宅遊年：根據出生年份和朝向計算宅命"""
+    try:
+        from data.bazhai_younian import get_bazhai_analysis
+        result = get_bazhai_analysis(year, facing)
+        return {"status": "success", "data": result}
+    except ImportError:
+        return {"status": "error", "message": "八宅模塊尚未部署"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/api/fengshui/najia-floor")
+def api_najia_floor(year: int, floor: int):
+    """納甲樓層：根據出生年份和樓層計算吉凶"""
+    try:
+        from data.najia_floor import get_najia_analysis
+        result = get_najia_analysis(year, floor)
+        return {"status": "success", "data": result}
+    except ImportError:
+        return {"status": "error", "message": "納甲樓層模塊尚未部署"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/api/fengshui/compass")
+def api_compass(mountain: str, facing: str):
+    """羅盤工具：根據山向返回二十四山詳細信息"""
+    try:
+        from data.compass_tool import get_compass_info
+        result = get_compass_info(mountain, facing)
+        return {"status": "success", "data": result}
+    except ImportError:
+        return {"status": "error", "message": "羅盤工具模塊尚未部署"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 
 if __name__ == "__main__":
