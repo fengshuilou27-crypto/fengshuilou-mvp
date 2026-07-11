@@ -43,6 +43,11 @@ class RequestMeta(BaseModel):
     address: Optional[str] = Field(None, description="物業地址")
 
 
+class EvaluateRequest(BaseModel):
+    """評估請求模型"""
+    request_meta: RequestMeta
+
+
 def _get_goals(meta: RequestMeta) -> list:
     """從 RequestMeta 提取目標列表，支持多目標和向後兼容"""
     if meta.goals and isinstance(meta.goals, list) and len(meta.goals) > 0:
