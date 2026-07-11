@@ -466,7 +466,61 @@ function showDetail(idx) {
 </div>`;
     }
 
-    // 風險標記
+    // 風水精細度擴展分析（八宅+納甲+羅盤）
+    if (m.fengshui_extended && m.fengshui_extended.enabled) {
+        const fe = m.fengshui_extended;
+        html += `
+<div style="margin-top:16px">
+<div class="section-title" style="font-size:14px">🔮 風水精細度分析 <span style="font-size:12px;color:#667eea">+${fe.fengshui_bonus || 0}分</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">`;
+
+        // 八宅
+        if (fe.bazhai) {
+            const bz = fe.bazhai;
+            const matchClass = bz.compatibility && bz.compatibility.match ? 'score-high' : 'score-low';
+            const matchText = bz.compatibility ? (bz.compatibility.match ? '✓ 匹配' : '✗ 不配') : '?';
+            html += `
+<div style="background:white;border-radius:8px;padding:12px;border-left:4px solid #e74c3c">
+<h4 style="margin:0 0 8px 0;font-size:13px;color:#e74c3c">🏠 八宅遊年</h4>
+<p style="margin:0;font-size:12px;color:#666">命卦：${bz.ming_gua ? bz.ming_gua.name + bz.ming_gua.wuxing : 'N/A'}</p>
+<p style="margin:0;font-size:12px;color:#666">宅卦：${bz.zhai_gua ? bz.zhai_gua.name + bz.zhai_gua.wuxing : 'N/A'}</p>
+<p style="margin:4px 0 0 0;font-size:12px"><span class="estate-score ${matchClass}">${matchText}</span></p>
+</div>`;
+        }
+
+        // 納甲
+        if (fe.najia) {
+            const nj = fe.najia;
+            html += `
+<div style="background:white;border-radius:8px;padding:12px;border-left:4px solid #3498db">
+<h4 style="margin:0 0 8px 0;font-size:13px;color:#3498db">🏢 納甲樓層</h4>
+<p style="margin:0;font-size:12px;color:#666">樓層：${nj.floor ? nj.floor.number + '層(' + nj.floor.wuxing + ')' : 'N/A'}</p>
+<p style="margin:0;font-size:12px;color:#666">關係：${nj.relation ? nj.relation.type : 'N/A'}</p>
+<p style="margin:4px 0 0 0;font-size:12px"><span class="estate-score score-mid">${nj.relation ? nj.relation.score + '分' : 'N/A'}</span></p>
+</div>`;
+        }
+
+        // 羅盤
+        if (fe.compass) {
+            const cp = fe.compass;
+            html += `
+<div style="background:white;border-radius:8px;padding:12px;border-left:4px solid #9b59b6">
+<h4 style="margin:0 0 8px 0;font-size:13px;color:#9b59b6">🧭 羅盤驗證</h4>
+<p style="margin:0;font-size:12px;color:#666">山：${cp.mountain ? cp.mountain.name : 'N/A'}</p>
+<p style="margin:0;font-size:12px;color:#666">向：${cp.facing ? cp.facing.name : 'N/A'}</p>
+<p style="margin:4px 0 0 0;font-size:12px"><span class="estate-score ${cp.pair_analysis && cp.pair_analysis.valid_pair ? 'score-high' : 'score-low'}">${cp.pair_analysis && cp.pair_analysis.valid_pair ? '✓ 有效配對' : '✗ 異常'}</span></p>
+</div>`;
+        }
+
+        html += `</div>`;
+
+        // 加分理由
+        if (fe.bonus_rationale) {
+            html += `<p style="margin-top:8px;font-size:12px;color:#666;background:#f8f9fa;padding:8px;border-radius:4px">💡 ${fe.bonus_rationale}</p>`;
+        }
+
+        html += `</div>`;
+    }
     const flags = m.flags || {};
     if (flags.sha_detected || flags.severe_penalty_applied || flags.remedies_required || flags.theory_conflict_detected || flags.yun_conversion_considered) {
         html += `
