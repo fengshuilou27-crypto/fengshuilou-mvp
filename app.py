@@ -93,7 +93,7 @@ from data.fxti_relationship import analyze_relationship
 app = FastAPI(
     title="AI風水樓盤匹配系統",
     description="v3.1 - 24山向飛星表 + 旺衰分析 + 喜用神 + 九宮吉凶方位 + 零正神動態計算 + 目標配對動態計算 + 多運交叉分析 + 自動SHA推導 + GIS地理風水分析 + FXTI五行性格",
-    version="3.5.1"
+    version="3.5.2"
 )
 
 app.add_middleware(
@@ -1142,7 +1142,87 @@ def get_supported_facings():
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "version": "3.5.1", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
+    return {"status": "ok", "version": "3.5.2", "supported_facings": len(SUPPORTED_FACINGS), "modules": ["module1", "module2", "module3", "fxti"]}
+
+
+# ==================== v3.5 New API Routes ====================
+
+class AnnualFlyingStarRequest(BaseModel):
+    building_year: int = Field(..., description="建築年份")
+    building_facing: str = Field(..., description="坐向：子山午向/丑山未向等")
+    target_year: int = Field(default=2026, description="目標年份（默認2026）")
+
+
+class DynamicPanRequest(BaseModel):
+    building_year: int = Field(..., description="建築年份")
+    building_facing: str = Field(..., description="坐向：子山午向/丑山未向等")
+
+
+class MultiYearAnalysisRequest(BaseModel):
+    building_year: int = Field(..., description="建築年份")
+    building_facing: str = Field(..., description="坐向：子山午向/丑山未向等")
+    start_year: int = Field(default=2024, description="開始年份")
+    end_year: int = Field(default=2030, description="結束年份")
+
+
+@app.post("/api/annual-flying-star")
+def api_annual_flying_star(request: AnnualFlyingStarRequest):
+    """年度飛星分析：計算指定年份的流年飛星與宅運盤疊加分析"""
+    from data.annual_flying_star import calculate_annual_flying_star
+    
+    result = calculate_annual_flying_star(
+        building_year=request.building_year,
+        building_facing=request.building_facing,
+        target_year=request.target_year
+    )
+    return result
+
+
+@app.post("/api/dynamic-pan")
+def api_dynamic_pan(request: DynamicPanRequest):
+    """動態排盤：使用算法動態計算飛星盤（硬編碼數據缺失時的後備方案）"""
+    from data.flying_star_dynamic import calculate_flying_star_pan
+    
+    result = calculate_flying_star_pan(
+        building_year=request.building_year,
+        mountain_facing=request.building_facing
+    )
+    return result
+
+
+@app.post("/api/multi-year-analysis")
+def api_multi_year_analysis(request: MultiYearAnalysisRequest):
+    """多年度飛星分析：計算多年度的流年飛星疊加分析"""
+    from data.annual_flying_star import calculate_multi_year_analysis
+    
+    results = calculate_multi_year_analysis(
+        building_year=request.building_year,
+        building_facing=request.building_facing,
+        start_year=request.start_year,
+        end_year=request.end_year
+    )
+    return {
+        "status": "success",
+        "building_year": request.building_year,
+        "building_facing": request.building_facing,
+        "start_year": request.start_year,
+        "end_year": request.end_year,
+        "total_years": len(results),
+        "results": results
+    }
+
+
+@app.get("/api/annual-flying-star/{year}")
+def api_annual_flying_star_simple(year: int, building_year: int, building_facing: str):
+    """簡易年度飛星分析（GET版本）"""
+    from data.annual_flying_star import calculate_annual_flying_star
+    
+    result = calculate_annual_flying_star(
+        building_year=building_year,
+        building_facing=building_facing,
+        target_year=year
+    )
+    return result
 
 
 # ==================== FXTI Routes ====================
