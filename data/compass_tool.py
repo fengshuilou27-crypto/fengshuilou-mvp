@@ -45,7 +45,32 @@ MOUNTAIN_24_DATA = [
     {"name": "坤", "type": "維卦", "degree_start": 217.5, "degree_end": 232.5, "gua": "坤", "yinyang": "陰", "wuxing": "土"},
 ]
 
+# 天干陰陽
+GAN_YINYANG = {
+    "甲": "陽", "乙": "陰", "丙": "陽", "丁": "陰",
+    "戊": "陽", "己": "陰", "庚": "陽", "辛": "陰",
+    "壬": "陽", "癸": "陰"
+}
+
+# 地支陰陽
+ZHI_YINYANG = {
+    "子": "陽", "丑": "陰", "寅": "陽", "卯": "陰",
+    "辰": "陽", "巳": "陰", "午": "陽", "未": "陰",
+    "申": "陽", "酉": "陰", "戌": "陽", "亥": "陰"
+}
+
+# 分金吉凶（簡化版：陰陽匹配=旺相吉，陰陽不配=孤虛凶）
+# 實際羅盤還有「珠寶線」「火坑」等概念，此為 MVP 簡化
+FEN_JIN_FORTUNE_DESCRIPTION = {
+    "旺相": {"type": "吉", "score": 90, "description": "陰陽相配，氣場和諧，主丁財兩旺"},
+    "孤虛": {"type": "凶", "score": 30, "description": "陰陽不配，氣場散亂，主丁財不濟"},
+    "差錯": {"type": "大凶", "score": 10, "description": "天地不交，陰陽反背，主家宅不安"}
+}
+
+
 # 分金（每山分五個分金，每分金3度）
+# 注意：此為簡化表，實際每山分金不同（如子山=甲子丙子...，丑山=乙丑丁丑...）
+# MVP 使用統一模板，精確分金需查羅經
 FEN_JIN_NAMES = ["甲子", "丙子", "戊子", "庚子", "壬子"]
 
 # 山向配對（正對關係）
@@ -84,6 +109,27 @@ def get_mountain_info(mountain_name: str) -> Optional[Dict]:
     return None
 
 
+def get_fen_jin_fortune(fen_jin_name: str) -> Dict:
+    """判斷分金吉凶（簡化版：陰陽匹配）"""
+    # 提取天干和地支
+    if len(fen_jin_name) < 2:
+        return {"type": "未知", "score": 50, "description": "無法解析"}
+    
+    gan = fen_jin_name[0]
+    zhi = fen_jin_name[1]
+    
+    gan_yin = GAN_YINYANG.get(gan)
+    zhi_yin = ZHI_YINYANG.get(zhi)
+    
+    if not gan_yin or not zhi_yin:
+        return {"type": "未知", "score": 50, "description": "天干或地支無法識別"}
+    
+    if gan_yin == zhi_yin:
+        return FEN_JIN_FORTUNE_DESCRIPTION["旺相"]
+    else:
+        return FEN_JIN_FORTUNE_DESCRIPTION["孤虛"]
+
+
 def calculate_fen_jin(mountain_name: str) -> List[Dict]:
     """計算某山的五個分金"""
     mountain = get_mountain_info(mountain_name)
@@ -107,11 +153,15 @@ def calculate_fen_jin(mountain_name: str) -> List[Dict]:
         if fj_end > 360:
             fj_end -= 360
 
+        fj_name = f"{mountain_name}{name}"
+        fortune = get_fen_jin_fortune(name)
+        
         fen_jin_list.append({
-            "name": f"{mountain_name}{name}",
+            "name": fj_name,
             "degree_start": round(fj_start % 360, 1),
             "degree_end": round(fj_end % 360, 1),
-            "center_degree": round((fj_start + 1.5) % 360, 1)
+            "center_degree": round((fj_start + 1.5) % 360, 1),
+            "fortune": fortune
         })
 
     return fen_jin_list

@@ -1,40 +1,13 @@
 from data.solar_term import get_lunar_year_for_ming_gua
+from data.ming_gua import (
+    calc_ming_gua, MING_GUA_MAP, GUA_WUXING,
+    EAST_FOUR_GUA, WEST_FOUR_GUA
+)
 from data.bagua import (
-    ZHAIGUA_TABLE, GUA_WUXING, MING_GUA_MAP,
-    EAST_FOUR_GUA, WEST_FOUR_GUA,
+    ZHAIGUA_TABLE,
     BAGUA_DIRECTION_TABLE, DIRECTION_MAP, DIRECTION_REVERSE,
     AUSPICIOUS_WEIGHT, GOAL_DIRECTION_BONUS, ROOM_IMPORTANCE, ROOM_DIRECTION_PREFERENCE
 )
-
-
-def calc_ming_gua(birth_year: int, gender: str) -> int:
-    """
-    命卦計算公式（100年算法）
-    
-    ⚠️ v3.2 重要說明：
-    此函數使用公曆年份計算。傳統風水命理應以農曆立春為分界，
-    約15%用戶（1-2月出生）的農曆年可能與公曆年不同。
-    例如：1991年1月15日公曆 = 庚午年農曆（非辛未年）。
-    未來版本應增加農曆年轉換功能以提高準確度。
-    
-    男命：(100 - 出生年後兩位) ÷ 9，取餘數（整除取9）
-    女命：(出生年後兩位 - 4) ÷ 9，取餘數（整除取9）
-    餘5：男命寄艮(2)，女命寄坤(8)
-    命卦數：1坎 2坤 3震 4巽 6乾 7兌 8艮 9離
-    """
-    year_last_two = int(str(birth_year)[-2:])
-    
-    if gender == "男":
-        gua_num = (100 - year_last_two) % 9
-    else:
-        gua_num = (year_last_two - 4) % 9
-    
-    if gua_num == 0:
-        gua_num = 9
-    if gua_num == 5:
-        gua_num = 8 if gender == "男" else 2
-    
-    return gua_num
 
 
 def _get_direction_score(gua: str, direction: str, goal: str = ""):

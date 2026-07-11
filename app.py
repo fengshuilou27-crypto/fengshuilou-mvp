@@ -485,6 +485,28 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
         "yun_transition_note": dual_period.get("note", f"該樓宇建於{building_yun}，當前為{current_yun}。")
     }
 
+    # 10. v3.6 擴展風水分析（八宅遊年 + 納甲樓層 + 羅盤工具）
+    try:
+        from data.fengshui_integration import get_extended_fengshui
+        extended = get_extended_fengshui(
+            birth_date=birth_date,
+            gender=gender,
+            floor_number=floor_number,
+            building_facing=building_facing,
+            building_year=building_year
+        )
+        match_result["fengshui_extended"] = extended
+        
+        # 將風水精細度加分加到總分（上限 100）
+        bonus = extended.get("fengshui_bonus", 0)
+        if bonus > 0:
+            new_score = match_result.get("final_score", 0) + bonus
+            match_result["final_score"] = round(min(new_score, 100.0), 1)
+            match_result["score_breakdown"]["風水精細度"] = round(bonus, 1)
+    except Exception as e:
+        logger.warning("Extended fengshui analysis failed: %s", e)
+        match_result["fengshui_extended"] = {"enabled": False, "error": str(e)}
+
     return match_result
 
 

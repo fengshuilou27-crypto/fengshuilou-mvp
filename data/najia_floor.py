@@ -11,7 +11,7 @@
 """
 
 from typing import Dict, List
-from data.bazhai_younian import calculate_ming_gua, GUA_WUXING
+from data.ming_gua import get_ming_gua_by_year, GUA_WUXING
 
 # 河圖五行
 HE_TU_WUXING = {
@@ -116,9 +116,9 @@ def get_najia_analysis(birth_year: int, floor_number: int, gender: str = "male")
     """
     納甲樓層分析主入口
     """
-    # 計算命卦五行
-    ming_gua = calculate_ming_gua(birth_year, gender)
-    person_wuxing = GUA_WUXING[ming_gua]
+    # 統一命卦計算（與 bagua_matching.py / bazhai_younian.py 一致）
+    ming = get_ming_gua_by_year(birth_year, gender)
+    person_wuxing = ming["wuxing"]
 
     # 計算樓層五行
     floor_wuxing = get_floor_wuxing(floor_number)
@@ -149,7 +149,7 @@ def get_najia_analysis(birth_year: int, floor_number: int, gender: str = "male")
     return {
         "birth_year": birth_year,
         "gender": gender,
-        "ming_gua": ming_gua,
+        "ming_gua": ming["gua_name"],
         "person_wuxing": person_wuxing,
         "floor": {
             "number": floor_number,
