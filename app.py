@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.6.3"
+VERSION = "3.6.4"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
@@ -96,7 +96,7 @@ from data.fxti_relationship import analyze_relationship
 app = FastAPI(
     title="AI風水樓盤匹配系統",
     description="v3.6 - 24山向飛星表 + 八宅遊年 + 納甲樓層 + 羅盤工具 + 風水集成層 + 數據庫適配",
-    version="3.6.3"
+    version="3.6.4"
 )
 
 app.add_middleware(
@@ -167,6 +167,7 @@ class UserProfile(BaseModel):
     birth_time: Optional[str] = Field(None, description="出生時間 HH:MM")
     birth_place: Optional[str] = Field(None, description="出生地")
     user_job: Optional[str] = Field(None, description="職業")
+    floor_number: Optional[int] = Field(None, description="樓層號碼（可選）")
     # 同住人
     cohabitant_enabled: bool = Field(False, description="啟用同住人雙人模式")
     cohabitant_gender: Optional[str] = Field(None, description="同住人性別")
@@ -938,12 +939,16 @@ def match_estates(request: MatchEstatesRequest):
         try:
             goals = _parse_goals(profile.goals)
             
-            # 估算樓層（從 total_floors 取中層，否則默認10）
-            total_floors = estate.get("total_floors", "")
-            if total_floors and total_floors.isdigit():
-                floor = int(total_floors) // 2
+            # 估算樓層：優先使用用戶輸入的樓層，其次從 total_floors 取中層，最後默認10
+            user_floor = getattr(profile, 'floor_number', None)
+            if user_floor and user_floor > 0:
+                floor = user_floor
             else:
-                floor = 10
+                total_floors = estate.get("total_floors", "")
+                if total_floors and total_floors.isdigit():
+                    floor = int(total_floors) // 2
+                else:
+                    floor = 10
             
             # 從數據提取環境特徵
             has_sea = estate.get("has_sea_view", "False").lower() == "true"

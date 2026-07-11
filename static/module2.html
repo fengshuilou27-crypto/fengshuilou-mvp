@@ -142,6 +142,11 @@ input:focus, select:focus { outline: none; border-color: #667eea; }
 </select>
 </div>
 
+<div class="form-group">
+<label>樓層（可選，用於納甲樓層分析）</label>
+<input type="number" id="floorNumber" placeholder="例如：12" min="1" max="100">
+</div>
+
 <div class="section-title">同住人設定（雙人模式）<span class="coming-soon-badge">可選</span></div>
 <div class="form-group">
 <div class="checkbox-item">
@@ -351,6 +356,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         birthPlace: document.getElementById('birthPlace').value,
         gender: document.getElementById('gender').value,
         userJob: document.getElementById('userJob').value,
+        floorNumber: document.getElementById('floorNumber').value,
         goals: getGoals(),
         cohabitantEnabled: document.getElementById('cohabitantEnabled').checked,
         cohabitantGender: document.getElementById('cohabitantGender').value,
@@ -374,6 +380,7 @@ async function runMatching() {
             birth_time: userProfile.birthTime || null,
             birth_place: userProfile.birthPlace || null,
             user_job: userProfile.userJob || null,
+            floor_number: userProfile.floorNumber ? parseInt(userProfile.floorNumber) : null,
             goals: userProfile.goals,
             cohabitant_enabled: userProfile.cohabitantEnabled,
             cohabitant_gender: userProfile.cohabitantEnabled ? userProfile.cohabitantGender : null,

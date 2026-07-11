@@ -495,6 +495,383 @@ FLYING_STAR_TABLE = {
             "note": "七運到山到向，丁財兩得。與卯山酉向相對 ⚠️ 數據需專業確認"
         },
     },
+    "六運": {
+        "子山午向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "癸山丁向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "丑山未向": {
+            "pan_type": "雙星會坐", "base_score": 18, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會坐，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "艮山坤向": {
+            "pan_type": "上山下水", "base_score": 15, "confidence": 0.65,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運上山下水，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "寅山申向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "卯山酉向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "乙山辛向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "辰山戌向": {
+            "pan_type": "上山下水", "base_score": 15, "confidence": 0.65,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運上山下水，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "巽山乾向": {
+            "pan_type": "雙星會坐", "base_score": 18, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會坐，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "巳山亥向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "午山子向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "丁山癸向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "未山丑向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "坤山艮向": {
+            "pan_type": "上山下水", "base_score": 15, "confidence": 0.65,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運上山下水，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "申山寅向": {
+            "pan_type": "雙星會坐", "base_score": 18, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會坐，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "酉山卯向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "辛山乙向": {
+            "pan_type": "雙星會坐", "base_score": 18, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會坐，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "戌山辰向": {
+            "pan_type": "上山下水", "base_score": 15, "confidence": 0.65,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運上山下水，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "乾山巽向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "亥山巳向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "壬山丙向": {
+            "pan_type": "雙星會向", "base_score": 20, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "甲山庚向": {
+            "pan_type": "雙星會坐", "base_score": 18, "confidence": 0.7,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "68", "desc": "六八同宮，財丁兩旺"},
+                {"direction": "northwest", "stars": "67", "desc": "六七交劍，權貴之方"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運雙星會坐，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "丙山壬向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+        "庚山甲向": {
+            "pan_type": "旺山旺向", "base_score": 22, "confidence": 0.75,
+            "mountain_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "facing_stars": {"north": 2, "northeast": 9, "east": 4, "southeast": 5, "south": 1, "southwest": 3, "west": 8, "northwest": 7, "center": 6},
+            "auspicious_combos": [
+                {"direction": "west", "stars": "88", "desc": "六運八白生氣，財源廣進"},
+                {"direction": "northwest", "stars": "77", "desc": "六運七赤佐輔，丁財兩旺"},
+                {"direction": "northeast", "stars": "99", "desc": "六運九紫生氣，喜慶連連"},
+            ],
+            "inauspicious_combos": [
+                {"direction": "north", "stars": "22", "desc": "二黑病符，六運死氣方"},
+                {"direction": "south", "stars": "11", "desc": "一白退氣，六運不吉"},
+                {"direction": "southeast", "stars": "55", "desc": "五黃煞氣，宜靜不宜動"},
+            ],
+            "note": "六運旺山旺向，當令六白 ⚠️ 數據基於理論推算，需專業確認"
+        },
+    },
     "八運": {
         "丁山癸向": {
             "pan_type": "雙星會向", "base_score": 20, "confidence": 0.85,
