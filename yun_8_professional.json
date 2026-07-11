@@ -1,0 +1,674 @@
+{
+  "子山午向": {
+    "mountain_stars": {
+      "northwest": 3,
+      "north": 8,
+      "northeast": 1,
+      "west": 2,
+      "center": 4,
+      "east": 6,
+      "southwest": 7,
+      "south": 9,
+      "southeast": 5
+    },
+    "facing_stars": {
+      "northwest": 4,
+      "north": 8,
+      "northeast": 6,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。坐北朝南，正卦",
+    "pan_type": "雙星會向"
+  },
+  "癸山丁向": {
+    "mountain_stars": {
+      "northwest": 3,
+      "north": 8,
+      "northeast": 1,
+      "west": 2,
+      "center": 4,
+      "east": 6,
+      "southwest": 7,
+      "south": 9,
+      "southeast": 5
+    },
+    "facing_stars": {
+      "northwest": 4,
+      "north": 8,
+      "northeast": 6,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。癸山丁向正卦",
+    "pan_type": "雙星會向"
+  },
+  "午山子向": {
+    "mountain_stars": {
+      "northwest": 4,
+      "north": 8,
+      "northeast": 6,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 3,
+      "north": 8,
+      "northeast": 1,
+      "west": 2,
+      "center": 4,
+      "east": 6,
+      "southwest": 7,
+      "south": 9,
+      "southeast": 5
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。坐南朝北，正卦",
+    "pan_type": "雙星會向"
+  },
+  "丁山癸向": {
+    "mountain_stars": {
+      "northwest": 4,
+      "north": 8,
+      "northeast": 6,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 3,
+      "north": 8,
+      "northeast": 1,
+      "west": 2,
+      "center": 4,
+      "east": 6,
+      "southwest": 7,
+      "south": 9,
+      "southeast": 5
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。丁山癸向正卦",
+    "pan_type": "雙星會向"
+  },
+  "丑山未向": {
+    "mountain_stars": {
+      "northwest": 8,
+      "north": 3,
+      "northeast": 1,
+      "west": 9,
+      "center": 5,
+      "east": 7,
+      "southwest": 4,
+      "south": 6,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 8,
+      "north": 1,
+      "northeast": 6,
+      "west": 7,
+      "center": 2,
+      "east": 9,
+      "southwest": 3,
+      "south": 4,
+      "southeast": 5
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運到山到向，丁財兩得。坐東北朝西南，正卦",
+    "pan_type": "到山到向"
+  },
+  "未山丑向": {
+    "mountain_stars": {
+      "northwest": 8,
+      "north": 1,
+      "northeast": 6,
+      "west": 7,
+      "center": 2,
+      "east": 9,
+      "southwest": 3,
+      "south": 4,
+      "southeast": 5
+    },
+    "facing_stars": {
+      "northwest": 8,
+      "north": 3,
+      "northeast": 1,
+      "west": 9,
+      "center": 5,
+      "east": 7,
+      "southwest": 4,
+      "south": 6,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運到山到向，丁財兩得。坐西南朝東北，正卦",
+    "pan_type": "到山到向"
+  },
+  "艮山坤向": {
+    "mountain_stars": {
+      "northwest": 2,
+      "north": 7,
+      "northeast": 9,
+      "west": 1,
+      "center": 5,
+      "east": 3,
+      "southwest": 8,
+      "south": 6,
+      "southeast": 4
+    },
+    "facing_stars": {
+      "northwest": 5,
+      "north": 3,
+      "northeast": 1,
+      "west": 2,
+      "center": 8,
+      "east": 7,
+      "southwest": 9,
+      "south": 4,
+      "southeast": 6
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運上山下水，損財傷丁。坐東南朝西北，正卦",
+    "pan_type": "上山下水"
+  },
+  "寅山申向": {
+    "mountain_stars": {
+      "northwest": 2,
+      "north": 7,
+      "northeast": 9,
+      "west": 1,
+      "center": 5,
+      "east": 3,
+      "southwest": 8,
+      "south": 6,
+      "southeast": 4
+    },
+    "facing_stars": {
+      "northwest": 5,
+      "north": 3,
+      "northeast": 1,
+      "west": 2,
+      "center": 8,
+      "east": 7,
+      "southwest": 9,
+      "south": 4,
+      "southeast": 6
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運上山下水，損財傷丁。寅山申向正卦",
+    "pan_type": "上山下水"
+  },
+  "坤山艮向": {
+    "mountain_stars": {
+      "northwest": 5,
+      "north": 3,
+      "northeast": 1,
+      "west": 2,
+      "center": 8,
+      "east": 7,
+      "southwest": 9,
+      "south": 4,
+      "southeast": 6
+    },
+    "facing_stars": {
+      "northwest": 2,
+      "north": 7,
+      "northeast": 9,
+      "west": 1,
+      "center": 5,
+      "east": 3,
+      "southwest": 8,
+      "south": 6,
+      "southeast": 4
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運上山下水，損財傷丁。坐西南朝東北，正卦",
+    "pan_type": "上山下水"
+  },
+  "申山寅向": {
+    "mountain_stars": {
+      "northwest": 5,
+      "north": 3,
+      "northeast": 1,
+      "west": 2,
+      "center": 8,
+      "east": 7,
+      "southwest": 9,
+      "south": 4,
+      "southeast": 6
+    },
+    "facing_stars": {
+      "northwest": 2,
+      "north": 7,
+      "northeast": 9,
+      "west": 1,
+      "center": 5,
+      "east": 3,
+      "southwest": 8,
+      "south": 6,
+      "southeast": 4
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運上山下水，損財傷丁。申山寅向正卦",
+    "pan_type": "上山下水"
+  },
+  "卯山酉向": {
+    "mountain_stars": {
+      "northwest": 6,
+      "north": 1,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "facing_stars": {
+      "northwest": 5,
+      "north": 6,
+      "northeast": 4,
+      "west": 3,
+      "center": 1,
+      "east": 9,
+      "southwest": 8,
+      "south": 7,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。坐東朝西，正卦",
+    "pan_type": "雙星會向"
+  },
+  "乙山辛向": {
+    "mountain_stars": {
+      "northwest": 6,
+      "north": 1,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "facing_stars": {
+      "northwest": 5,
+      "north": 6,
+      "northeast": 4,
+      "west": 3,
+      "center": 1,
+      "east": 9,
+      "southwest": 8,
+      "south": 7,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。乙山辛向正卦",
+    "pan_type": "雙星會向"
+  },
+  "酉山卯向": {
+    "mountain_stars": {
+      "northwest": 5,
+      "north": 6,
+      "northeast": 4,
+      "west": 3,
+      "center": 1,
+      "east": 9,
+      "southwest": 8,
+      "south": 7,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 6,
+      "north": 1,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。坐西朝東，正卦",
+    "pan_type": "雙星會向"
+  },
+  "辛山乙向": {
+    "mountain_stars": {
+      "northwest": 5,
+      "north": 6,
+      "northeast": 4,
+      "west": 3,
+      "center": 1,
+      "east": 9,
+      "southwest": 8,
+      "south": 7,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 6,
+      "north": 1,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運雙星會向，旺財不旺丁。辛山乙向正卦",
+    "pan_type": "雙星會向"
+  },
+  "辰山戌向": {
+    "mountain_stars": {
+      "northwest": 9,
+      "north": 4,
+      "northeast": 2,
+      "west": 3,
+      "center": 8,
+      "east": 6,
+      "southwest": 5,
+      "south": 7,
+      "southeast": 1
+    },
+    "facing_stars": {
+      "northwest": 7,
+      "north": 9,
+      "northeast": 5,
+      "west": 6,
+      "center": 4,
+      "east": 2,
+      "southwest": 1,
+      "south": 3,
+      "southeast": 8
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運上山下水，損財傷丁。辰山戌向正卦",
+    "pan_type": "上山下水"
+  },
+  "戌山辰向": {
+    "mountain_stars": {
+      "northwest": 7,
+      "north": 9,
+      "northeast": 5,
+      "west": 6,
+      "center": 4,
+      "east": 2,
+      "southwest": 1,
+      "south": 3,
+      "southeast": 8
+    },
+    "facing_stars": {
+      "northwest": 9,
+      "north": 4,
+      "northeast": 2,
+      "west": 3,
+      "center": 8,
+      "east": 6,
+      "southwest": 5,
+      "south": 7,
+      "southeast": 1
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運上山下水，損財傷丁。戌山辰向正卦",
+    "pan_type": "上山下水"
+  },
+  "巽山乾向": {
+    "mountain_stars": {
+      "northwest": 1,
+      "north": 6,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "facing_stars": {
+      "northwest": 9,
+      "north": 4,
+      "northeast": 2,
+      "west": 3,
+      "center": 8,
+      "east": 6,
+      "southwest": 5,
+      "south": 7,
+      "southeast": 1
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運到山到向，丁財兩得。巽山乾向正卦",
+    "pan_type": "到山到向"
+  },
+  "巳山亥向": {
+    "mountain_stars": {
+      "northwest": 1,
+      "north": 6,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "facing_stars": {
+      "northwest": 9,
+      "north": 4,
+      "northeast": 2,
+      "west": 3,
+      "center": 8,
+      "east": 6,
+      "southwest": 5,
+      "south": 7,
+      "southeast": 1
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運到山到向，丁財兩得。巳山亥向正卦",
+    "pan_type": "到山到向"
+  },
+  "乾山巽向": {
+    "mountain_stars": {
+      "northwest": 9,
+      "north": 4,
+      "northeast": 2,
+      "west": 3,
+      "center": 8,
+      "east": 6,
+      "southwest": 5,
+      "south": 7,
+      "southeast": 1
+    },
+    "facing_stars": {
+      "northwest": 1,
+      "north": 6,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運到山到向，丁財兩得。乾山巽向正卦",
+    "pan_type": "到山到向"
+  },
+  "亥山巳向": {
+    "mountain_stars": {
+      "northwest": 9,
+      "north": 4,
+      "northeast": 2,
+      "west": 3,
+      "center": 8,
+      "east": 6,
+      "southwest": 5,
+      "south": 7,
+      "southeast": 1
+    },
+    "facing_stars": {
+      "northwest": 1,
+      "north": 6,
+      "northeast": 8,
+      "west": 7,
+      "center": 3,
+      "east": 5,
+      "southwest": 2,
+      "south": 4,
+      "southeast": 9
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運到山到向，丁財兩得。亥山巳向正卦",
+    "pan_type": "到山到向"
+  },
+  "丙山壬向": {
+    "mountain_stars": {
+      "northwest": 5,
+      "north": 1,
+      "northeast": 3,
+      "west": 4,
+      "center": 8,
+      "east": 6,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 6,
+      "north": 8,
+      "northeast": 4,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 7,
+      "south": 9,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運丙山壬向正卦",
+    "pan_type": "其他"
+  },
+  "甲山庚向": {
+    "mountain_stars": {
+      "northwest": 8,
+      "north": 4,
+      "northeast": 6,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 7,
+      "north": 9,
+      "northeast": 2,
+      "west": 1,
+      "center": 5,
+      "east": 3,
+      "southwest": 4,
+      "south": 6,
+      "southeast": 8
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運甲山庚向正卦",
+    "pan_type": "其他"
+  },
+  "壬山丙向": {
+    "mountain_stars": {
+      "northwest": 6,
+      "north": 8,
+      "northeast": 4,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 7,
+      "south": 9,
+      "southeast": 2
+    },
+    "facing_stars": {
+      "northwest": 5,
+      "north": 1,
+      "northeast": 3,
+      "west": 4,
+      "center": 8,
+      "east": 6,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運壬山丙向正卦",
+    "pan_type": "其他"
+  },
+  "庚山甲向": {
+    "mountain_stars": {
+      "northwest": 7,
+      "north": 9,
+      "northeast": 2,
+      "west": 1,
+      "center": 5,
+      "east": 3,
+      "southwest": 4,
+      "south": 6,
+      "southeast": 8
+    },
+    "facing_stars": {
+      "northwest": 8,
+      "north": 4,
+      "northeast": 6,
+      "west": 5,
+      "center": 3,
+      "east": 1,
+      "southwest": 9,
+      "south": 7,
+      "southeast": 2
+    },
+    "confidence": 0.85,
+    "source": "福山堂玄空飛星盤（專業數據）",
+    "note": "八運庚山甲向正卦",
+    "pan_type": "其他"
+  }
+}
