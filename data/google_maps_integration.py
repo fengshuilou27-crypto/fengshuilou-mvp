@@ -8,12 +8,15 @@ API Key: 從環境變量或配置文件讀取
 """
 
 import json
+import logging
 import os
 import time
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 # ===== 配置 =====
 API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "")
@@ -26,8 +29,8 @@ if not API_KEY:
             API_KEY = config.get("google_maps_api_key", "")
 
 if not API_KEY:
-    # 用戶已啟用 Google Maps Platform API，使用提供的 key
-    API_KEY = "AIzaSyC-hLYqIjpLlG9I3jf6_fQkmYKQAezyY5g"
+    logger.warning("GOOGLE_MAPS_API_KEY 環境變量未設置，Google Maps 功能將不可用。請在 Render Dashboard 設置環境變量。")
+    # 安全原則：不硬編碼 API key。生產環境必須通過環境變量提供。
 
 BASE_URL = "https://maps.googleapis.com/maps/api"
 RATE_LIMIT_DELAY = 0.05  # 50ms 延遲，避免速率限制
@@ -327,7 +330,10 @@ def verify_dem_against_google(lat: float, lng: float) -> Dict:
             "assessment": "基本一致"
         }
     """
-    from dem_parser import query_elevation
+    try:
+        from data.dem_parser import query_elevation
+    except ImportError:
+        from .dem_parser import query_elevation
     
     srtm_elev = query_elevation(lat, lng)
     google_elev = get_elevation(lat, lng)

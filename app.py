@@ -11,9 +11,69 @@ import json
 import os
 import re
 import logging
+import time
+from collections import defaultdict
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
+
+# ===== 安全中間件：API 限流 =====
+class RateLimiter:
+    """簡易內存限流器（基於 IP）—— Render 無狀態實例已足夠，日後可遷移至 Redis"""
+    def __init__(self, max_requests: int = 60, window_seconds: int = 60):
+        self.max_requests = max_requests
+        self.window = window_seconds
+        self._storage = defaultdict(list)  # ip -> [timestamp, ...]
+    
+    def is_allowed(self, client_ip: str) -> bool:
+        now = time.time()
+        # 清理過期記錄
+        self._storage[client_ip] = [
+            t for t in self._storage[client_ip]
+            if now - t < self.window
+        ]
+        if len(self._storage[client_ip]) >= self.max_requests:
+            return False
+        self._storage[client_ip].append(now)
+        return True
+
+rate_limiter = RateLimiter(max_requests=60, window_seconds=60)
+
+from fastapi import Request, Response
+from starlette.middleware.base import BaseHTTPMiddleware
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """添加安全響應頭"""
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
+
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    """API 限流中間件"""
+    async def dispatch(self, request: Request, call_next):
+        # 靜態文件和合法頁面不限流
+        if request.url.path.startswith("/static") or request.method == "OPTIONS":
+            return await call_next(request)
+        
+        # 獲取客戶端 IP（Render 會透過 X-Forwarded-For）
+        client_ip = request.headers.get("x-forwarded-for", request.client.host)
+        if client_ip and "," in client_ip:
+            client_ip = client_ip.split(",")[0].strip()
+        
+        if not rate_limiter.is_allowed(client_ip):
+            logger.warning(f"Rate limit exceeded for IP: {client_ip}")
+            return Response(
+                content='{"detail":"Too many requests. Please try again later."}',
+                status_code=429,
+                media_type="application/json"
+            )
+        
+        return await call_next(request)
+
 from data.flying_star import get_yun, SUPPORTED_FACINGS, FLYING_STAR_TABLE
 from models.flying_star_analysis import analyze_flying_star
 from models.zero_main_god import analyze_zero_main_god
@@ -38,11 +98,19 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://fengshuilou.com",
+        "https://www.fengshuilou.com",
+        "http://localhost:8000",
+        "http://localhost:3000",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
 )
+
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RateLimitMiddleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
