@@ -12,8 +12,8 @@ DATABASE_URL = os.environ.get(
     "postgresql://neondb_owner:npg_sVKUOn6P2BlW@ep-ancient-cherry-afmoe2xv-pooler.c-2.us-west-2.aws.neon.tech/neondb?channel_binding=require&sslmode=require"
 )
 
-# 是否使用數據庫（環境變量控制）
-USE_DATABASE = os.environ.get("USE_DATABASE", "true").lower() == "true"
+# 是否使用數據庫（強制啟用）
+USE_DATABASE = True
 
 
 def _get_db_connection():
