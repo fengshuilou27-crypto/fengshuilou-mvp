@@ -87,8 +87,8 @@ def aggregate_match_result(
         except Exception:
             yun_adaptation_factor = 1.0
     
-    # === GIS 地理風水分析 ===
-    gis_result = {"score": 0, "max_score": 0, "status": "skipped"}
+    # === GIS 地理風水分析（暫時跳過，標註「即將推出」）===
+    gis_result = {"score": 0, "max_score": 0, "status": "coming_soon"}
     gis_norm = 0.0
     if estate_name or district:
         try:
@@ -106,8 +106,10 @@ def aggregate_match_result(
                 gis_norm = (gis_result.get("score", 0) / 20) * 8
             else:
                 gis_norm = 0.0
+                gis_result["status"] = "coming_soon"
         except Exception:
             gis_norm = 0.0
+            gis_result["status"] = "coming_soon"
     
     # === 物業特徵加分（v2.5：樓齡融入物業特徵維度）===
     property_bonus = 0.0
@@ -169,10 +171,11 @@ def aggregate_match_result(
     property_bonus = min(property_bonus, 10.0)
     property_norm = (property_bonus / 10) * 10  # 物業特徵 10 分
     
-    # === 樓層精確度微調（避免尾數相同導致分數相同）===
+    # === 樓層精確度微調（v3.6.5：提高到2-3分，用戶可感知）===
     floor_tie_breaker = 0.0
     if floor_number and isinstance(floor_number, int) and floor_number > 0:
-        floor_tie_breaker = min(floor_number * 0.01, 0.3)  # 每層+0.01，最多+0.3
+        # 基礎分1.5分 + 每層0.05分，最多3分（12層達到2.1分，30層達到3分上限）
+        floor_tie_breaker = min(1.5 + floor_number * 0.05, 3.0)
     
     # 計算總分（v2.5：正向維度合計 20+18+13+8+13+10+8+7 = 97，再乘元運適配係數）
     base_total = (
@@ -222,10 +225,18 @@ def aggregate_match_result(
     # 風險控制（v2.5：使用原始煞氣扣分計算風險值）
     family_risk = abs(raw_sha_penalty) + abs(zmg_score) if zmg_score < 0 else abs(raw_sha_penalty)
     
-    # 化解建議聚合
+    # 化解建議聚合（v3.6.5：按 item 字段去重，相同化解方案只顯示一次）
     all_remedies = []
+    seen_items = set()
     if sha_result.get("remedies"):
-        all_remedies.extend(sha_result["remedies"])
+        for remedy in sha_result["remedies"]:
+            item_key = remedy.get("item", "") if isinstance(remedy, dict) else str(remedy)
+            if item_key and item_key not in seen_items:
+                seen_items.add(item_key)
+                all_remedies.append(remedy)
+            elif not item_key:
+                # 無 item 字段的建議直接保留
+                all_remedies.append(remedy)
     
     # 運轉建議（雙周期版 + 多運交叉分析）
     yun_conversion = None
@@ -330,7 +341,7 @@ def aggregate_match_result(
             "目標": round(goal_norm, 1),
             "物業特徵": round(property_norm, 1),
             "煞氣防禦": round(sha_norm, 1),
-            "GIS風水": round(gis_norm, 1),
+            "GIS風水(即將推出)": round(gis_norm, 1),
             "多運交叉適配": round(yun_adaptation_factor, 2),
             "樓層微調": round(floor_tie_breaker, 2)
         },

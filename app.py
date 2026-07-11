@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.6.4"
+VERSION = "3.6.5"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
@@ -96,7 +96,7 @@ from data.fxti_relationship import analyze_relationship
 app = FastAPI(
     title="AI風水樓盤匹配系統",
     description="v3.6 - 24山向飛星表 + 八宅遊年 + 納甲樓層 + 羅盤工具 + 風水集成層 + 數據庫適配",
-    version="3.6.4"
+    version="3.6.5"
 )
 
 app.add_middleware(
@@ -517,14 +517,37 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
 
 
 def run_single_match(meta: RequestMeta, district: str = None):
-    """執行單次匹配計算（支持單人/雙人）"""
+    """執行單次匹配計算（支持單人/雙人）v3.6.5 修復版"""
     goals = _parse_goals(meta.goals)
     
     # 如果外部傳入 district，覆蓋 meta.address
     if district and not meta.address:
         meta.address = district
 
-    if meta.cohabitant_enabled and meta.cohabitant_birth_date and meta.cohabitant_gender:
+    # v3.6.5: 根據 household_weight_mode 自動設置權重
+    weight_mode = getattr(meta, 'household_weight_mode', 'balanced')
+    if weight_mode == 'single':
+        # 單人模式：100% 主用戶
+        meta.cohabitant_enabled = False
+        meta.cohabitant_weight_ratio = 0.0
+    elif weight_mode == 'family':
+        # 家庭模式：60% 主用戶 + 40% 同住人
+        meta.cohabitant_weight_ratio = 0.4
+    elif weight_mode == 'balanced':
+        # 二人模式：50/50
+        meta.cohabitant_weight_ratio = 0.5
+    # else: 使用用戶自定義的 cohabitant_weight_ratio
+
+    # v3.6.5: 檢查同住人資料是否完整，不完整則自動回退到單人模式（不報錯）
+    partner_data_complete = (
+        meta.cohabitant_enabled and
+        meta.cohabitant_birth_date and
+        meta.cohabitant_gender and
+        meta.cohabitant_birth_date.strip() != '' and
+        meta.cohabitant_gender.strip() != ''
+    )
+
+    if partner_data_complete:
         # 雙人模式：宅不變，人加權
         weight_a = 1 - meta.cohabitant_weight_ratio
         weight_b = meta.cohabitant_weight_ratio
@@ -561,21 +584,34 @@ def run_single_match(meta: RequestMeta, district: str = None):
         )
 
         # 八宅雙人分析（專門用於對照表）
-        bagua_dual = analyze_bagua_dual(
-            meta.birth_date, meta.user_gender,
-            meta.cohabitant_birth_date, meta.cohabitant_gender,
-            meta.building_facing,
-            weight_a=weight_a, weight_b=weight_b
-        )
+        try:
+            bagua_dual = analyze_bagua_dual(
+                meta.birth_date, meta.user_gender,
+                meta.cohabitant_birth_date, meta.cohabitant_gender,
+                meta.building_facing,
+                weight_a=weight_a, weight_b=weight_b
+            )
+        except Exception as e:
+            logger.warning("Bagua dual analysis failed: %s", e)
+            bagua_dual = {"comparison_table": None}
 
         # 合併分數：宅客觀分不變，人主觀分加權
         merged = dict(result_a)  # 複製A的結果作為基礎
 
-        # 宅客觀分（不變）
-        # 人主觀分：八字、八宅、目標
-        bazi_merged = round(result_a["score_breakdown"]["八字"] * weight_a + result_b["score_breakdown"]["八字"] * weight_b, 1)
-        bagua_merged = round(result_a["score_breakdown"]["八宅"] * weight_a + result_b["score_breakdown"]["八宅"] * weight_b, 1)
-        goal_merged = round(result_a["score_breakdown"]["目標"] * weight_a + result_b["score_breakdown"]["目標"] * weight_b, 1)
+        # v3.6.5: 安全訪問 score_breakdown，避免 KeyError
+        sb_a = result_a.get("score_breakdown", {})
+        sb_b = result_b.get("score_breakdown", {})
+        
+        # 人主觀分：八字、八宅、目標（使用 .get() 安全訪問）
+        bazi_merged = round(
+            sb_a.get("八字", 0) * weight_a + sb_b.get("八字", 0) * weight_b, 1
+        )
+        bagua_merged = round(
+            sb_a.get("八宅", 0) * weight_a + sb_b.get("八宅", 0) * weight_b, 1
+        )
+        goal_merged = round(
+            sb_a.get("目標", 0) * weight_a + sb_b.get("目標", 0) * weight_b, 1
+        )
 
         merged["score_breakdown"]["八字"] = bazi_merged
         merged["score_breakdown"]["八宅"] = bagua_merged
@@ -595,11 +631,13 @@ def run_single_match(meta: RequestMeta, district: str = None):
         else: merged["rating"] = "☆☆☆☆☆ 極低分區間（需專業師傅確認）"
 
         # 更新理由
+        rationale_a = result_a.get("ai_rationale", "")
+        rationale_b = result_b.get("ai_rationale", "")
         merged["ai_rationale"] = (
             f"【雙人模式】A({meta.user_gender},{meta.birth_date})權重{weight_a:.0%}，"
             f"B({meta.cohabitant_gender},{meta.cohabitant_birth_date})權重{weight_b:.0%}。\n"
-            f"{result_a['ai_rationale']}\n"
-            f"{result_b['ai_rationale']}"
+            f"{rationale_a}\n"
+            f"{rationale_b}"
         )
 
         # 合併八字信息
@@ -616,7 +654,9 @@ def run_single_match(meta: RequestMeta, district: str = None):
 
         return merged
     else:
-        # 單人模式
+        # 單人模式（或同住人資料不完整自動回退）
+        if meta.cohabitant_enabled and not partner_data_complete:
+            logger.info("Partner data incomplete, falling back to single mode")
         return _run_single_person_match(
             birth_date=meta.birth_date, gender=meta.user_gender,
             birth_time=meta.birth_time, user_job=meta.user_job,
