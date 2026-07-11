@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.6.1"
+VERSION = "3.6.3"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
@@ -96,7 +96,7 @@ from data.fxti_relationship import analyze_relationship
 app = FastAPI(
     title="AI風水樓盤匹配系統",
     description="v3.6 - 24山向飛星表 + 八宅遊年 + 納甲樓層 + 羅盤工具 + 風水集成層 + 數據庫適配",
-    version="3.6.1"
+    version="3.6.3"
 )
 
 app.add_middleware(
