@@ -13,7 +13,13 @@ import os
 from pathlib import Path
 from typing import Optional, Tuple
 
-import numpy as np
+# numpy 為可選依賴，若未安裝則回退到簡化模型
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
 
 # rasterio 為可選依賴，若未安裝則回退到簡化模型
 try:
@@ -28,7 +34,6 @@ DEM_PATH = Path(__file__).parent / "dem" / "hong_kong_dem.tif"
 
 # 全局 DEM 數據集（懶加載）
 _dem_dataset = None
-
 
 def _get_dem_dataset():
     """懶加載 DEM 數據集"""
