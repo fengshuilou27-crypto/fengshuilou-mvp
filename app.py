@@ -153,6 +153,7 @@ class RequestMeta(BaseModel):
     detected_shas: Optional[List[str]] = Field(default=[], description="已知煞氣")
     estate_name: Optional[str] = Field(None, description="屋苑名稱（用於GIS風水分析）")
     property_features: Optional[dict] = Field(default=None, description="物業特徵：海景/山景/裝修/交通等")
+    room_layout: Optional[dict] = Field(default=None, description="房間方位佈局：{\"大門\":\"南\",\"臥室\":\"東\",\"廚房\":\"北\",\"廁所\":\"西\"}")
 
 
 class EvaluateRequest(BaseModel):
@@ -390,7 +391,7 @@ def _parse_goals(goals):
     return []
 
 
-def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None, property_features=None, estate_name=None):
+def _run_single_person_match(birth_date, gender, birth_time, user_job, building_year, building_facing, floor_number, goals, detected_shas, north_has_water, south_has_mountain, eval_year=2026, address=None, property_features=None, estate_name=None, room_layout=None):
     """單人匹配計算"""
     # 1. 飛星分析
     flying_star_result = analyze_flying_star(
@@ -496,7 +497,8 @@ def _run_single_person_match(birth_date, gender, birth_time, user_job, building_
             gender=gender,
             floor_number=floor_number,
             building_facing=building_facing,
-            building_year=building_year
+            building_year=building_year,
+            room_layout=room_layout
         )
         match_result["fengshui_extended"] = extended
         
@@ -538,7 +540,8 @@ def run_single_match(meta: RequestMeta, district: str = None):
             eval_year=meta.eval_year,
             address=meta.address,
             property_features=meta.property_features,
-            estate_name=meta.estate_name
+            estate_name=meta.estate_name,
+            room_layout=meta.room_layout
         )
 
         result_b = _run_single_person_match(
@@ -552,7 +555,8 @@ def run_single_match(meta: RequestMeta, district: str = None):
             eval_year=meta.eval_year,
             address=meta.address,
             property_features=meta.property_features,
-            estate_name=meta.estate_name
+            estate_name=meta.estate_name,
+            room_layout=meta.room_layout
         )
 
         # 八宅雙人分析（專門用於對照表）
@@ -623,7 +627,8 @@ def run_single_match(meta: RequestMeta, district: str = None):
             eval_year=meta.eval_year,
             address=meta.address,
             property_features=meta.property_features,
-            estate_name=meta.estate_name
+            estate_name=meta.estate_name,
+            room_layout=meta.room_layout
         )
 
 

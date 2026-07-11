@@ -188,7 +188,8 @@ def load_estates_unified_from_db():
             SELECT name, facing, district, building_year, price_range,
                    transport_rating, amenities_score,
                    has_sea_view, has_mountain_view, school_net,
-                   developer, management, property_type, source_count
+                   developer, management, property_type, source_count,
+                   floor_number, room_layout
             FROM estates_unified
             ORDER BY name;
         """)

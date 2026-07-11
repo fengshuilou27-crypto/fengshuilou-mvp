@@ -24,7 +24,8 @@ def get_extended_fengshui(
     gender: str,
     floor_number: int = None,
     building_facing: str = None,
-    building_year: int = None
+    building_year: int = None,
+    room_layout: dict = None
 ) -> Dict:
     """
     獲取擴展風水分析（八宅 + 納甲 + 羅盤）
@@ -35,6 +36,7 @@ def get_extended_fengshui(
         floor_number: 樓層號（可選）
         building_facing: 坐向（可選，如 "子"）
         building_year: 建築年份（可選，用於羅盤三元判斷）
+        room_layout: 房間方位佈局（可選，如 {"大門":"南","臥室":"東"}）
     
     Returns:
         {
@@ -51,6 +53,7 @@ def get_extended_fengshui(
         "bazhai": None,
         "najia": None,
         "compass": None,
+        "room_layout": room_layout,
         "fengshui_bonus": 0.0,
         "bonus_rationale": ""
     }
@@ -82,8 +85,8 @@ def get_extended_fengshui(
                 bonus += 2.0
                 rationale_parts.append(f"八宅：命宅匹配（{bazhai['ming_gua']['name']}配{bazhai['zhai_gua']['name']}），+2分")
             else:
-                bonus += 0.5
-                rationale_parts.append(f"八宅：命宅不配（{bazhai['ming_gua']['name']}配{bazhai['zhai_gua']['name']}），+0.5分")
+                bonus += 0.0
+                rationale_parts.append(f"八宅：命宅不配（{bazhai['ming_gua']['name']}配{bazhai['zhai_gua']['name']}），+0分")
             
             result["enabled"] = True
     except Exception as e:
@@ -153,8 +156,8 @@ def get_extended_fengshui(
                         bonus += 1.5
                         rationale_parts.append(f"羅盤：山向{mountain}對{facing}為有效配對，+1.5分")
                     else:
-                        bonus += 0.5
-                        rationale_parts.append(f"羅盤：山向{mountain}對{facing}配對異常，+0.5分")
+                        bonus += 0.0
+                        rationale_parts.append(f"羅盤：山向{mountain}對{facing}配對異常，+0分")
                     
                     result["enabled"] = True
         except Exception as e:
