@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>風水樓 - 飛星盤可視化</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Serif TC', 'Microsoft JhengHei', serif;
+            background: #f5f0e8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #c9a961;
+        }
+        
+        .btn-primary {
+            background: #c9a961;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .btn-primary:hover {
+            background: #b8984f;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Year Selector */
+        .year-selector {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .year-btn {
+            padding: 8px 16px;
+            border: 2px solid #c9a961;
+            background: white;
+            color: #c9a961;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .year-btn:hover,
+        .year-btn.active {
+            background: #c9a961;
+            color: white;
+        }
+        
+        /* Info Panel */
+        .info-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            padding: 10px;
+            background: #f8f6f1;
+            border-radius: 8px;
+        }
+        
+        .info-item .label {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+        }
+        
+        .info-item .value {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* 9-Palace Grid */
+        .palace-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+        
+        .palace {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .palace:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .palace::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .palace.auspicious::before { background: #27ae60; }
+        .palace.inauspicious::before { background: #e74c3c; }
+        .palace.neutral::before { background: #95a5a6; }
+        .palace.yun-star::before { background: #f39c12; }
+        
+        .palace-direction {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .palace-stars {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .star {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+            position: relative;
+        }
+
+        .star.mountain { background: #3498db; }
+        .star.facing { background: #e67e22; }
+        .star.annual { background: #9b59b6; }
+        
+        .star-label {
+            position: absolute;
+            bottom: -14px;
+            font-size: 0.65rem;
+            color: #7f8c8d;
+            white-space: nowrap;
+        }
+        
+        .palace-desc {
+            font-size: 0.75rem;
+            color: #555;
+            text-align: center;
+            min-height: 30px;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.mountain { background: #3498db; }
+        .legend-dot.facing { background: #e67e22; }
+        .legend-dot.annual { background: #9b59b6; }
+        .legend-dot.auspicious { background: #27ae60; }
+        .legend-dot.inauspicious { background: #e74c3c; }
+        .legend-dot.yun { background: #f39c12; }
+        
+        /* Advice Panel */
+        .advice-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .advice-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .advice-list {
+            list-style: none;
+        }
+        
+        .advice-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .advice-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .advice-list .good { color: #27ae60; }
+        .advice-list .bad { color: #e74c3c; }
+        .advice-list .warn { color: #f39c12; }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #c9a961;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Error */
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 600px) {
+            .palace-grid {
+                gap: 5px;
+            }
+            .palace {
+                padding: 8px;
+            }
+            .star {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 玄空飛星盤可視化</h1>
+        <p class="subtitle">年度流年飛星與宅運盤疊加分析</p>
+        
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>建築年份</label>
+                    <input type="number" id="buildingYear" value="2004" min="1900" max="2100">
+                </div>
+                <div class="form-group">
+                    <label>坐向</label>
+                    <select id="buildingFacing">
+                        <option value="子山午向">子山午向（坐北向南）</option>
+                        <option value="午山子向">午山子向（坐南向北）</option>
+                        <option value="卯山酉向">卯山酉向（坐東向西）</option>
+                        <option value="酉山卯向">酉山卯向（坐西向東）</option>
+                        <option value="乾山巽向">乾山巽向（坐西北向東南）</option>
+                        <option value="巽山乾向">巽山乾向（坐東南向西北）</option>
+                        <option value="艮山坤向">艮山坤向（坐東北向西南）</option>
+                        <option value="坤山艮向">坤山艮向（坐西南向東北）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>目標年份</label>
+                    <input type="number" id="targetYear" value="2026" min="1900" max="2100">
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button class="btn-primary" id="analyzeBtn" onclick="analyze()">分析飛星盤</button>
+            </div>
+        </div>
+        
+        <!-- Year Quick Selector -->
+        <div class="year-selector" id="yearSelector" style="display: none;">
+            <button class="year-btn" onclick="selectYear(2024)">2024</button>
+            <button class="year-btn" onclick="selectYear(2025)">2025</button>
+            <button class="year-btn active" onclick="selectYear(2026)">2026</button>
+            <button class="year-btn" onclick="selectYear(2027)">2027</button>
+            <button class="year-btn" onclick="selectYear(2028)">2028</button>
+            <button class="year-btn" onclick="selectYear(2029)">2029</button>
+            <button class="year-btn" onclick="selectYear(2030)">2030</button>
+        </div>
+        
+        <!-- Info Panel -->
+        <div class="info-panel" id="infoPanel" style="display: none;">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">建築年份</div>
+                    <div class="value" id="infoBuildingYear">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">坐向</div>
+                    <div class="value" id="infoFacing">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">目標年份</div>
+                    <div class="value" id="infoTargetYear">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">流年干支</div>
+                    <div class="value" id="infoGanzhi">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">宅運格局</div>
+                    <div class="value" id="infoPanType">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">調整後分數</div>
+                    <div class="value" id="infoScore">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend" id="legend" style="display: none;">
+            <div class="legend-item">
+                <div class="legend-dot mountain"></div>
+                <span>山星</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot facing"></div>
+                <span>向星</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot annual"></div>
+                <span>流年星</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot auspicious"></div>
+                <span>吉位</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot inauspicious"></div>
+                <span>凶位</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot yun"></div>
+                <span>當運星</span>
+            </div>
+        </div>
+        
+        <!-- 9-Palace Grid -->
+        <div class="palace-grid" id="palaceGrid" style="display: none;">
+            <!-- Generated by JS -->
+        </div>
+        
+        <!-- Advice Panel -->
+        <div class="advice-panel" id="advicePanel" style="display: none;">
+            <h3>📋 年度風水建議</h3>
+            <ul class="advice-list" id="adviceList">
+                <!-- Generated by JS -->
+            </ul>
+        </div>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>正在計算飛星盤...</p>
+        </div>
+        
+        <!-- Error -->
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Direction mapping
+        const DIRECTION_MAP = {
+            'northwest': '西北',
+            'north': '北',
+            'northeast': '東北',
+            'west': '西',
+            'center': '中',
+            'east': '東',
+            'southwest': '西南',
+            'south': '南',
+            'southeast': '東南'
+        };
+        
+        // 9-palace order for rendering (top to bottom, left to right)
+        const PALACE_ORDER = [
+            'southeast', 'south', 'southwest',
+            'east', 'center', 'west',
+            'northeast', 'north', 'northwest'
+        ];
+        
+        let currentData = null;
+        
+        async function analyze() {
+            const buildingYear = document.getElementById('buildingYear').value;
+            const buildingFacing = document.getElementById('buildingFacing').value;
+            const targetYear = document.getElementById('targetYear').value;
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('palaceGrid').style.display = 'none';
+            document.getElementById('infoPanel').style.display = 'none';
+            document.getElementById('advicePanel').style.display = 'none';
+            document.getElementById('legend').style.display = 'none';
+            document.getElementById('yearSelector').style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/annual-flying-star', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        building_year: parseInt(buildingYear),
+                        building_facing: buildingFacing,
+                        target_year: parseInt(targetYear)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    currentData = data;
+                    renderData(data);
+                    document.getElementById('yearSelector').style.display = 'flex';
+                    document.getElementById('legend').style.display = 'flex';
+                } else {
+                    showError(data.error || '分析失敗');
+                }
+            } catch (err) {
+                showError('網絡錯誤: ' + err.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function renderData(data) {
+            // Update info panel
+            document.getElementById('infoBuildingYear').textContent = data.house_chart ? 
+                (data.building_year || '-') : '-';
+            document.getElementById('infoFacing').textContent = data.building_facing || '-';
+            document.getElementById('infoTargetYear').textContent = data.target_year || '-';
+            document.getElementById('infoGanzhi').textContent = data.year_ganzhi || '-';
+            document.getElementById('infoPanType').textContent = data.house_chart ? 
+                data.house_chart.pan_type : '-';
+            document.getElementById('infoScore').textContent = data.adjusted_score !== undefined ? 
+                data.adjusted_score + '/40' : '-';
+            document.getElementById('infoPanel').style.display = 'block';
+            
+            // Render palace grid
+            const grid = document.getElementById('palaceGrid');
+            grid.innerHTML = '';
+            
+            const mountainStars = data.mountain_stars || {};
+            const facingStars = data.facing_stars || {};
+            const annualStars = data.annual_pan ? data.annual_pan.stars : {};
+            const effects = data.overlay_analysis ? data.overlay_analysis.annual_effects : [];
+            
+            PALACE_ORDER.forEach(dir => {
+                const mStar = mountainStars[dir] || '-';
+                const fStar = facingStars[dir] || '-';
+                const aStar = annualStars[dir] || '-';
+                
+                // Find effect for this direction
+                const effect = effects.find(e => e.direction === dir);
+                const level = effect ? effect.level : '平';
+                const desc = effect ? effect.desc : '';
+                
+                // Determine palace class
+                let palaceClass = 'neutral';
+                if (level === '大旺' || level === '中吉') palaceClass = 'auspicious';
+                else if (level === '大凶' || level === '凶') palaceClass = 'inauspicious';
+                
+                // Check if annual star is yun star
+                const yun = data.yun || '八運';
+                const yunNum = parseInt(yun.replace('運', '')) || 8;
+                if (aStar === yunNum) palaceClass = 'yun-star';
+                
+                const palace = document.createElement('div');
+                palace.className = `palace ${palaceClass}`;
+                palace.innerHTML = `
+                    <div class="palace-direction">${DIRECTION_MAP[dir]}</div>
+                    <div class="palace-stars">
+                        <div class="star mountain">
+                            ${mStar}
+                            <span class="star-label">山</span>
+                        </div>
+                        <div class="star facing">
+                            ${fStar}
+                            <span class="star-label">向</span>
+                        </div>
+                        <div class="star annual">
+                            ${aStar}
+                            <span class="star-label">年</span>
+                        </div>
+                    </div>
+                    <div class="palace-desc">${desc}</div>
+                `;
+                grid.appendChild(palace);
+            });
+            
+            grid.style.display = 'grid';
+            
+            // Render advice
+            const adviceList = document.getElementById('adviceList');
+            adviceList.innerHTML = '';
+            
+            const advices = data.overlay_analysis ? 
+                data.overlay_analysis.summary.annual_advice : [];
+            
+            if (advices && advices.length > 0) {
+                advices.forEach(advice => {
+                    const li = document.createElement('li');
+                    if (advice.includes('吉') || advice.includes('旺')) {
+                        li.className = 'good';
+                    } else if (advice.includes('凶') || advice.includes('煞')) {
+                        li.className = 'bad';
+                    } else if (advice.includes('注意') || advice.includes('避免')) {
+                        li.className = 'warn';
+                    }
+                    li.textContent = advice;
+                    adviceList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = '本年整體運勢平穩，無特別吉凶方位。';
+                adviceList.appendChild(li);
+            }
+            
+            document.getElementById('advicePanel').style.display = 'block';
+        }
+        
+        async function selectYear(year) {
+            document.getElementById('targetYear').value = year;
+            
+            // Update active state
+            document.querySelectorAll('.year-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === String(year)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            await analyze();
+        }
+        
+        function showError(msg) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+        
+        // Initial analysis on load
+        window.onload = function() {
+            analyze();
+        };
+    </script>
+</body>
+</html>
