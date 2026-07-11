@@ -22,9 +22,13 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center shadow-glow">
-              <span className="text-brand-900 font-display font-bold text-lg">風</span>
-            </div>
+            <img
+              src="/logo.svg"
+              alt="風水樓"
+              className="w-10 h-10 rounded-lg shadow-glow"
+              width={40}
+              height={40}
+            />
             <div className="flex flex-col">
               <span className="text-white font-display font-bold text-lg leading-tight">風水樓</span>
               <span className="text-brand-200 text-[10px] tracking-widest uppercase hidden sm:block">FengShuiLou</span>

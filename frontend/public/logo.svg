@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3c2a"/>
+      <stop offset="100%" style="stop-color:#2d6a4f"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a961"/>
+      <stop offset="100%" style="stop-color:#e7b74f"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景圓角方形 -->
+  <rect x="5" y="5" width="110" height="110" rx="28" fill="url(#brandGrad)" stroke="url(#goldGrad)" stroke-width="2.5"/>
+  
+  <!-- 外圈裝飾 -->
+  <circle cx="60" cy="60" r="44" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="60" cy="60" r="36" fill="none" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.25"/>
+  
+  <!-- 風字主體 -->
+  <text x="60" y="76" font-family="'Noto Serif TC', 'SimSun', serif" font-size="52" font-weight="700" fill="url(#goldGrad)" text-anchor="middle">風</text>
+  
+  <!-- 小裝飾點 -->
+  <circle cx="60" cy="28" r="3" fill="url(#goldGrad)" opacity="0.6"/>
+  <circle cx="28" cy="60" r="2" fill="url(#goldGrad)" opacity="0.3"/>
+  <circle cx="92" cy="60" r="2" fill="url(#goldGrad)" opacity="0.3"/>
+</svg>

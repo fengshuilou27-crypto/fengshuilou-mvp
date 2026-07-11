@@ -4,6 +4,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { DisclaimerProvider } from '@/components/providers/DisclaimerProvider';
+import { LoadingScreen } from '@/components/ui/LoadingScreen';
 
 const notoSans = Noto_Sans_TC({
   subsets: ['latin'],
@@ -48,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="zh-HK" className={`${notoSans.variable} ${notoSerif.variable}`}>
       <body className="font-body bg-paper text-ink min-h-screen antialiased">
+        <LoadingScreen />
         <DisclaimerProvider>
           <Header />
           <main>{children}</main>
