@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\LENOVO\Documents\kimi\FSL workspace\mvp_code\test_v33.py", line 9, in <module>
-    print(f"\u516b\u904b\u4e11\u5c71\u672a\u5411 confidence: {result.get('confidence')} (should be 0.3)")
-    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-5: character maps to <undefined>
