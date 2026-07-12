@@ -7,41 +7,41 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;  min-height: 100vh; padding: 20px; color: #fff; }
+body { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;  min-height: 100vh; padding: 20px; color: #fff; }
 .container { max-width: 900px; margin: 0 auto;  border-radius: 16px; padding: 32px;  }
 h1 { text-align: center; color: #fff; margin-bottom: 8px; font-size: 28px; }
 .subtitle { text-align: center; color: #808080; margin-bottom: 24px; font-size: 14px; }
-.module-badge { display: inline-block; background: #E50914; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+.module-badge { display: inline-block; background: #C9A962; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
 .form-group { margin-bottom: 16px; }
 label { display: block; margin-bottom: 6px; color: #bcbcbc; font-weight: 500; font-size: 14px; }
-input, select { width: 100%; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 15px; }
-input:focus, select:focus { outline: none; border-color: #E50914; }
-.btn { width: 100%; padding: 14px; background: #E50914; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+input, select { width: 100%; padding: 12px 16px; border: 1px solid rgba(201,169,98,0.08); border-radius: 8px; font-size: 15px; }
+input:focus, select:focus { outline: none; border-color: #C9A962; }
+.btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A962, #A08438); color: #0A0A0F; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(229,9,20,0.4); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-secondary { background: rgba(255,255,255,0.1); color: #bcbcbc; }
-.btn-secondary:hover { background: #2D2D2D; }
-.section-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #E50914; }
+.btn-secondary:hover { background: #1E1E28; }
+.section-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #C9A962; }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
 .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 @media (max-width: 600px) { .three-col { grid-template-columns: 1fr; } }
-.estate-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
-.estate-card:hover { border-color: #E50914; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
+.estate-card { border: 1px solid rgba(201,169,98,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+.estate-card:hover { border-color: #C9A962; box-shadow: 0 4px 12px rgba(102,126,234,0.15); }
 .estate-name { font-size: 18px; font-weight: 600; color: #fff; }
 .estate-meta { font-size: 13px; color: #808080; margin-top: 4px; }
 .estate-score { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 600; margin-top: 8px; }
 .score-high { background: rgba(70,211,105,0.15); color: #46D369; }
 .score-mid { background: rgba(212,168,67,0.15); color: #D4A843; }
-.score-low { background: rgba(229,9,20,0.15); color: #E50914; }
+.score-low { background: rgba(229,9,20,0.15); color: #C9A962; }
 .loading { text-align: center; padding: 40px; color: #808080; }
-.spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #E50914; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+.spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #C9A962; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.result-section { margin-top: 24px; padding: 24px; background: #1F1F1F; border-radius: 12px; }
+.result-section { margin-top: 24px; padding: 24px; background: #1E1E28; border-radius: 12px; }
 #step1 { display: block; }
 #step2 { display: none; }
 #step3 { display: none; }
-.filter-section { background: #1F1F1F; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+.filter-section { background: #1E1E28; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
 .checkbox-group { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
 .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 14px; }
 .checkbox-item input { width: auto; }
@@ -52,21 +52,24 @@ input:focus, select:focus { outline: none; border-color: #E50914; }
 .goal-item { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
 .goal-item select { flex: 1; }
 .goal-item .priority-select { width: 100px; }
-.goal-item .remove-btn { background: rgba(229,9,20,0.15); color: #E50914; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
-.coming-soon-badge { display: inline-block; background: #2D2D2D; color: #808080; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+.goal-item .remove-btn { background: rgba(229,9,20,0.15); color: #C9A962; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; }
+.coming-soon-badge { display: inline-block; background: #1E1E28; color: #808080; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
 .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
 .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: transform 0.2s; }
 .module-card:hover { transform: translateY(-3px); }
 @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
 </style>
-    <link rel="stylesheet" href="css/netflix-theme.css">
+    <link rel="stylesheet" href="css/luxury-theme.css">
 </head>
 <body>
 <!-- 頂部導航欄 -->
 <nav class="top-nav" id="topNav">
-    <a href="/" class="netflix-logo" title="回到主頁">
-        <div class="logo-icon">風</div>
-        <span class="logo-text">風水<span>樓</span></span>
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">風水<span>樓</span></span>
+            <span class="logo-sub">Feng Shui Lou</span>
+        </div>
     </a>
     <div class="nav-links">
         <a href="index.html">首頁</a>
@@ -647,7 +650,7 @@ function toggleRationale() {
 </script>
 
     <!-- Footer -->
-    <footer style="background: #181818; color: #D4A843; padding: 24px 20px; text-align: center; margin-top: 40px; font-size: 13px;">
+    <footer style="background: #1E1E28; color: #D4A843; padding: 24px 20px; text-align: center; margin-top: 40px; font-size: 13px;">
         <div style="max-width: 1200px; margin: 0 auto;">
             <div style="margin-bottom: 12px;">
                 <a href="/disclaimer" style="color: #D4A843; text-decoration: none; margin: 0 12px;">免責聲明</a>
@@ -672,8 +675,8 @@ function toggleRationale() {
                 <p><strong>使用風險：</strong>使用本服務即表示您了解並接受上述限制。對於因使用本服務而導致的任何損失，我們不承擔法律責任。</p>
             </div>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button onclick="acceptDisclaimer()" style="background: #E50914; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600;">我已了解並同意</button>
-                <a href="/disclaimer" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.08); padding: 12px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; display: inline-block;">查看完整聲明</a>
+                <button onclick="acceptDisclaimer()" style="background: linear-gradient(135deg, #C9A962, #A08438); color: #0A0A0F; border: none; padding: 12px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600;">我已了解並同意</button>
+                <a href="/disclaimer" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(201,169,98,0.08); padding: 12px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; display: inline-block;">查看完整聲明</a>
             </div>
         </div>
     </div>
