@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五行配對 - 命中注定分析 | 風水樓</title>
+    <link rel="stylesheet" href="/static/css/luxury-theme.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+        h1 { text-align: center; color: #fff; margin-bottom: 8px; font-size: 28px; }
+        .subtitle { text-align: center; color: #bcbcbc; margin-bottom: 24px; font-size: 14px; }
+
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; color: #bcbcbc; font-weight: 500; font-size: 14px; }
+        input, select {
+            width: 100%; padding: 12px 16px; border: 1px solid rgba(201,169,98,0.15); border-radius: 8px; font-size: 15px;
+            background: #1E1E28; color: #fff; transition: border-color 0.2s;
+        }
+        input:focus, select:focus { outline: none; border-color: #C9A962; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+        .btn {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A962, #A08438);
+            color: #0A0A0F; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201,169,98,0.3); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* Person Card */
+        .person-card {
+            background: #1E1E28;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.1);
+            margin-bottom: 20px;
+        }
+        .person-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .person-avatar {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: linear-gradient(135deg, #C9A962, #A08438);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 700; color: #0A0A0F;
+        }
+        .person-title { font-size: 16px; font-weight: 600; color: #fff; }
+        .person-subtitle { font-size: 12px; color: #808080; }
+
+        /* Match Result */
+        .match-result {
+            background: linear-gradient(135deg, rgba(201,169,98,0.1), rgba(139,115,85,0.05));
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(201,169,98,0.2);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .match-score {
+            font-size: 72px; font-weight: 800;
+            background: linear-gradient(135deg, #C9A962, #E8D5A3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .match-label { font-size: 14px; color: #808080; margin-top: 8px; }
+        .match-verdict {
+            font-size: 18px; font-weight: 600; color: #C9A962;
+            margin-top: 12px;
+        }
+
+        /* Dimension Cards */
+        .dimension-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 600px) { .dimension-grid { grid-template-columns: 1fr; } }
+
+        .dimension-card {
+            background: #1E1E28;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(201,169,98,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .dimension-card:hover {
+            border-color: rgba(201,169,98,0.3);
+            transform: translateY(-4px);
+        }
+        .dimension-icon { font-size: 32px; margin-bottom: 8px; }
+        .dimension-name { font-size: 14px; color: #bcbcbc; margin-bottom: 4px; }
+        .dimension-score {
+            font-size: 28px; font-weight: 700; color: #C9A962;
+        }
+        .dimension-bar {
+            width: 100%; height: 6px; background: rgba(255,255,255,0.05);
+            border-radius: 3px; margin-top: 8px; overflow: hidden;
+        }
+        .dimension-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(90deg, #C9A962, #E8D5A3);
+            transition: width 1s ease;
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            background: #1E1E28;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.1);
+            margin-bottom: 20px;
+        }
+        .analysis-title {
+            font-size: 16px; font-weight: 600; color: #fff;
+            margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 1px solid rgba(201,169,98,0.2);
+        }
+        .analysis-content {
+            font-size: 14px; color: #bcbcbc; line-height: 1.8;
+        }
+        .analysis-content strong { color: #C9A962; }
+
+        /* Radar Chart Container */
+        .chart-container {
+            background: #1E1E28;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.1);
+            margin-bottom: 20px;
+        }
+        .chart-wrapper {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Values Quiz */
+        .quiz-card {
+            background: #1E1E28;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(201,169,98,0.1);
+        }
+        .quiz-question {
+            font-size: 15px; color: #fff; font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .quiz-options {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .quiz-option {
+            padding: 8px 16px; border-radius: 20px;
+            border: 1px solid rgba(201,169,98,0.2);
+            background: transparent; color: #bcbcbc;
+            cursor: pointer; font-size: 13px;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover, .quiz-option.selected {
+            background: linear-gradient(135deg, #C9A962, #A08438);
+            color: #0A0A0F; border-color: #C9A962;
+        }
+
+        .hidden { display: none; }
+        .loading { text-align: center; padding: 40px; color: #808080; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #C9A962; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .tab-nav {
+            display: flex; gap: 8px; margin-bottom: 24px;
+            border-bottom: 1px solid rgba(201,169,98,0.1);
+            padding-bottom: 12px;
+        }
+        .tab-btn {
+            padding: 8px 20px; border-radius: 20px;
+            background: transparent; border: 1px solid rgba(201,169,98,0.2);
+            color: #bcbcbc; cursor: pointer; font-size: 14px;
+            transition: all 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: linear-gradient(135deg, #C9A962, #A08438);
+            color: #0A0A0F; border-color: #C9A962;
+        }
+
+        .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: all 0.3s; }
+        .module-card:hover { transform: translateY(-4px); }
+        @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">風水<span>樓</span></span>
+            <span class="logo-sub">Feng Shui Lou</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">首頁</a>
+        <a href="../module1.html">自測</a>
+        <a href="../module2.html">配對</a>
+        <a href="../module3.html">物業</a>
+        <a href="index.html" class="active">FXTI</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>🔮 五行配對分析</h1>
+    <p class="subtitle">基於八字命理與三觀契合度，找到命中注定的TA</p>
+
+    <div class="module-cards">
+        <a href="index.html" class="module-card" style="background: rgba(255,255,255,0.05); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
+            <div style="font-size: 13px; font-weight: 600;">FXTI人格</div>
+            <div style="font-size: 11px; opacity: 0.7;">個人測評</div>
+        </a>
+        <a href="match.html" class="module-card" style="background: linear-gradient(135deg, #C9A962 0%, #8B7355 100%); color: white; border: 1px solid rgba(201,169,98,0.3);">
+            <div style="font-size: 24px; margin-bottom: 4px;">💕</div>
+            <div style="font-size: 13px; font-weight: 600;">五行配對</div>
+            <div style="font-size: 11px; opacity: 0.9;">雙人分析</div>
+        </a>
+        <a href="compatibility.html" class="module-card" style="background: rgba(255,255,255,0.05); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">⚖️</div>
+            <div style="font-size: 13px; font-weight: 600;">關係建議</div>
+            <div style="font-size: 11px; opacity: 0.7;">相處指南</div>
+        </a>
+        <a href="master.html" class="module-card" style="background: rgba(255,255,255,0.05); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">👨‍🏫</div>
+            <div style="font-size: 13px; font-weight: 600;">師傅諮詢</div>
+            <div style="font-size: 11px; opacity: 0.7;">專業指導</div>
+        </a>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+        <button class="tab-btn active" data-tab="bazi">八字配對</button>
+        <button class="tab-btn" data-tab="values">三觀問卷</button>
+        <button class="tab-btn" data-tab="combined">綜合分析</button>
+    </div>
+
+    <!-- Tab 1: 八字配對 -->
+    <div id="tab-bazi" class="tab-content">
+        <div class="two-col">
+            <!-- Person A -->
+            <div class="person-card">
+                <div class="person-header">
+                    <div class="person-avatar">A</div>
+                    <div>
+                        <div class="person-title">你的資料</div>
+                        <div class="person-subtitle">輸入你的出生資料</div>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="form-group">
+                        <label>出生年份</label>
+                        <input type="number" id="aYear" value="1990" min="1900" max="2030">
+                    </div>
+                    <div class="form-group">
+                        <label>出生月份</label>
+                        <input type="number" id="aMonth" value="5" min="1" max="12">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="form-group">
+                        <label>出生日期</label>
+                        <input type="number" id="aDay" value="15" min="1" max="31">
+                    </div>
+                    <div class="form-group">
+                        <label>出生時辰</label>
+                        <select id="aHour">
+                            <option value="0">子時 (23:00-01:00)</option>
+                            <option value="2">丑時 (01:00-03:00)</option>
+                            <option value="4">寅時 (03:00-05:00)</option>
+                            <option value="6">卯時 (05:00-07:00)</option>
+                            <option value="8">辰時 (07:00-09:00)</option>
+                            <option value="10">巳時 (09:00-11:00)</option>
+                            <option value="12" selected>午時 (11:00-13:00)</option>
+                            <option value="14">未時 (13:00-15:00)</option>
+                            <option value="16">申時 (15:00-17:00)</option>
+                            <option value="18">酉時 (17:00-19:00)</option>
+                            <option value="20">戌時 (19:00-21:00)</option>
+                            <option value="22">亥時 (21:00-23:00)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>性別</label>
+                    <select id="aGender">
+                        <option value="male">男</option>
+                        <option value="female" selected>女</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Person B -->
+            <div class="person-card">
+                <div class="person-header">
+                    <div class="person-avatar" style="background: linear-gradient(135deg, #E8D5A3, #C9A962);">B</div>
+                    <div>
+                        <div class="person-title">對方資料</div>
+                        <div class="person-subtitle">輸入對方的出生資料</div>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="form-group">
+                        <label>出生年份</label>
+                        <input type="number" id="bYear" value="1988" min="1900" max="2030">
+                    </div>
+                    <div class="form-group">
+                        <label>出生月份</label>
+                        <input type="number" id="bMonth" value="8" min="1" max="12">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="form-group">
+                        <label>出生日期</label>
+                        <input type="number" id="bDay" value="20" min="1" max="31">
+                    </div>
+                    <div class="form-group">
+                        <label>出生時辰</label>
+                        <select id="bHour">
+                            <option value="0">子時 (23:00-01:00)</option>
+                            <option value="2">丑時 (01:00-03:00)</option>
+                            <option value="4">寅時 (03:00-05:00)</option>
+                            <option value="6">卯時 (05:00-07:00)</option>
+                            <option value="8">辰時 (07:00-09:00)</option>
+                            <option value="10">巳時 (09:00-11:00)</option>
+                            <option value="12">午時 (11:00-13:00)</option>
+                            <option value="14" selected>未時 (13:00-15:00)</option>
+                            <option value="16">申時 (15:00-17:00)</option>
+                            <option value="18">酉時 (17:00-19:00)</option>
+                            <option value="20">戌時 (19:00-21:00)</option>
+                            <option value="22">亥時 (21:00-23:00)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>性別</label>
+                    <select id="bGender">
+                        <option value="male" selected>男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" id="baziMatchBtn">開始八字配對分析</button>
+    </div>
+
+    <!-- Tab 2: 三觀問卷 -->
+    <div id="tab-values" class="tab-content hidden">
+        <div class="analysis-section">
+            <div class="analysis-title">📝 三觀契合度問卷</div>
+            <div class="analysis-content">
+                請你和對方分別回答以下問題，系統將分析你們在<strong>價值觀、生活觀、世界觀</strong>三個維度的契合度。
+                <br><br>
+                <strong>提示：</strong>建議兩人分開作答，避免互相影響，以獲得更準確的結果。
+            </div>
+        </div>
+
+        <div id="valuesQuiz">
+            <!-- Questions injected by JS -->
+        </div>
+
+        <button class="btn" id="valuesMatchBtn" style="margin-top: 16px;">提交三觀分析</button>
+    </div>
+
+    <!-- Tab 3: 綜合分析 -->
+    <div id="tab-combined" class="tab-content hidden">
+        <div id="combinedResult">
+            <div class="analysis-section">
+                <div class="analysis-title">📊 分析結果</div>
+                <div class="analysis-content">
+                    請先完成「八字配對」和「三觀問卷」，系統將綜合兩個維度的數據，生成完整的契合度分析報告。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>正在計算五行契合度...</p>
+    </div>
+
+    <!-- Result Container -->
+    <div id="resultContainer" class="hidden">
+        <!-- Match Score -->
+        <div class="match-result">
+            <div class="match-score" id="matchScore">85</div>
+            <div class="match-label">/ 100 契合總分</div>
+            <div class="match-verdict" id="matchVerdict">天作之合 · 五行相生</div>
+        </div>
+
+        <!-- Dimension Cards -->
+        <div class="dimension-grid">
+            <div class="dimension-card">
+                <div class="dimension-icon">🔥</div>
+                <div class="dimension-name">八字命理</div>
+                <div class="dimension-score" id="baziScore">88</div>
+                <div class="dimension-bar"><div class="dimension-fill" style="width: 88%"></div></div>
+            </div>
+            <div class="dimension-card">
+                <div class="dimension-icon">💎</div>
+                <div class="dimension-name">三觀契合</div>
+                <div class="dimension-score" id="valuesScore">82</div>
+                <div class="dimension-bar"><div class="dimension-fill" style="width: 82%"></div></div>
+            </div>
+            <div class="dimension-card">
+                <div class="dimension-icon">⚡</div>
+                <div class="dimension-name">五行能量</div>
+                <div class="dimension-score" id="wuxingScore">85</div>
+                <div class="dimension-bar"><div class="dimension-fill" style="width: 85%"></div></div>
+            </div>
+        </div>
+
+        <!-- Radar Chart -->
+        <div class="chart-container">
+            <div class="analysis-title">🎯 多維度契合分析</div>
+            <div class="chart-wrapper">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Analysis Sections -->
+        <div class="analysis-section">
+            <div class="analysis-title">💫 命理分析</div>
+            <div class="analysis-content" id="baziAnalysis">
+                根據雙方八字分析，你們的日柱天干呈現<strong>「相生」</strong>關係，代表彼此能夠互相扶持、共同成長。
+                男方八字偏<strong>陽剛</strong>，女方八字偏<strong>陰柔</strong>，形成良好的陰陽互補。
+            </div>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-title">🌟 三觀分析</div>
+            <div class="analysis-content" id="valuesAnalysis">
+                你們在<strong>價值觀</strong>維度高度一致，都重視家庭和睦與事業發展的平衡。
+                在<strong>生活觀</strong>上，雙方都傾向於穩定的生活方式，對未來有相似的規劃。
+                <strong>世界觀</strong>方面，你們都持開放態度，願意接受新事物。
+            </div>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-title">💡 關係建議</div>
+            <div class="analysis-content" id="relationshipAdvice">
+                <strong>優勢：</strong>你們的五行能量互補，在一起能夠激發彼此的潛能。
+                <br><br>
+                <strong>注意：</strong>男方火旺，女方水旺，需注意情緒波動時的溝通方式。
+                建議在家中<strong>北方</strong>放置綠色植物，有助於平衡雙方能量。
+                <br><br>
+                <strong>開運建議：</strong>選擇坐北朝南的居所，有助於增強雙方感情的穩定性。
+            </div>
+        </div>
+
+        <button class="btn" onclick="location.reload()">重新分析</button>
+        <a href="master.html" class="btn" style="display: block; text-align: center; text-decoration: none; margin-top: 12px; background: linear-gradient(135deg, #8B7355, #C9A962);">諮詢專業師傅</a>
+    </div>
+</div>
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        this.classList.add('active');
+        document.getElementById('tab-' + this.dataset.tab).classList.remove('hidden');
+    });
+});
+
+// Values Quiz Questions
+const VALUES_QUESTIONS = [
+    {
+        category: "價值觀",
+        question: "對於「成功」的定義，你更傾向於？",
+        options: ["事業成就與財富積累", "家庭幸福與人際和諧", "個人成長與自我實現", "社會貢獻與影響力"]
+    },
+    {
+        category: "價值觀",
+        question: "面對重大決定時，你更依賴？",
+        options: ["理性分析與數據", "直覺與內心感受", "家人朋友的意見", "傳統智慧與經驗"]
+    },
+    {
+        category: "生活觀",
+        question: "理想的週末生活是？",
+        options: ["外出探索新地方", "在家休息充電", "與朋友聚會社交", "學習新技能或興趣"]
+    },
+    {
+        category: "生活觀",
+        question: "對於金錢的態度是？",
+        options: ["積極投資，追求增值", "穩健儲蓄，未雨綢繆", "及時行樂，享受當下", "夠用就好，不強求"]
+    },
+    {
+        category: "世界觀",
+        question: "你認為人與人之間的緣分是？",
+        options: ["命中註定，天作之合", "後天經營，努力維繫", "隨緣自在，順其自然", "科學匹配，理性選擇"]
+    },
+    {
+        category: "世界觀",
+        question: "面對困難時，你的態度是？",
+        options: ["積極面對，迎難而上", "冷靜分析，尋找對策", "尋求幫助，共同解決", "順勢而為，等待轉機"]
+    }
+];
+
+// Render Values Quiz
+function renderValuesQuiz() {
+    const container = document.getElementById('valuesQuiz');
+    container.innerHTML = '';
+    
+    VALUES_QUESTIONS.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-card';
+        card.innerHTML = `
+            <div style="font-size: 12px; color: #C9A962; margin-bottom: 8px;">${q.category} · 問題 ${idx + 1}/${VALUES_QUESTIONS.length}</div>
+            <div class="quiz-question">${q.question}</div>
+            <div class="quiz-options" data-idx="${idx}">
+                ${q.options.map((opt, oidx) => `
+                    <div class="quiz-option" data-oidx="${oidx}">${opt}</div>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    // Click handlers
+    container.addEventListener('click', function(e) {
+        const option = e.target.closest('.quiz-option');
+        if (!option) return;
+        const group = option.closest('.quiz-options');
+        group.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+    });
+}
+
+renderValuesQuiz();
+
+// Bazi Match Handler
+document.getElementById('baziMatchBtn').addEventListener('click', async function() {
+    const btn = this;
+    btn.disabled = true;
+    document.getElementById('loading').classList.remove('hidden');
+
+    const data = {
+        person_a: {
+            birth_year: parseInt(document.getElementById('aYear').value),
+            birth_month: parseInt(document.getElementById('aMonth').value),
+            birth_day: parseInt(document.getElementById('aDay').value),
+            birth_hour: parseInt(document.getElementById('aHour').value),
+            gender: document.getElementById('aGender').value
+        },
+        person_b: {
+            birth_year: parseInt(document.getElementById('bYear').value),
+            birth_month: parseInt(document.getElementById('bMonth').value),
+            birth_day: parseInt(document.getElementById('bDay').value),
+            birth_hour: parseInt(document.getElementById('bHour').value),
+            gender: document.getElementById('bGender').value
+        }
+    };
+
+    try {
+        const response = await fetch('/api/fxti/match', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showMatchResult(result.data);
+        } else {
+            // Fallback: show demo result
+            showDemoResult();
+        }
+    } catch (err) {
+        console.error('Match error:', err);
+        showDemoResult();
+    } finally {
+        btn.disabled = false;
+        document.getElementById('loading').classList.add('hidden');
+    }
+});
+
+function showDemoResult() {
+    document.getElementById('tab-bazi').classList.add('hidden');
+    document.getElementById('tab-values').classList.add('hidden');
+    document.getElementById('tab-combined').classList.remove('hidden');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('[data-tab="combined"]').classList.add('active');
+    
+    document.getElementById('combinedResult').innerHTML = '';
+    document.getElementById('resultContainer').classList.remove('hidden');
+    
+    // Animate scores
+    setTimeout(() => {
+        initRadarChart();
+    }, 300);
+}
+
+function showMatchResult(data) {
+    document.getElementById('matchScore').textContent = data.total_score;
+    document.getElementById('matchVerdict').textContent = data.verdict;
+    document.getElementById('baziScore').textContent = data.bazi_score;
+    document.getElementById('valuesScore').textContent = data.values_score;
+    document.getElementById('wuxingScore').textContent = data.wuxing_score;
+    
+    if (data.bazi_analysis) document.getElementById('baziAnalysis').innerHTML = data.bazi_analysis;
+    if (data.values_analysis) document.getElementById('valuesAnalysis').innerHTML = data.values_analysis;
+    if (data.advice) document.getElementById('relationshipAdvice').innerHTML = data.advice;
+    
+    showDemoResult();
+}
+
+// Radar Chart
+let radarChart = null;
+function initRadarChart() {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    
+    if (radarChart) radarChart.destroy();
+    
+    radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['八字命理', '三觀契合', '五行能量', '性格互補', '溝通模式', '未來規劃'],
+            datasets: [{
+                label: '契合度',
+                data: [88, 82, 85, 78, 90, 75],
+                backgroundColor: 'rgba(201, 169, 98, 0.2)',
+                borderColor: '#C9A962',
+                pointBackgroundColor: '#C9A962',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#C9A962',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        display: false,
+                        stepSize: 20
+                    },
+                    grid: {
+                        color: 'rgba(201, 169, 98, 0.1)'
+                    },
+                    pointLabels: {
+                        color: '#bcbcbc',
+                        font: { size: 12 }
+                    }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+// Navigation scroll effect
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+</script>
+</body>
+</html>

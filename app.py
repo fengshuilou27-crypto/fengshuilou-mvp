@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.8.2"
+VERSION = "3.8.3"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
@@ -749,6 +749,21 @@ def fxti_result_html():
 @app.get("/fxti/share.html")
 def fxti_share_html():
     return FileResponse("static/fxti/share.html")
+
+
+@app.get("/fxti/match.html")
+def fxti_match_html():
+    return FileResponse("static/fxti/match.html")
+
+
+@app.get("/fxti/compatibility.html")
+def fxti_compatibility_html():
+    return FileResponse("static/fxti/compatibility.html")
+
+
+@app.get("/fxti/master.html")
+def fxti_master_html():
+    return FileResponse("static/fxti/master.html")
 
 
 @app.get("/disclaimer")
@@ -1497,6 +1512,107 @@ def fxti_relationship(request: FXTIRelationshipRequest):
         "status": "success",
         "data": report
     }
+
+
+# FXTI 五行配對 API（支持八字配對 + 三觀問卷）
+class FXTIMatchRequest(BaseModel):
+    person_a: FXTIPersonInput
+    person_b: FXTIPersonInput
+    questionnaire: Optional[Dict[str, Any]] = Field(None, description="三觀問卷答案")
+
+
+@app.post("/api/fxti/match")
+def fxti_match(request: FXTIMatchRequest):
+    """FXTI：五行配對分析（八字 + 三觀問卷）"""
+    # 獲取或創建雙方 FXTI 結果
+    result_a = _get_or_create_fxti_result(request.person_a)
+    result_b = _get_or_create_fxti_result(request.person_b)
+
+    # 五行關係分析
+    report = analyze_relationship(result_a, result_b)
+
+    # 三觀問卷分析（如有）
+    questionnaire_score = None
+    if request.questionnaire:
+        questionnaire_score = _calculate_questionnaire_match(request.questionnaire)
+
+    # 綜合評分
+    wuxing_score = report.get("compatibility_score", 50)
+    if questionnaire_score:
+        final_score = round(wuxing_score * 0.6 + questionnaire_score["total"] * 0.4, 1)
+    else:
+        final_score = wuxing_score
+
+    return {
+        "status": "success",
+        "data": {
+            "person_a": {
+                "name": result_a["profile"]["name"],
+                "title": result_a["profile"]["title"],
+                "elements": result_a["profile"]["elements"]
+            },
+            "person_b": {
+                "name": result_b["profile"]["name"],
+                "title": result_b["profile"]["title"],
+                "elements": result_b["profile"]["elements"]
+            },
+            "wuxing_analysis": report,
+            "questionnaire_analysis": questionnaire_score,
+            "final_score": final_score,
+            "rating": _get_match_rating(final_score)
+        }
+    }
+
+
+def _calculate_questionnaire_match(answers: Dict[str, Any]) -> Dict[str, Any]:
+    """計算三觀問卷匹配度"""
+    # 簡化計算：假設 answers 包含 person_a 和 person_b 的回答
+    a_answers = answers.get("person_a", [])
+    b_answers = answers.get("person_b", [])
+
+    if not a_answers or not b_answers:
+        return None
+
+    # 計算三維度匹配度
+    dimensions = {
+        "values": 0,      # 價值觀
+        "lifestyle": 0,   # 生活觀
+        "worldview": 0    # 世界觀
+    }
+
+    # 簡化：每2題一個維度
+    dim_keys = list(dimensions.keys())
+    for i in range(min(len(a_answers), len(b_answers))):
+        dim = dim_keys[i // 2] if i < 6 else dim_keys[-1]
+        diff = abs(a_answers[i] - b_answers[i])
+        match = max(0, 100 - diff * 25)  # 差0=100分，差1=75分，差2=50分...
+        dimensions[dim] += match
+
+    for dim in dimensions:
+        dimensions[dim] = round(dimensions[dim] / 2, 1)  # 每維度2題
+
+    total = round(sum(dimensions.values()) / 3, 1)
+
+    return {
+        "values": dimensions["values"],
+        "lifestyle": dimensions["lifestyle"],
+        "worldview": dimensions["worldview"],
+        "total": total
+    }
+
+
+def _get_match_rating(score: float) -> str:
+    """根據分數返回評級"""
+    if score >= 85:
+        return "天作之合"
+    elif score >= 70:
+        return "非常契合"
+    elif score >= 55:
+        return "相得益彰"
+    elif score >= 40:
+        return "需要磨合"
+    else:
+        return "挑戰較大"
 
 
 @app.get("/api/db-status")

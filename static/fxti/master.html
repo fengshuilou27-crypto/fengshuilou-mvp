@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>師傅諮詢 - 專業風水命理指導 | 風水樓</title>
+    <link rel="stylesheet" href="/static/css/luxury-theme.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+        h1 { text-align: center; color: #fff; margin-bottom: 8px; font-size: 28px; }
+        .subtitle { text-align: center; color: #bcbcbc; margin-bottom: 24px; font-size: 14px; }
+
+        .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: all 0.3s; }
+        .module-card:hover { transform: translateY(-4px); }
+        @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
+
+        /* 師傅卡片 */
+        .master-card {
+            background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.15);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+        .master-card:hover {
+            border-color: rgba(201,169,98,0.3);
+            box-shadow: 0 8px 30px rgba(201,169,98,0.1);
+        }
+        @media (max-width: 600px) { .master-card { flex-direction: column; align-items: center; text-align: center; } }
+
+        .master-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C9A962, #8B7355);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        .master-info { flex: 1; }
+        .master-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .master-title {
+            font-size: 13px;
+            color: #C9A962;
+            margin-bottom: 8px;
+        }
+        .master-desc {
+            font-size: 14px;
+            color: #bcbcbc;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .master-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .master-tag {
+            background: rgba(201,169,98,0.1);
+            color: #C9A962;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            border: 1px solid rgba(201,169,98,0.2);
+        }
+        .master-action {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #C9A962, #A08438);
+            color: #0A0A0F;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201,169,98,0.3); }
+        .btn-outline {
+            background: transparent;
+            color: #C9A962;
+            border: 1px solid rgba(201,169,98,0.3);
+        }
+        .btn-outline:hover {
+            background: rgba(201,169,98,0.1);
+        }
+
+        /* 服務套餐 */
+        .service-section {
+            background: #1E1E28;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.1);
+            margin-bottom: 20px;
+        }
+        .service-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #C9A962;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(201,169,98,0.2);
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 600px) { .service-grid { grid-template-columns: 1fr; } }
+
+        .service-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(201,169,98,0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .service-card:hover {
+            border-color: rgba(201,169,98,0.3);
+            background: rgba(201,169,98,0.05);
+        }
+        .service-icon { font-size: 36px; margin-bottom: 12px; }
+        .service-name { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+        .service-price { font-size: 24px; font-weight: 700; color: #C9A962; margin-bottom: 4px; }
+        .service-unit { font-size: 12px; color: #808080; margin-bottom: 12px; }
+        .service-features { font-size: 13px; color: #bcbcbc; line-height: 1.6; text-align: left; }
+        .service-features li { margin-bottom: 4px; list-style: none; }
+        .service-features li::before { content: '✓ '; color: #C9A962; }
+
+        /* 預約表單 */
+        .booking-form {
+            background: #1E1E28;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.1);
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; color: #bcbcbc; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(201,169,98,0.1);
+            border-radius: 8px;
+            font-size: 15px;
+            color: #fff;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #C9A962;
+        }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+        /* 常見問題 */
+        .faq-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(201,169,98,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .faq-item:hover { border-color: rgba(201,169,98,0.2); }
+        .faq-question {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-answer {
+            font-size: 14px;
+            color: #bcbcbc;
+            line-height: 1.6;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: none;
+        }
+        .faq-answer.active { display: block; }
+        .faq-toggle { font-size: 20px; color: #C9A962; transition: transform 0.2s; }
+        .faq-toggle.open { transform: rotate(45deg); }
+
+        /* 認證標誌 */
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(70,211,105,0.1);
+            color: #46D369;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(70,211,105,0.2);
+        }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">風水<span>樓</span></span>
+            <span class="logo-sub">Feng Shui Lou</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">首頁</a>
+        <a href="../module1.html">自測</a>
+        <a href="../module2.html">配對</a>
+        <a href="../module3.html">物業</a>
+        <a href="index.html" class="active">FXTI</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>👨‍🏫 師傅諮詢</h1>
+    <p class="subtitle">專業風水命理師在線指導，為你解答人生疑惑</p>
+
+    <!-- FXTI 子模組導航 -->
+    <div class="module-cards">
+        <a href="index.html" class="module-card" style="background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
+            <div style="font-size: 13px; font-weight: 600;">FXTI人格</div>
+            <div style="font-size: 11px; opacity: 0.7;">個人測評</div>
+        </a>
+        <a href="match.html" class="module-card" style="background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">💕</div>
+            <div style="font-size: 13px; font-weight: 600;">五行配對</div>
+            <div style="font-size: 11px; opacity: 0.7;">雙人分析</div>
+        </a>
+        <a href="compatibility.html" class="module-card" style="background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">⚖️</div>
+            <div style="font-size: 13px; font-weight: 600;">關係建議</div>
+            <div style="font-size: 11px; opacity: 0.7;">相處指南</div>
+        </a>
+        <a href="master.html" class="module-card" style="background: linear-gradient(135deg, #C9A962 0%, #8B7355 100%); color: white; border: 1px solid rgba(201,169,98,0.3);">
+            <div style="font-size: 24px; margin-bottom: 4px;">👨‍🏫</div>
+            <div style="font-size: 13px; font-weight: 600;">師傅諮詢</div>
+            <div style="font-size: 11px; opacity: 0.9;">專業指導</div>
+        </a>
+    </div>
+
+    <!-- 認證標誌 -->
+    <div style="text-align: center; margin-bottom: 24px;">
+        <span class="cert-badge">✓ 嚴格審核認證</span>
+        <span class="cert-badge" style="background: rgba(201,169,98,0.1); color: #C9A962; border-color: rgba(201,169,98,0.2); margin-left: 8px;">🏆 平均 4.8 星評價</span>
+    </div>
+
+    <!-- 師傅列表 -->
+    <div class="service-section">
+        <div class="service-title">🌟 推薦師傅</div>
+
+        <div class="master-card">
+            <div class="master-avatar">🧙‍♂️</div>
+            <div class="master-info">
+                <div class="master-name">玄清子師傅</div>
+                <div class="master-title">玄學風水 · 八字命理 · 20年經驗</div>
+                <div class="master-desc">
+                    專精玄空飛星、八宅風水、八字命理。曾為多家上市公司提供風水顧問服務，
+                    擅長將傳統風水智慧與現代居住環境結合，為客戶提供實用的風水改善建議。
+                </div>
+                <div class="master-tags">
+                    <span class="master-tag">玄空飛星</span>
+                    <span class="master-tag">八宅風水</span>
+                    <span class="master-tag">八字命理</span>
+                    <span class="master-tag">擇日</span>
+                </div>
+            </div>
+            <div class="master-action">
+                <button class="btn" onclick="openBooking('玄清子師傅')">立即預約</button>
+                <button class="btn btn-outline" onclick="showMasterDetail('xuanqing')">查看詳情</button>
+            </div>
+        </div>
+
+        <div class="master-card">
+            <div class="master-avatar">👩‍🏫</div>
+            <div class="master-info">
+                <div class="master-name">靜心師傅</div>
+                <div class="master-title">紫微斗數 · 姓名學 · 15年經驗</div>
+                <div class="master-desc">
+                    精通紫微斗數命盤分析、姓名學改名、婚姻配對。特別擅長感情關係諮詢，
+                    能從命理角度分析雙方契合度，提供相處建議和化解方案。
+                </div>
+                <div class="master-tags">
+                    <span class="master-tag">紫微斗數</span>
+                    <span class="master-tag">姓名學</span>
+                    <span class="master-tag">婚姻配對</span>
+                    <span class="master-tag">情感諮詢</span>
+                </div>
+            </div>
+            <div class="master-action">
+                <button class="btn" onclick="openBooking('靜心師傅')">立即預約</button>
+                <button class="btn btn-outline" onclick="showMasterDetail('jingxin')">查看詳情</button>
+            </div>
+        </div>
+
+        <div class="master-card">
+            <div class="master-avatar">🧘</div>
+            <div class="master-info">
+                <div class="master-name">明遠師傅</div>
+                <div class="master-title">陽宅風水 · 商業佈局 · 18年經驗</div>
+                <div class="master-desc">
+                    專注陽宅風水佈局、商業空間規劃、辦公室風水。提供上門實地勘察服務，
+                    結合羅盤測量和環境分析，為客戶打造最適合的居住和工作環境。
+                </div>
+                <div class="master-tags">
+                    <span class="master-tag">陽宅風水</span>
+                    <span class="master-tag">商業佈局</span>
+                    <span class="master-tag">實地勘察</span>
+                    <span class="master-tag">羅盤測量</span>
+                </div>
+            </div>
+            <div class="master-action">
+                <button class="btn" onclick="openBooking('明遠師傅')">立即預約</button>
+                <button class="btn btn-outline" onclick="showMasterDetail('mingyuan')">查看詳情</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 服務套餐 -->
+    <div class="service-section">
+        <div class="service-title">📋 服務套餐</div>
+        <div class="service-grid">
+            <div class="service-card">
+                <div class="service-icon">💬</div>
+                <div class="service-name">在線問答</div>
+                <div class="service-price">$200</div>
+                <div class="service-unit">/ 次</div>
+                <ul class="service-features">
+                    <li>文字問答 30 分鐘</li>
+                    <li>1 個主題深入分析</li>
+                    <li>48 小時內回覆</li>
+                    <li>基礎建議報告</li>
+                </ul>
+                <button class="btn" style="margin-top: 16px; width: 100%;" onclick="selectService('在線問答')">選擇</button>
+            </div>
+            <div class="service-card" style="border-color: rgba(201,169,98,0.3);">
+                <div class="service-icon" style="filter: drop-shadow(0 0 8px rgba(201,169,98,0.3));">📞</div>
+                <div class="service-name">視訊諮詢</div>
+                <div class="service-price">$500</div>
+                <div class="service-unit">/ 30分鐘</div>
+                <ul class="service-features">
+                    <li>一對一視訊通話</li>
+                    <li>2-3 個主題分析</li>
+                    <li>即時互動問答</li>
+                    <li>詳細分析報告</li>
+                    <li>7 日內跟進</li>
+                </ul>
+                <button class="btn" style="margin-top: 16px; width: 100%;" onclick="selectService('視訊諮詢')">選擇</button>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🏠</div>
+                <div class="service-name">上門勘察</div>
+                <div class="service-price">$2,000</div>
+                <div class="service-unit">/ 次</div>
+                <ul class="service-features">
+                    <li>實地風水勘察</li>
+                    <li>羅盤精確測量</li>
+                    <li>全屋風水報告</li>
+                    <li>佈局改善方案</li>
+                    <li>30 日內跟進</li>
+                </ul>
+                <button class="btn" style="margin-top: 16px; width: 100%;" onclick="selectService('上門勘察')">選擇</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 預約表單 -->
+    <div class="booking-form" id="bookingForm" style="display: none;">
+        <div class="service-title">📝 預約諮詢</div>
+        <form id="consultForm">
+            <div class="two-col">
+                <div class="form-group">
+                    <label>你的姓名</label>
+                    <input type="text" name="name" placeholder="請輸入姓名" required>
+                </div>
+                <div class="form-group">
+                    <label>聯絡電話</label>
+                    <input type="tel" name="phone" placeholder="請輸入電話" required>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label>選擇師傅</label>
+                    <select name="master" id="masterSelect">
+                        <option value="">請選擇師傅</option>
+                        <option value="玄清子師傅">玄清子師傅</option>
+                        <option value="靜心師傅">靜心師傅</option>
+                        <option value="明遠師傅">明遠師傅</option>
+                        <option value="不指定">不指定（系統推薦）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>服務類型</label>
+                    <select name="service" id="serviceSelect">
+                        <option value="">請選擇服務</option>
+                        <option value="在線問答">在線問答 ($200)</option>
+                        <option value="視訊諮詢">視訊諮詢 ($500)</option>
+                        <option value="上門勘察">上門勘察 ($2,000)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>諮詢主題</label>
+                <select name="topic">
+                    <option value="">請選擇主題</option>
+                    <option value="風水佈局">風水佈局</option>
+                    <option value="八字命理">八字命理</option>
+                    <option value="婚姻配對">婚姻配對</option>
+                    <option value="事業運勢">事業運勢</option>
+                    <option value="財運分析">財運分析</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>問題描述（可選）</label>
+                <textarea name="description" placeholder="請簡單描述你的問題或需求，讓師傅提前了解..."></textarea>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">提交預約</button>
+            <p style="text-align: center; color: #808080; font-size: 12px; margin-top: 12px;">
+                提交後我們會在 24 小時內聯絡你確認預約時間
+            </p>
+        </form>
+    </div>
+
+    <!-- 常見問題 -->
+    <div class="service-section">
+        <div class="service-title">❓ 常見問題</div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>諮詢前需要準備什麼資料？</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                建議準備：出生年月日時（八字分析需要）、房屋坐向（風水佈局需要）、
+                具體問題描述。如果是配對諮詢，請準備雙方的出生資料。
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>線上諮詢和線下勘察有什麼分別？</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                線上諮詢適合命理分析、運勢解讀等問題；線下勘察適合風水佈局、
+                實地測量等需要現場環境評估的服務。視訊諮詢介乎兩者之間。
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>如何選擇適合的師傅？</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                根據你的需求選擇：風水佈局選明遠師傅，命理配對選靜心師傅，
+                綜合諮詢選玄清子師傅。也可以選擇「不指定」，系統會根據你的問題推薦最適合的師傅。
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>諮詢後不滿意可以退款嗎？</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                在諮詢開始前 24 小時取消可全額退款。諮詢進行中如有不滿意，
+                可向平台申訴，我們會安排其他師傅免費重新諮詢一次。
+            </div>
+        </div>
+    </div>
+
+    <!-- 免責聲明 -->
+    <div style="text-align: center; padding: 24px; color: #808080; font-size: 12px; line-height: 1.6;">
+        <p>風水命理僅供參考，不構成專業醫療、法律或投資建議。</p>
+        <p>重大決策請諮詢相關專業人士。</p>
+    </div>
+</div>
+
+<script>
+// 導航欄滾動效果
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+
+// 打開預約表單
+function openBooking(masterName) {
+    const form = document.getElementById('bookingForm');
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth' });
+    if (masterName) {
+        document.getElementById('masterSelect').value = masterName;
+    }
+}
+
+// 選擇服務
+function selectService(serviceName) {
+    openBooking();
+    document.getElementById('serviceSelect').value = serviceName;
+}
+
+// 查看師傅詳情
+function showMasterDetail(masterId) {
+    const details = {
+        'xuanqing': '玄清子師傅\n\n專業資歷：\n• 香港風水師協會認證會員\n• 20年玄學研究經驗\n• 曾服務多家上市公司\n\n專長領域：\n• 玄空飛星風水\n• 八字命理分析\n• 擇日選時\n• 商業風水顧問',
+        'jingxin': '靜心師傅\n\n專業資歷：\n• 紫微斗數研究會會員\n• 15年命理諮詢經驗\n• 專注情感關係諮詢\n\n專長領域：\n• 紫微斗數命盤\n• 姓名學分析\n• 婚姻配對\n• 情感關係指導',
+        'mingyuan': '明遠師傅\n\n專業資歷：\n• 國際風水師協會認證\n• 18年陽宅風水實踐\n• 專注商業空間規劃\n\n專長領域：\n• 陽宅風水佈局\n• 商業空間規劃\n• 實地羅盤勘察\n• 辦公室風水設計'
+    };
+    alert(details[masterId] || '師傅資料載入中...');
+}
+
+// FAQ 折疊
+function toggleFaq(item) {
+    const answer = item.querySelector('.faq-answer');
+    const toggle = item.querySelector('.faq-toggle');
+    answer.classList.toggle('active');
+    toggle.classList.toggle('open');
+    toggle.textContent = toggle.classList.contains('open') ? '×' : '+';
+}
+
+// 表單提交
+document.getElementById('consultForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // 模擬提交
+    alert('預約提交成功！\n\n師傅：' + data.master + '\n服務：' + data.service + '\n\n我們會在 24 小時內聯絡你確認預約時間。');
+    
+    // 重置表單
+    this.reset();
+    document.getElementById('bookingForm').style.display = 'none';
+});
+</script>
+</body>
+</html>

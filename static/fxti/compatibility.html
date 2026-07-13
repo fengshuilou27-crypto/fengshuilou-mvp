@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>關係建議 - 五行相處指南 | 風水樓</title>
+    <link rel="stylesheet" href="/static/css/luxury-theme.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+        h1 { text-align: center; color: #fff; margin-bottom: 8px; font-size: 28px; }
+        .subtitle { text-align: center; color: #bcbcbc; margin-bottom: 24px; font-size: 14px; }
+
+        .module-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .module-card { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; transition: all 0.3s; }
+        .module-card:hover { transform: translateY(-4px); }
+        @media (max-width: 600px) { .module-cards { grid-template-columns: 1fr 1fr !important; } }
+
+        .guide-section {
+            background: #1E1E28;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(201,169,98,0.1);
+            margin-bottom: 20px;
+        }
+        .guide-title {
+            font-size: 18px; font-weight: 600; color: #C9A962;
+            margin-bottom: 16px; padding-bottom: 8px;
+            border-bottom: 1px solid rgba(201,169,98,0.2);
+        }
+        .guide-content {
+            font-size: 14px; color: #bcbcbc; line-height: 1.8;
+        }
+        .guide-content strong { color: #fff; }
+        .guide-content ul { margin-left: 20px; margin-top: 8px; }
+        .guide-content li { margin-bottom: 6px; }
+
+        .element-pair {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .element-item {
+            text-align: center;
+            padding: 16px 24px;
+            border-radius: 12px;
+            background: rgba(201,169,98,0.1);
+            border: 1px solid rgba(201,169,98,0.2);
+        }
+        .element-symbol { font-size: 36px; margin-bottom: 4px; }
+        .element-name { font-size: 16px; font-weight: 600; color: #C9A962; }
+        .element-type { font-size: 12px; color: #808080; }
+        .element-relation {
+            font-size: 24px; color: #C9A962;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(201,169,98,0.1), rgba(139,115,85,0.05));
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #C9A962;
+        }
+        .tip-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .tip-text { font-size: 13px; color: #bcbcbc; line-height: 1.6; }
+
+        .btn {
+            display: block; width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #C9A962, #A08438);
+            color: #0A0A0F; border: none; border-radius: 8px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center; text-decoration: none;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201,169,98,0.3); }
+
+        .compatibility-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+        @media (max-width: 600px) { .compatibility-matrix { grid-template-columns: repeat(3, 1fr); } }
+
+        .matrix-cell {
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,169,98,0.1);
+        }
+        .matrix-cell .emoji { font-size: 24px; display: block; margin-bottom: 4px; }
+        .matrix-cell .label { font-size: 12px; color: #bcbcbc; }
+        .matrix-cell .score { font-size: 14px; font-weight: 600; color: #C9A962; }
+        .matrix-cell.good { background: rgba(70,211,105,0.1); border-color: rgba(70,211,105,0.3); }
+        .matrix-cell.bad { background: rgba(229,9,20,0.1); border-color: rgba(229,9,20,0.3); }
+        .matrix-cell.neutral { background: rgba(212,168,67,0.1); border-color: rgba(212,168,67,0.3); }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">風水<span>樓</span></span>
+            <span class="logo-sub">Feng Shui Lou</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="../index.html">首頁</a>
+        <a href="../module1.html">自測</a>
+        <a href="../module2.html">配對</a>
+        <a href="../module3.html">物業</a>
+        <a href="index.html" class="active">FXTI</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>⚖️ 五行關係建議</h1>
+    <p class="subtitle">基於五行相生相剋原理，為你提供專業的相處指南</p>
+
+    <div class="module-cards">
+        <a href="index.html" class="module-card" style="background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔥</div>
+            <div style="font-size: 13px; font-weight: 600;">FXTI人格</div>
+            <div style="font-size: 11px; opacity: 0.7;">個人測評</div>
+        </a>
+        <a href="match.html" class="module-card" style="background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">💕</div>
+            <div style="font-size: 13px; font-weight: 600;">五行配對</div>
+            <div style="font-size: 11px; opacity: 0.7;">雙人分析</div>
+        </a>
+        <a href="compatibility.html" class="module-card" style="background: linear-gradient(135deg, #C9A962 0%, #8B7355 100%); color: white; border: 1px solid rgba(201,169,98,0.3);">
+            <div style="font-size: 24px; margin-bottom: 4px;">⚖️</div>
+            <div style="font-size: 13px; font-weight: 600;">關係建議</div>
+            <div style="font-size: 11px; opacity: 0.9;">相處指南</div>
+        </a>
+        <a href="master.html" class="module-card" style="background: linear-gradient(135deg, #1E1E28 0%, #2A2A3A 100%); color: #C9A962; border: 1px solid rgba(201,169,98,0.15);">
+            <div style="font-size: 24px; margin-bottom: 4px;">👨‍🏫</div>
+            <div style="font-size: 13px; font-weight: 600;">師傅諮詢</div>
+            <div style="font-size: 11px; opacity: 0.7;">專業指導</div>
+        </a>
+    </div>
+
+    <!-- 五行配對速查表 -->
+    <div class="guide-section">
+        <div class="guide-title">📊 五行配對速查表</div>
+        <div class="guide-content">
+            五行之間存在<strong>相生</strong>與<strong>相剋</strong>的關係，了解這些關係有助於理解你與伴侶的互動模式。
+        </div>
+        <div class="compatibility-matrix">
+            <div class="matrix-cell good">
+                <span class="emoji">🔥</span>
+                <span class="label">火 + 木</span>
+                <span class="score">相生</span>
+            </div>
+            <div class="matrix-cell good">
+                <span class="emoji">🌱</span>
+                <span class="label">木 + 水</span>
+                <span class="score">相生</span>
+            </div>
+            <div class="matrix-cell good">
+                <span class="emoji">💧</span>
+                <span class="label">水 + 金</span>
+                <span class="score">相生</span>
+            </div>
+            <div class="matrix-cell good">
+                <span class="emoji">🏔️</span>
+                <span class="label">金 + 土</span>
+                <span class="score">相生</span>
+            </div>
+            <div class="matrix-cell good">
+                <span class="emoji">🌍</span>
+                <span class="label">土 + 火</span>
+                <span class="score">相生</span>
+            </div>
+            <div class="matrix-cell bad">
+                <span class="emoji">🔥</span>
+                <span class="label">火 + 金</span>
+                <span class="score">相剋</span>
+            </div>
+            <div class="matrix-cell bad">
+                <span class="emoji">🌱</span>
+                <span class="label">木 + 土</span>
+                <span class="score">相剋</span>
+            </div>
+            <div class="matrix-cell bad">
+                <span class="emoji">💧</span>
+                <span class="label">水 + 火</span>
+                <span class="score">相剋</span>
+            </div>
+            <div class="matrix-cell bad">
+                <span class="emoji">🏔️</span>
+                <span class="label">金 + 木</span>
+                <span class="score">相剋</span>
+            </div>
+            <div class="matrix-cell bad">
+                <span class="emoji">🌍</span>
+                <span class="label">土 + 水</span>
+                <span class="score">相剋</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 相生關係指南 -->
+    <div class="guide-section">
+        <div class="guide-title">💫 相生關係 · 互相滋養</div>
+        <div class="guide-content">
+            <p>相生代表雙方能夠互相支持、共同成長。這種關係通常較為和諧，但也要注意不要過度依賴對方。</p>
+            <br>
+            <div class="element-pair">
+                <div class="element-item">
+                    <div class="element-symbol">🌱</div>
+                    <div class="element-name">木</div>
+                    <div class="element-type">生長者</div>
+                </div>
+                <div class="element-relation">→ 生 →</div>
+                <div class="element-item">
+                    <div class="element-symbol">🔥</div>
+                    <div class="element-name">火</div>
+                    <div class="element-type">熱情者</div>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-title">木生火 · 相處建議</div>
+                <div class="tip-text">
+                    木型人給予火型人成長的空間和支持，火型人則為木型人帶來熱情和動力。
+                    <strong>建議：</strong>木型人不要過度保護，讓火型人有獨立發展的機會；火型人要學會回饋，不要只顧索取。
+                </div>
+            </div>
+
+            <div class="element-pair">
+                <div class="element-item">
+                    <div class="element-symbol">🔥</div>
+                    <div class="element-name">火</div>
+                    <div class="element-type">熱情者</div>
+                </div>
+                <div class="element-relation">→ 生 →</div>
+                <div class="element-item">
+                    <div class="element-symbol">🌍</div>
+                    <div class="element-name">土</div>
+                    <div class="element-type">穩重者</div>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-title">火生土 · 相處建議</div>
+                <div class="tip-text">
+                    火型人的熱情能夠溫暖土型人，土型人則為火型人提供穩定的依靠。
+                    <strong>建議：</strong>火型人要學會適度降溫，避免過度熱情讓土型人感到壓力；土型人要學會表達，不要總是默默承受。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 相剋關係指南 -->
+    <div class="guide-section">
+        <div class="guide-title">⚡ 相剋關係 · 挑戰與成長</div>
+        <div class="guide-content">
+            <p>相剋並不代表不好，而是代表雙方需要更多磨合。適度的相剋能夠激發彼此的潛能，讓關係更加成熟。</p>
+            <br>
+            <div class="element-pair">
+                <div class="element-item">
+                    <div class="element-symbol">💧</div>
+                    <div class="element-name">水</div>
+                    <div class="element-type">智慧者</div>
+                </div>
+                <div class="element-relation">→ 剋 →</div>
+                <div class="element-item">
+                    <div class="element-symbol">🔥</div>
+                    <div class="element-name">火</div>
+                    <div class="element-type">熱情者</div>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-title">水剋火 · 相處建議</div>
+                <div class="tip-text">
+                    水型人的冷靜可能會澆熄火型人的熱情，火型人的衝動也可能讓水型人感到不安。
+                    <strong>建議：</strong>水型人要學會欣賞火型人的熱情，不要總是潑冷水；火型人要理解水型人的謹慎，學會冷靜思考。
+                </div>
+            </div>
+
+            <div class="element-pair">
+                <div class="element-item">
+                    <div class="element-symbol">🏔️</div>
+                    <div class="element-name">金</div>
+                    <div class="element-type">果斷者</div>
+                </div>
+                <div class="element-relation">→ 剋 →</div>
+                <div class="element-item">
+                    <div class="element-symbol">🌱</div>
+                    <div class="element-name">木</div>
+                    <div class="element-type">生長者</div>
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-title">金剋木 · 相處建議</div>
+                <div class="tip-text">
+                    金型人的果斷可能會限制木型人的發展，木型人的猶豫也可能讓金型人感到不耐煩。
+                    <strong>建議：</strong>金型人要學會給予空間，不要過度控制；木型人要學會果斷，在關鍵時刻做出決定。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用相處建議 -->
+    <div class="guide-section">
+        <div class="guide-title">💡 五行通用相處法則</div>
+        <div class="guide-content">
+            <ul>
+                <li><strong>了解彼此的五行屬性</strong>：先完成 FXTI 個人測評，了解自己和對方的五行能量分布。</li>
+                <li><strong>尊重差異</strong>：不同五行類型有不同的思維方式和行為模式，學會欣賞對方的獨特性。</li>
+                <li><strong>互補而非改變</strong>：不要試圖改變對方，而是找到互補的方式，讓雙方都能發揮優勢。</li>
+                <li><strong>適度調整居住環境</strong>：根據雙方五行屬性，調整家居風水佈局，有助於平衡能量。</li>
+                <li><strong>定期溝通</strong>：五行關係會隨時間變化，定期進行配對分析，及時調整相處方式。</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 風水佈局建議 -->
+    <div class="guide-section">
+        <div class="guide-title">🏠 增進感情的風水佈局</div>
+        <div class="guide-content">
+            <div class="tip-card">
+                <div class="tip-title">臥室佈局</div>
+                <div class="tip-text">
+                    臥室床位宜靠實牆，避免床頭懸空。雙人床兩側應有對稱的床頭櫃，象徵關係平等。
+                    避免在臥室放置過多電器，減少電磁干擾。
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-title">客廳佈局</div>
+                <div class="tip-text">
+                    客廳沙發宜呈 U 型或 L 型擺放，有助於促進交流。可在客廳西南方放置成對的裝飾品，
+                    如成對的燭台、花瓶等，象徵感情圓滿。
+                </div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-title">色彩選擇</div>
+                <div class="tip-text">
+                    根據雙方五行屬性選擇主色調。例如：木火組合宜選綠色和紅色點綴；金水組合宜選白色和藍色。
+                    避免使用過於刺眼的對比色。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="match.html" class="btn" style="margin-bottom: 12px;">進行五行配對分析</a>
+    <a href="master.html" class="btn" style="background: linear-gradient(135deg, #8B7355, #C9A962);">諮詢專業風水師傅</a>
+</div>
+
+<script>
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+</script>
+</body>
+</html>
