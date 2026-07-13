@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.8.3"
+VERSION = "3.8.5"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:
@@ -92,6 +92,7 @@ from data.fxti_bazi import get_innate_wuxing
 from data.fxti_questionnaire import get_questionnaire, calculate_acquired_wuxing
 from data.fxti_profile import determine_profile, synthesize_result, ALL_PROFILES
 from data.fxti_relationship import analyze_relationship
+from data.fxti_timing_engine import analyze_timing_compatibility, get_daily_fortune
 
 app = FastAPI(
     title="AI風水樓盤匹配系統",
@@ -1708,6 +1709,96 @@ def api_compass(mountain: str, facing: str):
         return {"status": "error", "message": "羅盤工具模塊尚未部署"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+# ==================== FXTI Timing Engine Routes ====================
+
+class FXTITimingRequest(BaseModel):
+    """歲月磨合引擎請求：雙人大運流年交叉分析"""
+    person_a_birth_year: int = Field(..., description="甲方出生年")
+    person_a_birth_month: int = Field(..., description="甲方出生月")
+    person_a_birth_day: int = Field(..., description="甲方出生日")
+    person_a_gender: str = Field(..., description="甲方性別 male/female")
+    person_b_birth_year: int = Field(..., description="乙方出生年")
+    person_b_birth_month: int = Field(..., description="乙方出生月")
+    person_b_birth_day: int = Field(..., description="乙方出生日")
+    person_b_gender: str = Field(..., description="乙方性別 male/female")
+    analysis_years: int = Field(default=10, description="分析未來多少年")
+    current_year: int = Field(default=2026, description="從哪一年開始分析")
+
+
+class FXTIDailyFortuneRequest(BaseModel):
+    """每日運勢請求"""
+    birth_year: int = Field(..., description="出生年")
+    birth_month: int = Field(..., description="出生月")
+    birth_day: int = Field(..., description="出生日")
+    date: Optional[str] = Field(None, description="指定日期 YYYY-MM-DD，默認今天")
+
+
+@app.post("/api/fxti/timing")
+def fxti_timing(request: FXTITimingRequest):
+    """FXTI 歲月磨合引擎：雙人大運流年交叉分析"""
+    birth_a = {
+        "year": request.person_a_birth_year,
+        "month": request.person_a_birth_month,
+        "day": request.person_a_birth_day,
+        "gender": request.person_a_gender
+    }
+    birth_b = {
+        "year": request.person_b_birth_year,
+        "month": request.person_b_birth_month,
+        "day": request.person_b_birth_day,
+        "gender": request.person_b_gender
+    }
+    
+    result = analyze_timing_compatibility(
+        birth_a=birth_a,
+        birth_b=birth_b,
+        analysis_years=request.analysis_years,
+        current_year=request.current_year
+    )
+    
+    return {
+        "status": "success",
+        "module": "歲月磨合引擎",
+        "data": result
+    }
+
+
+@app.post("/api/fxti/daily-fortune")
+def fxti_daily_fortune(request: FXTIDailyFortuneRequest):
+    """FXTI 每日運勢"""
+    birth_info = {
+        "year": request.birth_year,
+        "month": request.birth_month,
+        "day": request.birth_day
+    }
+    
+    date = None
+    if request.date:
+        date = datetime.strptime(request.date, "%Y-%m-%d")
+    
+    result = get_daily_fortune(birth_info, date)
+    
+    return {
+        "status": "success",
+        "module": "每日運勢",
+        "data": result
+    }
+
+
+# ==================== FXTI HePan (合盤) Route ====================
+
+@app.get("/fxti/hepan.html")
+def fxti_hepan_html():
+    """合盤頁面：雙人八字深度對比分析"""
+    return FileResponse("static/fxti/hepan.html")
+
+
+@app.get("/fxti/hepan")
+def fxti_hepan():
+    """合盤頁面（無 .html 後綴）"""
+    return FileResponse("static/fxti/hepan.html")
 
 
 if __name__ == "__main__":
