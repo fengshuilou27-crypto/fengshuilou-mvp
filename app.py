@@ -87,6 +87,7 @@ from models.goal_matching import analyze_goal
 from models.match_result import aggregate_match_result
 
 from routers.geo import router as geo_router
+from routers.fxti_v2 import router as fxti_v2_router
 
 from data.fxti_bazi import get_innate_wuxing
 from data.fxti_questionnaire import get_questionnaire, calculate_acquired_wuxing
@@ -119,6 +120,10 @@ app.add_middleware(RateLimitMiddleware)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(geo_router)
+app.include_router(fxti_v2_router)
+
+# Update version
+VERSION = "3.9.0"
 
 
 class GoalItem(BaseModel):
