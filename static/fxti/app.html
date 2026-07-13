@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FXTI 緣分配對 - 五行社交匹配</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --gold: #C9A962;
+            --gold-light: #E8D5A3;
+            --dark: #0A0A0F;
+            --dark-card: #1A1A2E;
+            --text: #FFFFFF;
+            --text-muted: #808080;
+            --like: #FF4D6D;
+            --super-like: #00C9B7;
+            --pass: #FF6B35;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(10,10,15,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(201,169,98,0.1);
+            padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-actions {
+            display: flex; gap: 16px; align-items: center;
+        }
+        .nav-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 16px;
+        }
+        .nav-btn.active { background: rgba(201,169,98,0.2); border-color: var(--gold); }
+        
+        /* 主内容区 */
+        .main-content {
+            padding-top: 60px; padding-bottom: 80px;
+            max-width: 430px; margin: 0 auto;
+        }
+        
+        /* 卡片堆叠 */
+        .card-stack {
+            position: relative;
+            width: 100%; height: 520px;
+            margin: 16px auto;
+        }
+        
+        .match-card {
+            position: absolute; top: 0; left: 16px; right: 16px;
+            height: 100%;
+            background: var(--dark-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border: 1px solid rgba(201,169,98,0.1);
+        }
+        
+        .match-card:nth-child(2) { transform: scale(0.95) translateY(10px); opacity: 0.6; z-index: -1; }
+        .match-card:nth-child(3) { transform: scale(0.9) translateY(20px); opacity: 0.3; z-index: -2; }
+        
+        .card-image {
+            width: 100%; height: 65%;
+            background-size: cover; background-position: center;
+            position: relative;
+        }
+        
+        /* 五行元素遮罩（专利规避：不用模糊照片） */
+        .wuxing-overlay {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(10,10,15,0.7);
+            transition: opacity 0.5s ease;
+        }
+        .wuxing-overlay.revealed { opacity: 0; pointer-events: none; }
+        
+        .wuxing-card {
+            width: 160px; height: 220px;
+            background: linear-gradient(135deg, rgba(201,169,98,0.2), rgba(139,115,85,0.1));
+            border: 2px solid var(--gold);
+            border-radius: 16px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .wuxing-symbol {
+            font-size: 48px; margin-bottom: 8px;
+        }
+        .wuxing-name {
+            font-size: 20px; font-weight: 700; color: var(--gold);
+            margin-bottom: 4px;
+        }
+        .wuxing-desc {
+            font-size: 12px; color: var(--text-muted);
+        }
+        .wuxing-hint {
+            margin-top: 12px; font-size: 11px;
+            color: var(--gold); opacity: 0.8;
+        }
+        
+        .card-info {
+            padding: 16px 20px;
+        }
+        .card-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+        }
+        .card-name {
+            font-size: 22px; font-weight: 700;
+        }
+        .card-age {
+            font-size: 16px; color: var(--text-muted);
+        }
+        .card-badge {
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 600;
+        }
+        .badge-verified {
+            background: rgba(0,201,183,0.15); color: var(--super-like);
+        }
+        .card-meta {
+            display: flex; gap: 12px; margin-bottom: 8px;
+            font-size: 13px; color: var(--text-muted);
+        }
+        .card-bio {
+            font-size: 13px; color: var(--text-muted); line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .compatibility-bar {
+            margin-top: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .compatibility-score {
+            font-size: 14px; font-weight: 700; color: var(--gold);
+        }
+        .compatibility-track {
+            flex: 1; height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px; overflow: hidden;
+        }
+        .compatibility-fill {
+            height: 100%; border-radius: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            transition: width 0.5s ease;
+        }
+        
+        /* 滑动按钮 */
+        .swipe-actions {
+            display: flex; justify-content: center; gap: 20px;
+            padding: 16px;
+        }
+        .swipe-btn {
+            width: 64px; height: 64px; border-radius: 50%;
+            border: 2px solid; background: transparent;
+            font-size: 28px; cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .swipe-btn:hover { transform: scale(1.1); }
+        .swipe-btn.pass { border-color: var(--pass); color: var(--pass); }
+        .swipe-btn.like { border-color: var(--like); color: var(--like); }
+        .swipe-btn.super { border-color: var(--super-like); color: var(--super-like); }
+        .swipe-btn.pass:hover { background: rgba(255,107,53,0.1); }
+        .swipe-btn.like:hover { background: rgba(255,77,109,0.1); }
+        .swipe-btn.super:hover { background: rgba(0,201,183,0.1); }
+        
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(10,10,15,0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(201,169,98,0.1);
+            display: flex; justify-content: space-around;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+        .bottom-nav-item {
+            text-decoration: none; color: var(--text-muted);
+            font-size: 11px; text-align: center;
+            padding: 4px 16px; transition: color 0.2s;
+            border: none; background: none; cursor: pointer;
+        }
+        .bottom-nav-item.active { color: var(--gold); }
+        .bottom-nav-item .icon { font-size: 22px; display: block; margin-bottom: 2px; }
+        
+        /* 匹配成功动画 */
+        .match-modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(10,10,15,0.95);
+            z-index: 2000;
+            align-items: center; justify-content: center;
+            flex-direction: column;
+        }
+        .match-modal.active { display: flex; }
+        .match-animation {
+            font-size: 80px; margin-bottom: 20px;
+            animation: pulse 1s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .match-title {
+            font-size: 32px; font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--like));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .match-subtitle { color: var(--text-muted); margin-bottom: 24px; }
+        .match-actions {
+            display: flex; gap: 16px;
+        }
+        .match-btn {
+            padding: 14px 32px; border-radius: 28px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            border: none;
+        }
+        .match-btn.primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--dark);
+        }
+        .match-btn.secondary {
+            background: rgba(255,255,255,0.1); color: var(--text);
+        }
+        
+        /* 页面切换 */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 匹配列表 */
+        .match-list {
+            padding: 16px;
+        }
+        .match-item {
+            display: flex; align-items: center; gap: 16px;
+            padding: 12px; border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            margin-bottom: 8px; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .match-item:hover { background: rgba(255,255,255,0.06); }
+        .match-avatar {
+            width: 56px; height: 56px; border-radius: 50%;
+            background-size: cover; background-position: center;
+            border: 2px solid var(--gold);
+        }
+        .match-info { flex: 1; }
+        .match-name { font-weight: 600; margin-bottom: 2px; }
+        .match-preview { font-size: 13px; color: var(--text-muted); }
+        .match-time { font-size: 11px; color: var(--text-muted); }
+        
+        /* 聊天页面 */
+        .chat-container {
+            display: flex; flex-direction: column;
+            height: calc(100vh - 140px);
+        }
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 16px;
+        }
+        .chat-message {
+            display: flex; gap: 8px; margin-bottom: 12px;
+        }
+        .chat-message.own { flex-direction: row-reverse; }
+        .chat-bubble {
+            max-width: 70%; padding: 10px 14px; border-radius: 16px;
+            font-size: 14px; line-height: 1.4;
+        }
+        .chat-message:not(.own) .chat-bubble {
+            background: rgba(255,255,255,0.08); color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-message.own .chat-bubble {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--dark); font-weight: 500;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-input-bar {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex; gap: 8px;
+        }
+        .chat-input {
+            flex: 1; padding: 10px 16px; border-radius: 20px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text); font-size: 14px;
+        }
+        .chat-input:focus { outline: none; border-color: var(--gold); }
+        .chat-send {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--gold); border: none;
+            color: var(--dark); font-size: 18px; cursor: pointer;
+        }
+        
+        /* 社区页面 */
+        .community-header {
+            padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .post-card {
+            padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .post-author {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+        }
+        .post-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background-size: cover;
+        }
+        .post-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .post-content { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .post-tags {
+            display: flex; gap: 6px; margin-top: 8px;
+        }
+        .post-tag {
+            padding: 2px 8px; border-radius: 10px;
+            background: rgba(201,169,98,0.1); color: var(--gold);
+            font-size: 11px;
+        }
+        .post-stats {
+            display: flex; gap: 16px; margin-top: 10px;
+            font-size: 12px; color: var(--text-muted);
+        }
+        
+        /* 专家页面 */
+        .expert-card {
+            padding: 16px; margin: 8px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px; border: 1px solid rgba(201,169,98,0.1);
+        }
+        .expert-header {
+            display: flex; gap: 14px; margin-bottom: 12px;
+        }
+        .expert-avatar {
+            width: 64px; height: 64px; border-radius: 50%;
+            background-size: cover; border: 2px solid var(--gold);
+        }
+        .expert-info { flex: 1; }
+        .expert-name { font-size: 16px; font-weight: 600; }
+        .expert-title { font-size: 13px; color: var(--gold); }
+        .expert-rating { font-size: 13px; color: var(--text-muted); }
+        .expert-tags {
+            display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0;
+        }
+        .expert-tag {
+            padding: 3px 10px; border-radius: 12px;
+            background: rgba(0,201,183,0.1); color: var(--super-like);
+            font-size: 11px;
+        }
+        .expert-price {
+            font-size: 18px; font-weight: 700; color: var(--gold);
+        }
+        .expert-book-btn {
+            width: 100%; padding: 12px; margin-top: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border: none; border-radius: 10px;
+            color: var(--dark); font-weight: 600; cursor: pointer;
+        }
+        
+        /* 每日一卦 */
+        .fortune-card {
+            margin: 16px; padding: 20px;
+            background: linear-gradient(135deg, rgba(201,169,98,0.1), rgba(139,115,85,0.05));
+            border: 1px solid rgba(201,169,98,0.2);
+            border-radius: 20px; text-align: center;
+        }
+        .fortune-gua {
+            font-size: 48px; margin-bottom: 8px;
+        }
+        .fortune-name {
+            font-size: 20px; font-weight: 700; color: var(--gold);
+        }
+        .fortune-score {
+            font-size: 56px; font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        .fortune-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-top: 16px;
+        }
+        .fortune-item {
+            padding: 10px; border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+        }
+        .fortune-item-label { font-size: 11px; color: var(--text-muted); }
+        .fortune-item-value { font-size: 16px; font-weight: 600; color: var(--gold); }
+        
+        /* 加载 */
+        .loading {
+            text-align: center; padding: 40px; color: var(--text-muted);
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(201,169,98,0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+        <div class="logo">FXTI</div>
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="showPage('discover')" id="nav-discover">🔍</button>
+            <button class="nav-btn" onclick="showPage('matches')" id="nav-matches">💕</button>
+            <button class="nav-btn" onclick="showPage('community')" id="nav-community">📰</button>
+            <button class="nav-btn" onclick="showPage('experts')" id="nav-experts">👨‍🏫</button>
+            <button class="nav-btn" onclick="showPage('fortune')" id="nav-fortune">🔮</button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- 发现页面 (Tinder 卡片) -->
+        <div class="page active" id="page-discover">
+            <div class="card-stack" id="cardStack">
+                <!-- 卡片由 JS 动态生成 -->
+            </div>
+            
+            <div class="swipe-actions">
+                <button class="swipe-btn pass" onclick="swipe('left')">✕</button>
+                <button class="swipe-btn super" onclick="swipe('super')">⭐</button>
+                <button class="swipe-btn like" onclick="swipe('right')">♥</button>
+            </div>
+        </div>
+        
+        <!-- 匹配列表 -->
+        <div class="page" id="page-matches">
+            <div class="match-list" id="matchList">
+                <!-- 动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 聊天页面 -->
+        <div class="page" id="page-chat">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-bar">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="输入消息...">
+                    <button class="chat-send" onclick="sendMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 社区页面 -->
+        <div class="page" id="page-community">
+            <div class="community-header">
+                <h2 style="font-size: 20px; margin-bottom: 8px;">缘分社区</h2>
+                <p style="color: #808080; font-size: 13px;">分享故事 · 求助问答 · 风水案例</p>
+            </div>
+            <div id="communityPosts"></div>
+        </div>
+        
+        <!-- 专家页面 -->
+        <div class="page" id="page-experts">
+            <div style="padding: 16px;">
+                <h2 style="font-size: 20px; margin-bottom: 8px;">风水大师</h2>
+                <p style="color: #808080; font-size: 13px;">专业咨询 · 八字解读 · 风水布局</p>
+            </div>
+            <div id="expertList"></div>
+        </div>
+        
+        <!-- 每日一卦 -->
+        <div class="page" id="page-fortune">
+            <div class="fortune-card" id="fortuneCard">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>正在计算今日运势...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <button class="bottom-nav-item active" onclick="showPage('discover')">
+            <span class="icon">🔍</span>发现
+        </button>
+        <button class="bottom-nav-item" onclick="showPage('matches')">
+            <span class="icon">💕</span>配对
+        </button>
+        <button class="bottom-nav-item" onclick="showPage('community')">
+            <span class="icon">📰</span>社区
+        </button>
+        <button class="bottom-nav-item" onclick="showPage('experts')">
+            <span class="icon">👨‍🏫</span>专家
+        </button>
+        <button class="bottom-nav-item" onclick="showPage('fortune')">
+            <span class="icon">🔮</span>运势
+        </button>
+    </nav>
+
+    <!-- 匹配成功弹窗 -->
+    <div class="match-modal" id="matchModal">
+        <div class="match-animation">💕</div>
+        <div class="match-title">匹配成功!</div>
+        <div class="match-subtitle">你们五行相合，缘分天定</div>
+        <div class="match-actions">
+            <button class="match-btn secondary" onclick="closeMatchModal()">继续浏览</button>
+            <button class="match-btn primary" onclick="goToChat()">开始聊天</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局状态
+        let currentUserId = 1; // Demo user
+        let currentCards = [];
+        let currentCardIndex = 0;
+        let currentMatchId = null;
+        
+        const API_BASE = '/api/fxti/v2';
+        
+        const WUXING_SYMBOLS = {
+            '木': { symbol: '🌲', color: '#4CAF50', desc: '生机勃勃' },
+            '火': { symbol: '🔥', color: '#FF5722', desc: '热情奔放' },
+            '土': { symbol: '⛰️', color: '#FFC107', desc: '稳重踏实' },
+            '金': { symbol: '⚔️', color: '#E0E0E0', desc: '果断坚毅' },
+            '水': { symbol: '💧', color: '#2196F3', desc: '智慧灵动' }
+        };
+        
+        // 页面切换
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            
+            // Update nav
+            const navMap = { discover: 0, matches: 1, community: 2, experts: 3, fortune: 4, chat: 1 };
+            const navIdx = navMap[page];
+            if (navIdx !== undefined) {
+                document.querySelectorAll('.bottom-nav-item')[navIdx]?.classList.add('active');
+            }
+            
+            // Load data
+            if (page === 'discover') loadDiscover();
+            if (page === 'matches') loadMatches();
+            if (page === 'community') loadCommunity();
+            if (page === 'experts') loadExperts();
+            if (page === 'fortune') loadFortune();
+        }
+        
+        // 加载发现卡片
+        async function loadDiscover() {
+            const stack = document.getElementById('cardStack');
+            stack.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/discover?user_id=${currentUserId}&limit=5`);
+                const data = await res.json();
+                currentCards = data.users || [];
+                currentCardIndex = 0;
+                renderCards();
+            } catch (e) {
+                stack.innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
+        
+        function renderCards() {
+            const stack = document.getElementById('cardStack');
+            stack.innerHTML = '';
+            
+            currentCards.slice(currentCardIndex, currentCardIndex + 3).forEach((user, i) => {
+                const wuxing = WUXING_SYMBOLS[user.fxti_element] || WUXING_SYMBOLS['木'];
+                const age = user.birth_date ? Math.floor((new Date() - new Date(user.birth_date)) / 31557600000) : '--';
+                
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.style.zIndex = 3 - i;
+                card.innerHTML = `
+                    <div class="card-image" style="background-image: url('${user.avatar_url}')">
+                        <div class="wuxing-overlay" id="overlay-${user.id}">
+                            <div class="wuxing-card">
+                                <div class="wuxing-symbol">${wuxing.symbol}</div>
+                                <div class="wuxing-name">${user.fxti_element}命</div>
+                                <div class="wuxing-desc">${wuxing.desc}</div>
+                                <div class="wuxing-hint">右滑解锁照片</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-header">
+                            <span class="card-name">${user.nickname}</span>
+                            <span class="card-age">${age}</span>
+                            ${user.is_verified ? '<span class="card-badge badge-verified">✓ 认证</span>' : ''}
+                        </div>
+                        <div class="card-meta">
+                            <span>${user.fxti_profile_name || ''}</span>
+                            <span>${user.birth_place || ''}</span>
+                        </div>
+                        <div class="card-bio">${user.bio || '这个人很懒，什么都没写...'}</div>
+                        <div class="compatibility-bar">
+                            <span class="compatibility-score">${user.compatibility_score || 75}分</span>
+                            <div class="compatibility-track">
+                                <div class="compatibility-fill" style="width: ${user.compatibility_score || 75}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                stack.appendChild(card);
+            });
+            
+            if (currentCards.length === 0) {
+                stack.innerHTML = '<div class="loading">暂无更多推荐<br><small>稍后再来看看</small></div>';
+            }
+        }
+        
+        // 滑动操作
+        async function swipe(direction) {
+            if (currentCardIndex >= currentCards.length) return;
+            
+            const user = currentCards[currentCardIndex];
+            const cards = document.querySelectorAll('.match-card');
+            const topCard = cards[0];
+            
+            // 动画
+            const translateX = direction === 'left' ? -300 : direction === 'right' ? 300 : 0;
+            const rotate = direction === 'left' ? -20 : direction === 'right' ? 20 : 0;
+            topCard.style.transform = `translateX(${translateX}px) rotate(${rotate}deg)`;
+            topCard.style.opacity = '0';
+            
+            // 发送API
+            try {
+                const res = await fetch(`${API_BASE}/swipe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        swiper_id: currentUserId,
+                        swiped_id: user.id,
+                        direction: direction === 'super' ? 'super' : direction === 'right' ? 'right' : 'left'
+                    })
+                });
+                const data = await res.json();
+                
+                if (data.result?.matched) {
+                    showMatchModal(data.result);
+                }
+            } catch (e) {
+                console.error('Swipe error:', e);
+            }
+            
+            setTimeout(() => {
+                currentCardIndex++;
+                renderCards();
+            }, 300);
+        }
+        
+        // 显示匹配弹窗
+        function showMatchModal(result) {
+            document.getElementById('matchModal').classList.add('active');
+        }
+        
+        function closeMatchModal() {
+            document.getElementById('matchModal').classList.remove('active');
+        }
+        
+        function goToChat() {
+            closeMatchModal();
+            showPage('matches');
+        }
+        
+        // 加载匹配列表
+        async function loadMatches() {
+            const list = document.getElementById('matchList');
+            list.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/users/${currentUserId}/matches`);
+                const data = await res.json();
+                
+                list.innerHTML = data.matches?.map(m => `
+                    <div class="match-item" onclick="openChat(${m.id}, ${m.partner_id})">
+                        <div class="match-avatar" style="background-image: url('${m.avatar_url}')"></div>
+                        <div class="match-info">
+                            <div class="match-name">${m.nickname} <span style="color: var(--gold)">${m.compatibility_score}分</span></div>
+                            <div class="match-preview">${m.wuxing_relation === 'mutual' ? '五行相生 ✨' : '缘分天定'}</div>
+                        </div>
+                        <div class="match-time">${m.matched_at ? new Date(m.matched_at).toLocaleDateString() : ''}</div>
+                    </div>
+                `).join('') || '<div class="loading">暂无匹配</div>';
+            } catch (e) {
+                list.innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
+        
+        // 打开聊天
+        async function openChat(matchId, partnerId) {
+            currentMatchId = matchId;
+            showPage('chat');
+            
+            try {
+                const res = await fetch(`${API_BASE}/matches/${matchId}/messages`);
+                const data = await res.json();
+                
+                const container = document.getElementById('chatMessages');
+                container.innerHTML = data.messages?.map(m => `
+                    <div class="chat-message ${m.sender_id === currentUserId ? 'own' : ''}">
+                        <div class="chat-bubble">${m.content}</div>
+                    </div>
+                `).join('') || '<div class="loading">开始聊天吧</div>';
+                
+                container.scrollTop = container.scrollHeight;
+            } catch (e) {
+                console.error('Chat load error:', e);
+            }
+        }
+        
+        // 发送消息
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const content = input.value.trim();
+            if (!content || !currentMatchId) return;
+            
+            // 临时显示
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `
+                <div class="chat-message own">
+                    <div class="chat-bubble">${content}</div>
+                </div>
+            `;
+            container.scrollTop = container.scrollHeight;
+            input.value = '';
+            
+            // 发送API
+            try {
+                await fetch(`${API_BASE}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        match_id: currentMatchId,
+                        sender_id: currentUserId,
+                        receiver_id: 0, // Will be determined by backend
+                        content: content
+                    })
+                });
+            } catch (e) {
+                console.error('Send error:', e);
+            }
+        }
+        
+        // 加载社区
+        async function loadCommunity() {
+            const container = document.getElementById('communityPosts');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/posts?limit=10`);
+                const data = await res.json();
+                
+                container.innerHTML = data.posts?.map(p => `
+                    <div class="post-card">
+                        <div class="post-author">
+                            <div class="post-avatar" style="background-image: url('${p.author_avatar}')"></div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 14px;">${p.author_name}</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">${new Date(p.created_at).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                        <div class="post-title">${p.title}</div>
+                        <div class="post-content">${p.content.substring(0, 100)}...</div>
+                        <div class="post-tags">
+                            ${p.tags?.map(t => `<span class="post-tag">${t}</span>`).join('') || ''}
+                        </div>
+                        <div class="post-stats">
+                            <span>👁 ${p.view_count}</span>
+                            <span>❤️ ${p.like_count}</span>
+                            <span>💬 ${p.comment_count}</span>
+                        </div>
+                    </div>
+                `).join('') || '<div class="loading">暂无帖子</div>';
+            } catch (e) {
+                container.innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
+        
+        // 加载专家
+        async function loadExperts() {
+            const container = document.getElementById('expertList');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/experts`);
+                const data = await res.json();
+                
+                container.innerHTML = data.experts?.map(e => `
+                    <div class="expert-card">
+                        <div class="expert-header">
+                            <div class="expert-avatar" style="background-image: url('${e.avatar_url}')"></div>
+                            <div class="expert-info">
+                                <div class="expert-name">${e.real_name || e.nickname}</div>
+                                <div class="expert-title">${e.title}</div>
+                                <div class="expert-rating">⭐ ${e.rating} (${e.review_count}评价)</div>
+                            </div>
+                        </div>
+                        <div class="expert-tags">
+                            ${e.specialties?.map(s => `<span class="expert-tag">${s}</span>`).join('') || ''}
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-muted); margin: 8px 0;">${e.bio?.substring(0, 80)}...</div>
+                        <div class="expert-price">$${e.consultation_price} HKD/次</div>
+                        <button class="expert-book-btn" onclick="bookExpert(${e.id})">立即预约</button>
+                    </div>
+                `).join('') || '<div class="loading">暂无专家</div>';
+            } catch (e) {
+                container.innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
+        
+        // 加载每日一卦
+        async function loadFortune() {
+            const card = document.getElementById('fortuneCard');
+            card.innerHTML = '<div class="loading"><div class="spinner"></div><p>正在计算今日运势...</p></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/daily-fortune`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: currentUserId })
+                });
+                const data = await res.json();
+                const f = data.fortune;
+                
+                card.innerHTML = `
+                    <div class="fortune-gua">${['☰','☷','☳','☴','☵','☲','☶','☱'][f.gua_number - 1] || '☯'}</div>
+                    <div class="fortune-name">${f.gua_name}卦 · ${f.gua_type}</div>
+                    <div class="fortune-score">${f.overall_score}</div>
+                    <div style="color: var(--text-muted); font-size: 14px;">今日综合运势</div>
+                    <div class="fortune-grid">
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">💕 爱情</div>
+                            <div class="fortune-item-value">${f.love_score}</div>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">💼 事业</div>
+                            <div class="fortune-item-value">${f.career_score}</div>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">💰 财运</div>
+                            <div class="fortune-item-value">${f.wealth_score}</div>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">🏃 健康</div>
+                            <div class="fortune-item-value">${f.health_score}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                        <div style="font-size: 13px; color: var(--gold); margin-bottom: 4px;">💡 今日建议</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">${f.advice}</div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
+                        🎨 幸运色: ${f.lucky_color} | 🧭 幸运方向: ${f.lucky_direction}
+                    </div>
+                `;
+            } catch (e) {
+                card.innerHTML = '<div class="loading">运势计算失败</div>';
+            }
+        }
+        
+        function bookExpert(expertId) {
+            alert('预约功能开发中，请稍后...');
+        }
+        
+        // 键盘事件
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') swipe('left');
+            if (e.key === 'ArrowRight') swipe('right');
+            if (e.key === 'Enter' && document.getElementById('chatInput') === document.activeElement) {
+                sendMessage();
+            }
+        });
+        
+        // 触摸滑动支持
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+        document.addEventListener('touchend', (e) => {
+            const diff = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(diff) > 80) {
+                swipe(diff > 0 ? 'right' : 'left');
+            }
+        });
+        
+        // 初始化
+        loadDiscover();
+    </script>
+</body>
+</html>

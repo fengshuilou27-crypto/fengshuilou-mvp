@@ -1794,8 +1794,16 @@ def fxti_daily_fortune(request: FXTIDailyFortuneRequest):
 
 # ==================== FXTI HePan (合盤) Route ====================
 
-@app.get("/fxti/hepan.html")
-def fxti_hepan_html():
+@app.get("/fxti/app.html")
+def fxti_app_html():
+    """FXTI 独立应用 - Tinder风格社交匹配"""
+    return FileResponse("static/fxti/app.html")
+
+
+@app.get("/fxti/app")
+def fxti_app():
+    """FXTI 应用（无 .html 后缀）"""
+    return FileResponse("static/fxti/app.html")
     """合盤頁面：雙人八字深度對比分析"""
     return FileResponse("static/fxti/hepan.html")
 
