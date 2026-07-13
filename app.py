@@ -766,6 +766,36 @@ def fxti_master_html():
     return FileResponse("static/fxti/master.html")
 
 
+@app.get("/fxti/master.html")
+def fxti_master_html():
+    return FileResponse("static/fxti/master.html")
+
+
+@app.get("/fxti/social.html")
+def fxti_social_html():
+    return FileResponse("static/fxti/social.html")
+
+
+@app.get("/fxti/matches.html")
+def fxti_matches_html():
+    return FileResponse("static/fxti/matches.html")
+
+
+@app.get("/fxti/chat.html")
+def fxti_chat_html():
+    return FileResponse("static/fxti/chat.html")
+
+
+@app.get("/fxti/chat-room.html")
+def fxti_chat_room_html():
+    return FileResponse("static/fxti/chat-room.html")
+
+
+@app.get("/fxti/profile.html")
+def fxti_profile_html():
+    return FileResponse("static/fxti/profile.html")
+
+
 @app.get("/disclaimer")
 def disclaimer_page():
     return FileResponse("static/disclaimer.html")

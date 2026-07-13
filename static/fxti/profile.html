@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的資料 - FXTI 緣分配對</title>
+    <link rel="stylesheet" href="/static/css/fxti-social-theme.css">
+    <style>
+        .profile-header {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            background: linear-gradient(135deg, var(--romance-pink-muted), var(--mint-muted));
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+            margin: -16px -16px var(--space-lg);
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--romance-pink), var(--mint-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto var(--space-md);
+            border: 4px solid white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .profile-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .profile-element {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            background: white;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--romance-pink);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .menu-list {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--divider);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-item:hover {
+            background: var(--bg-gradient-start);
+        }
+        
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .menu-icon.pink { background: var(--romance-pink-muted); }
+        .menu-icon.mint { background: var(--mint-muted); }
+        .menu-icon.gold { background: rgba(255, 217, 61, 0.2); }
+        
+        .menu-content {
+            flex: 1;
+        }
+        
+        .menu-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .menu-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .menu-arrow {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .stat-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-box-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--romance-pink);
+        }
+        
+        .stat-box-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">FXTI<span>緣分</span></span>
+            <span class="logo-sub">Destiny Match</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="social.html">發現</a>
+        <a href="matches.html">配對</a>
+        <a href="chat.html">聊天</a>
+        <a href="profile.html" class="active">我的</a>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 60px; max-width: 500px;">
+    <!-- 個人資料頭部 -->
+    <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-name">Alex</div>
+        <div class="profile-meta">25歲 · 香港 · 軟件工程師</div>
+        <div class="profile-element">
+            <span>🌲</span> 木型人格 · 仁慈長青樹
+        </div>
+    </div>
+    
+    <!-- 統計 -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-box-value">28</div>
+            <div class="stat-box-label">總配對</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-value">12</div>
+            <div class="stat-box-label">互相喜歡</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-value">5</div>
+            <div class="stat-box-label">進行中</div>
+        </div>
+    </div>
+    
+    <!-- 金幣顯示 -->
+    <div style="background: linear-gradient(135deg, var(--destiny-gold), var(--gold-dark)); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <div style="font-size: 14px; color: rgba(0,0,0,0.6); margin-bottom: 4px;">我的金幣</div>
+            <div style="font-size: 28px; font-weight: 700; color: var(--text-primary);">🪙 128</div>
+        </div>
+        <button class="btn btn-primary" style="background: white; color: var(--text-primary); box-shadow: none;">充值</button>
+    </div>
+    
+    <!-- 菜單列表 -->
+    <div class="menu-list">
+        <a href="index.html" class="menu-item">
+            <div class="menu-icon pink">🔥</div>
+            <div class="menu-content">
+                <div class="menu-title">FXTI 五行測評</div>
+                <div class="menu-subtitle">查看你的五行人格分析</div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </a>
+        <a href="match.html" class="menu-item">
+            <div class="menu-icon mint">💕</div>
+            <div class="menu-content">
+                <div class="menu-title">五行配對</div>
+                <div class="menu-subtitle">雙人八字深度分析</div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </a>
+        <a href="compatibility.html" class="menu-item">
+            <div class="menu-icon gold">⚖️</div>
+            <div class="menu-content">
+                <div class="menu-title">關係建議</div>
+                <div class="menu-subtitle">五行相處指南</div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </a>
+    </div>
+    
+    <div class="menu-list">
+        <div class="menu-item" onclick="alert('設置功能開發中')">
+            <div class="menu-icon" style="background: #f0f0f0;">⚙️</div>
+            <div class="menu-content">
+                <div class="menu-title">設置</div>
+                <div class="menu-subtitle">偏好、通知、隱私</div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="alert('會員功能開發中')">
+            <div class="menu-icon" style="background: linear-gradient(135deg, var(--destiny-gold), var(--gold-dark));">👑</div>
+            <div class="menu-content">
+                <div class="menu-title">高級會員</div>
+                <div class="menu-subtitle">解鎖更多功能</div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </div>
+    </div>
+    
+    <!-- 版本信息 -->
+    <div style="text-align: center; padding: var(--space-xl) 0; color: var(--text-muted); font-size: 12px;">
+        FXTI v3.0.0 · 風水樓緣分配對平台
+    </div>
+</div>
+
+<!-- 底部導航（移動端） -->
+<nav class="bottom-nav">
+    <a href="social.html" class="bottom-nav-item">
+        <span class="icon">🔍</span>
+        <span class="label">發現</span>
+    </a>
+    <a href="matches.html" class="bottom-nav-item">
+        <span class="icon">💕</span>
+        <span class="label">配對</span>
+    </a>
+    <a href="chat.html" class="bottom-nav-item">
+        <span class="icon">💬</span>
+        <span class="label">聊天</span>
+    </a>
+    <a href="profile.html" class="bottom-nav-item active">
+        <span class="icon">👤</span>
+        <span class="label">我的</span>
+    </a>
+</nav>
+
+<script>
+// 導航欄滾動效果
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+</script>
+</body>
+</html>

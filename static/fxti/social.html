@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FXTI 緣分配對 - 命理社交匹配平台</title>
+    <link rel="stylesheet" href="/static/css/fxti-social-theme.css">
+    <style>
+        /* 頁面特定樣式 */
+        .page-header {
+            text-align: center;
+            padding: var(--space-lg) 0;
+        }
+        
+        .page-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .page-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        
+        /* 配對卡片堆疊效果 */
+        .card-stack {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 580px;
+            margin: 0 auto;
+        }
+        
+        .card-stack .match-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .card-stack .match-card:nth-child(2) {
+            transform: scale(0.95) translateY(10px);
+            opacity: 0.7;
+            z-index: -1;
+        }
+        
+        .card-stack .match-card:nth-child(3) {
+            transform: scale(0.9) translateY(20px);
+            opacity: 0.4;
+            z-index: -2;
+        }
+        
+        /* 滑動指示器 */
+        .swipe-hint {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 12px 24px;
+            border-radius: var(--radius-full);
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+            border: 3px solid;
+            transform: translateY(-50%) rotate(-15deg);
+        }
+        
+        .swipe-hint.like {
+            right: 20px;
+            color: var(--romance-pink);
+            border-color: var(--romance-pink);
+            background: rgba(255, 107, 157, 0.1);
+        }
+        
+        .swipe-hint.nope {
+            left: 20px;
+            color: #FF6B6B;
+            border-color: #FF6B6B;
+            background: rgba(255, 107, 107, 0.1);
+            transform: translateY(-50%) rotate(15deg);
+        }
+        
+        .match-card.swiping-left .swipe-hint.nope,
+        .match-card.swiping-right .swipe-hint.like {
+            opacity: 1;
+        }
+        
+        /* 空狀態 */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-2xl);
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .empty-state-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* 過濾器 */
+        .filter-bar {
+            display: flex;
+            gap: var(--space-sm);
+            padding: var(--space-md) 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-chip {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-chip:hover,
+        .filter-chip.active {
+            background: var(--romance-pink);
+            color: white;
+            border-color: var(--romance-pink);
+        }
+        
+        /* 統計信息 */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: var(--space-md);
+            background: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--romance-pink);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* 模態框 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: var(--space-xl);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--border-subtle);
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">FXTI<span>緣分</span></span>
+            <span class="logo-sub">Destiny Match</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="social.html" class="active">發現</a>
+        <a href="matches.html">配對</a>
+        <a href="chat.html">聊天</a>
+        <a href="profile.html">我的</a>
+    </div>
+    <div class="coin-display" style="margin-left: auto;">
+        <span class="coin-icon">🪙</span>
+        <span id="coinBalance">128</span>
+    </div>
+</nav>
+
+<div class="container container-narrow">
+    <!-- 每日命理卡 -->
+    <div class="daily-card animate-slide-up">
+        <div class="daily-card-title">
+            <span>✨</span> 今日命理提示
+        </div>
+        <div class="daily-card-content">
+            你的五行能量：<strong>木旺</strong>。今日適合社交、認識新朋友。幸運色為 <span style="color: #4ECDC4;">薄荷綠</span>，
+            建議穿著綠色系衣物提升桃花運。
+        </div>
+    </div>
+    
+    <!-- 統計欄 -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value">12</div>
+            <div class="stat-label">今日配對</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">互相喜歡</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">85%</div>
+            <div class="stat-label">平均匹配</div>
+        </div>
+    </div>
+    
+    <!-- 過濾器 -->
+    <div class="filter-bar">
+        <div class="filter-chip active">全部</div>
+        <div class="filter-chip">木型</div>
+        <div class="filter-chip">火型</div>
+        <div class="filter-chip">土型</div>
+        <div class="filter-chip">金型</div>
+        <div class="filter-chip">水型</div>
+        <div class="filter-chip">高匹配</div>
+    </div>
+    
+    <!-- 配對卡片流 -->
+    <div class="card-stack" id="cardStack">
+        <!-- 卡片由 JS 動態生成 -->
+    </div>
+    
+    <!-- 滑動按鈕 -->
+    <div class="swipe-actions">
+        <button class="swipe-btn reject" onclick="swipe('left')" title="跳過">
+            ❌
+        </button>
+        <button class="swipe-btn chat" onclick="openChat()" title="直接聊天">
+            💬
+        </button>
+        <button class="swipe-btn super-like" onclick="superLike()" title="超級喜歡">
+            ⭐
+        </button>
+        <button class="swipe-btn like" onclick="swipe('right')" title="喜歡">
+            ❤️
+        </button>
+    </div>
+</div>
+
+<!-- 底部導航（移動端） -->
+<nav class="bottom-nav">
+    <a href="social.html" class="bottom-nav-item active">
+        <span class="icon">🔍</span>
+        <span class="label">發現</span>
+    </a>
+    <a href="matches.html" class="bottom-nav-item">
+        <span class="icon">💕</span>
+        <span class="label">配對</span>
+    </a>
+    <a href="chat.html" class="bottom-nav-item">
+        <span class="icon">💬</span>
+        <span class="label">聊天</span>
+    </a>
+    <a href="profile.html" class="bottom-nav-item">
+        <span class="icon">👤</span>
+        <span class="label">我的</span>
+    </a>
+</nav>
+
+<!-- 匹配成功模態框 -->
+<div class="modal-overlay" id="matchModal">
+    <div class="modal-content" style="text-align: center; border-radius: var(--radius-xl);">
+        <div style="font-size: 64px; margin-bottom: var(--space-lg);">🎉</div>
+        <h2 style="font-size: 28px; margin-bottom: var(--space-sm);" class="gradient-text">匹配成功！</h2>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
+            你們的五行匹配度高達 <strong style="color: var(--romance-pink);">92%</strong>
+        </p>
+        <div style="display: flex; gap: var(--space-md); justify-content: center; margin-bottom: var(--space-lg);">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--romance-pink), var(--mint-green)); display: flex; align-items: center; justify-content: center; font-size: 36px;">你</div>
+            <div style="display: flex; align-items: center; font-size: 24px;">💕</div>
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--mint-green), var(--romance-pink)); display: flex; align-items: center; justify-content: center; font-size: 36px;">TA</div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; margin-bottom: var(--space-sm);" onclick="startChat()">
+            💬 開始聊天
+        </button>
+        <button class="btn btn-secondary" style="width: 100%;" onclick="closeModal()">
+            繼續瀏覽
+        </button>
+    </div>
+</div>
+
+<script>
+// 模擬配對數據
+const mockProfiles = [
+    {
+        id: 1,
+        name: '小玲',
+        age: 25,
+        location: '2km',
+        element: '木火型',
+        animal: '🐉 職場噴火龍',
+        matchScore: 92,
+        tags: ['相生', '互補', '穩定'],
+        blurLevel: 70,
+        photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ling&backgroundColor=ffdfbf'
+    },
+    {
+        id: 2,
+        name: '雅琪',
+        age: 27,
+        location: '5km',
+        element: '金水型',
+        animal: '🦢 優雅白天鵝',
+        matchScore: 85,
+        tags: ['默契', '知性', '溫柔'],
+        blurLevel: 100,
+        photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=yaqi&backgroundColor=c0a8ff'
+    },
+    {
+        id: 3,
+        name: '思涵',
+        age: 24,
+        location: '1km',
+        element: '土型',
+        animal: '🐢 穩重小烏龜',
+        matchScore: 78,
+        tags: ['踏實', '可靠', '顧家'],
+        blurLevel: 100,
+        photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sihan&backgroundColor=b8e6c1'
+    },
+    {
+        id: 4,
+        name: '雨萱',
+        age: 26,
+        location: '8km',
+        element: '火型',
+        animal: '🔥 熱情小火焰',
+        matchScore: 88,
+        tags: ['熱情', '活力', '浪漫'],
+        blurLevel: 100,
+        photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=yuxuan&backgroundColor=ffb8b8'
+    },
+    {
+        id: 5,
+        name: '靜怡',
+        age: 28,
+        location: '3km',
+        element: '水型',
+        animal: '🌊 智慧小海豚',
+        matchScore: 90,
+        tags: ['智慧', '靈活', '包容'],
+        blurLevel: 100,
+        photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jingyi&backgroundColor=b8d4ff'
+    }
+];
+
+let currentIndex = 0;
+let currentCard = null;
+let startX = 0;
+let currentX = 0;
+
+// 初始化卡片堆
+function initCardStack() {
+    const stack = document.getElementById('cardStack');
+    stack.innerHTML = '';
+    
+    mockProfiles.forEach((profile, index) => {
+        const card = createCard(profile, index);
+        stack.appendChild(card);
+    });
+    
+    setupSwipeGesture();
+}
+
+// 創建卡片
+function createCard(profile, index) {
+    const card = document.createElement('div');
+    card.className = 'match-card';
+    card.dataset.index = index;
+    card.style.zIndex = mockProfiles.length - index;
+    
+    const blurClass = `blur-${profile.blurLevel}`;
+    
+    card.innerHTML = `
+        <div class="match-card-photo ${blurClass}">
+            <img src="${profile.photo}" alt="${profile.name}">
+            <div class="blur-indicator">🔒 模糊度 ${profile.blurLevel}%</div>
+            <div class="match-badge">${profile.matchScore}% 匹配</div>
+            <div class="swipe-hint nope">跳過</div>
+            <div class="swipe-hint like">喜歡</div>
+        </div>
+        <div class="match-card-info">
+            <div class="match-card-name">${profile.name} <span style="font-size: 18px; color: var(--text-secondary);">${profile.age}歲</span></div>
+            <div class="match-card-meta">📍 ${profile.location} · ${profile.animal}</div>
+            <div class="match-card-tags">
+                <span class="match-tag">${profile.element}</span>
+                ${profile.tags.map(tag => `<span class="match-tag mint">${tag}</span>`).join('')}
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// 設置滑動手勢
+function setupSwipeGesture() {
+    const stack = document.getElementById('cardStack');
+    const cards = stack.querySelectorAll('.match-card');
+    
+    if (cards.length === 0) return;
+    
+    currentCard = cards[0];
+    
+    currentCard.addEventListener('touchstart', handleTouchStart, { passive: true });
+    currentCard.addEventListener('touchmove', handleTouchMove, { passive: true });
+    currentCard.addEventListener('touchend', handleTouchEnd);
+    
+    currentCard.addEventListener('mousedown', handleMouseDown);
+}
+
+function handleTouchStart(e) {
+    startX = e.touches[0].clientX;
+}
+
+function handleMouseDown(e) {
+    startX = e.clientX;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+}
+
+function handleTouchMove(e) {
+    if (!currentCard) return;
+    currentX = e.touches[0].clientX;
+    const deltaX = currentX - startX;
+    const rotation = deltaX * 0.05;
+    currentCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+    
+    if (deltaX > 50) currentCard.classList.add('swiping-right');
+    else if (deltaX < -50) currentCard.classList.add('swiping-left');
+    else {
+        currentCard.classList.remove('swiping-left', 'swiping-right');
+    }
+}
+
+function handleMouseMove(e) {
+    if (!currentCard) return;
+    currentX = e.clientX;
+    const deltaX = currentX - startX;
+    const rotation = deltaX * 0.05;
+    currentCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+}
+
+function handleTouchEnd(e) {
+    if (!currentCard) return;
+    const deltaX = currentX - startX;
+    
+    if (deltaX > 100) {
+        swipe('right');
+    } else if (deltaX < -100) {
+        swipe('left');
+    } else {
+        currentCard.style.transform = '';
+        currentCard.classList.remove('swiping-left', 'swiping-right');
+    }
+}
+
+function handleMouseUp(e) {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+    handleTouchEnd(e);
+}
+
+// 滑動操作
+function swipe(direction) {
+    if (!currentCard) return;
+    
+    if (direction === 'right') {
+        currentCard.classList.add('swiping-right');
+        setTimeout(() => showMatchModal(), 300);
+    } else {
+        currentCard.classList.add('swiping-left');
+    }
+    
+    setTimeout(() => {
+        currentCard.remove();
+        currentIndex++;
+        
+        const stack = document.getElementById('cardStack');
+        const cards = stack.querySelectorAll('.match-card');
+        
+        if (cards.length > 0) {
+            currentCard = cards[0];
+            setupSwipeGesture();
+        } else {
+            showEmptyState();
+        }
+    }, 300);
+}
+
+// 顯示空狀態
+function showEmptyState() {
+    const stack = document.getElementById('cardStack');
+    stack.innerHTML = `
+        <div class="empty-state">
+            <div class="empty-state-icon">🌸</div>
+            <div class="empty-state-title">今日配對已看完</div>
+            <div class="empty-state-text">明天再來發現新的緣分吧！</div>
+            <button class="btn btn-primary" onclick="location.reload()">重新載入</button>
+        </div>
+    `;
+}
+
+// 超級喜歡
+function superLike() {
+    const coinBalance = document.getElementById('coinBalance');
+    let coins = parseInt(coinBalance.textContent);
+    
+    if (coins >= 50) {
+        coins -= 50;
+        coinBalance.textContent = coins;
+        swipe('right');
+    } else {
+        alert('金幣不足！需要 50 金幣才能使用超級喜歡。');
+    }
+}
+
+// 直接聊天
+function openChat() {
+    alert('聊天功能需要雙方互相喜歡後才能開啟。請先右滑喜歡對方！');
+}
+
+// 顯示匹配模態框
+function showMatchModal() {
+    document.getElementById('matchModal').classList.add('active');
+}
+
+// 關閉模態框
+function closeModal() {
+    document.getElementById('matchModal').classList.remove('active');
+}
+
+// 開始聊天
+function startChat() {
+    closeModal();
+    window.location.href = 'chat.html';
+}
+
+// 導航欄滾動效果
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+
+// 初始化
+initCardStack();
+</script>
+</body>
+</html>

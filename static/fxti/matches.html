@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的配對 - FXTI 緣分配對</title>
+    <link rel="stylesheet" href="/static/css/fxti-social-theme.css">
+    <style>
+        .matches-tabs {
+            display: flex;
+            gap: var(--space-sm);
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--divider);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .matches-tab {
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        
+        .matches-tab.active {
+            background: var(--romance-pink);
+            color: white;
+        }
+        
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+        
+        @media (min-width: 600px) {
+            .matches-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .match-person-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+        
+        .match-person-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .match-person-photo {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--romance-pink-muted), var(--mint-muted));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+        
+        .match-person-score {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--romance-pink);
+            color: white;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .match-person-info {
+            padding: var(--space-md);
+        }
+        
+        .match-person-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .match-person-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .match-person-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+        
+        .status-mutual {
+            background: var(--romance-pink-muted);
+            color: var(--romance-pink);
+        }
+        
+        .status-pending {
+            background: var(--mint-muted);
+            color: var(--mint-dark);
+        }
+        
+        .status-liked {
+            background: rgba(255, 217, 61, 0.2);
+            color: var(--gold-dark);
+        }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">FXTI<span>緣分</span></span>
+            <span class="logo-sub">Destiny Match</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="social.html">發現</a>
+        <a href="matches.html" class="active">配對</a>
+        <a href="chat.html">聊天</a>
+        <a href="profile.html">我的</a>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: calc(60px + var(--space-md)); max-width: 600px;">
+    <div class="page-header" style="padding: var(--space-md) 0;">
+        <div class="page-title">💕 我的配對</div>
+    </div>
+    
+    <!-- 分類標籤 -->
+    <div class="matches-tabs">
+        <button class="matches-tab active" onclick="switchTab('mutual')">互相喜歡 (3)</button>
+        <button class="matches-tab" onclick="switchTab('liked')">我喜歡的 (8)</button>
+        <button class="matches-tab" onclick="switchTab('fans')">喜歡我的 (5)</button>
+    </div>
+    
+    <!-- 配對網格 -->
+    <div class="matches-grid" id="matchesGrid">
+        <!-- 由 JS 生成 -->
+    </div>
+</div>
+
+<!-- 底部導航（移動端） -->
+<nav class="bottom-nav">
+    <a href="social.html" class="bottom-nav-item">
+        <span class="icon">🔍</span>
+        <span class="label">發現</span>
+    </a>
+    <a href="matches.html" class="bottom-nav-item active">
+        <span class="icon">💕</span>
+        <span class="label">配對</span>
+    </a>
+    <a href="chat.html" class="bottom-nav-item">
+        <span class="icon">💬</span>
+        <span class="label">聊天</span>
+    </a>
+    <a href="profile.html" class="bottom-nav-item">
+        <span class="icon">👤</span>
+        <span class="label">我的</span>
+    </a>
+</nav>
+
+<script>
+// 模擬配對數據
+const matchesData = {
+    mutual: [
+        { id: 1, name: '小玲', age: 25, avatar: '🐉', score: 92, status: 'mutual', element: '火型' },
+        { id: 2, name: '雅琪', age: 27, avatar: '🦢', score: 85, status: 'mutual', element: '水型' },
+        { id: 3, name: '思涵', age: 24, avatar: '🐢', score: 78, status: 'mutual', element: '土型' }
+    ],
+    liked: [
+        { id: 4, name: '雨萱', age: 26, avatar: '🔥', score: 88, status: 'liked', element: '火型' },
+        { id: 5, name: '靜怡', age: 28, avatar: '🌊', score: 90, status: 'liked', element: '水型' }
+    ],
+    fans: [
+        { id: 6, name: '曉雯', age: 25, avatar: '🌸', score: 82, status: 'pending', element: '木型' },
+        { id: 7, name: '美琪', age: 27, avatar: '⭐', score: 75, status: 'pending', element: '金型' }
+    ]
+};
+
+let currentTab = 'mutual';
+
+// 切換標籤
+function switchTab(tab) {
+    currentTab = tab;
+    
+    // 更新標籤樣式
+    document.querySelectorAll('.matches-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    renderMatches();
+}
+
+// 渲染配對列表
+function renderMatches() {
+    const grid = document.getElementById('matchesGrid');
+    const data = matchesData[currentTab] || [];
+    
+    if (data.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: var(--space-2xl); color: var(--text-secondary);">
+                <div style="font-size: 48px; margin-bottom: var(--space-md);">🌸</div>
+                <p>暫無配對記錄</p>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = data.map(person => `
+        <div class="match-person-card" onclick="viewProfile(${person.id})">
+            <div class="match-person-photo">
+                ${person.avatar}
+                <div class="match-person-score">${person.score}%</div>
+            </div>
+            <div class="match-person-info">
+                <div class="match-person-name">${person.name} · ${person.age}歲</div>
+                <div class="match-person-meta">${person.element}</div>
+                <div class="match-person-status ${person.status === 'mutual' ? 'status-mutual' : person.status === 'liked' ? 'status-liked' : 'status-pending'}">
+                    ${person.status === 'mutual' ? '💕 互相喜歡' : person.status === 'liked' ? '👍 已喜歡' : '⏳ 等待回應'}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 查看資料
+function viewProfile(id) {
+    window.location.href = `chat-room.html?id=${id}`;
+}
+
+// 導航欄滾動效果
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+
+// 初始化
+renderMatches();
+</script>
+</body>
+</html>

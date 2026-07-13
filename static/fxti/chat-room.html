@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>聊天室 - FXTI 緣分配對</title>
+    <link rel="stylesheet" href="/static/css/fxti-social-theme.css">
+</head>
+<body style="overflow: hidden;">
+
+<!-- 聊天頭部 -->
+<div class="chat-header">
+    <a href="chat.html" style="text-decoration: none; font-size: 24px; color: var(--text-secondary);">←</a>
+    <div class="chat-avatar">🐉</div>
+    <div style="flex: 1;">
+        <div style="font-weight: 600; font-size: 16px;">小玲</div>
+        <div style="font-size: 12px; color: var(--mint-green);">● 在線</div>
+    </div>
+    <div style="text-align: right;">
+        <div style="font-size: 14px; font-weight: 700; color: var(--romance-pink);">92% 匹配</div>
+        <div style="font-size: 11px; color: var(--text-muted);">木火型 · 職場噴火龍</div>
+    </div>
+</div>
+
+<!-- 聊天消息區 -->
+<div class="chat-messages" id="chatMessages">
+    <!-- 命理洞察卡片：每日提示 -->
+    <div class="insight-card">
+        <div class="insight-card-title">✨ 今日命理提示</div>
+        <div class="insight-card-text">
+            你們今天五行相生（木生火），是深入交流的好時機。建議聊聊彼此的興趣愛好和未來規劃。
+        </div>
+    </div>
+    
+    <!-- 命理洞察卡片：話題推薦 -->
+    <div class="insight-card">
+        <div class="insight-card-title">💡 話題推薦</div>
+        <div class="insight-card-text">
+            根據三觀匹配結果，你們在「家庭觀」和「事業觀」上高度契合，可以從這些話題開始。
+        </div>
+    </div>
+    
+    <!-- 歡迎消息 -->
+    <div class="message received">
+        你好！👋 看到你的命理分析，我們五行相生呢！
+    </div>
+    
+    <div class="message sent">
+        對呀！我是木型，你是火型，木生火，感覺我們會很合得來 😊
+    </div>
+    
+    <!-- 里程碑卡片 -->
+    <div style="text-align: center; margin: var(--space-md) 0;">
+        <span style="background: linear-gradient(135deg, var(--romance-pink-muted), var(--mint-muted)); padding: 8px 16px; border-radius: var(--radius-full); font-size: 13px; color: var(--text-secondary);">
+            🎉 你們已經聊了 3 天
+        </span>
+    </div>
+    
+    <div class="message received">
+        你平時週末都喜歡做什麼？
+    </div>
+    
+    <div class="message sent">
+        我喜歡去爬山或者看展覽，比較喜歡戶外活動～你呢？
+    </div>
+    
+    <!-- 命理洞察卡片：警示 -->
+    <div class="insight-card" style="border-left-color: #FF6B6B;">
+        <div class="insight-card-title" style="color: #FF6B6B;">⚠️ 溫馨提示</div>
+        <div class="insight-card-text">
+            明天你們的五行會有輕微相剋，建議多傾聽對方，避免爭執。
+        </div>
+    </div>
+</div>
+
+<!-- 快捷回覆 -->
+<div style="padding: 0 var(--space-md); display: flex; gap: var(--space-sm); overflow-x: auto; -webkit-overflow-scrolling: touch;">
+    <button class="filter-chip" onclick="sendQuickReply('關於五行')">關於五行</button>
+    <button class="filter-chip" onclick="sendQuickReply('聊聊興趣')">聊聊興趣</button>
+    <button class="filter-chip" onclick="sendQuickReply('未來規劃')">未來規劃</button>
+    <button class="filter-chip" onclick="sendQuickReply('約見面')">約見面 ☕</button>
+</div>
+
+<!-- 輸入區 -->
+<div class="chat-input-area">
+    <button style="width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--border-subtle); cursor: pointer; font-size: 18px;">📎</button>
+    <input type="text" class="chat-input" id="chatInput" placeholder="輸入消息..." onkeypress="handleKeyPress(event)">
+    <button class="chat-send-btn" onclick="sendMessage()">➤</button>
+</div>
+
+<script>
+// 發送消息
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    
+    if (!text) return;
+    
+    const messagesContainer = document.getElementById('chatMessages');
+    
+    // 添加用戶消息
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message sent animate-slide-up';
+    userMsg.textContent = text;
+    messagesContainer.appendChild(userMsg);
+    
+    input.value = '';
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // 模擬對方回覆
+    setTimeout(() => {
+        const replyMsg = document.createElement('div');
+        replyMsg.className = 'message received animate-slide-up';
+        replyMsg.textContent = getAutoReply(text);
+        messagesContainer.appendChild(replyMsg);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 1000 + Math.random() * 2000);
+}
+
+// 快捷回覆
+function sendQuickReply(text) {
+    const input = document.getElementById('chatInput');
+    input.value = text;
+    sendMessage();
+}
+
+// 自動回覆邏輯
+function getAutoReply(userText) {
+    const replies = {
+        '關於五行': '對呀！我們的五行真的很合。我是火型，比較熱情直接，你是木型，比較溫和有耐心，感覺互補呢！',
+        '聊聊興趣': '我喜歡瑜伽和烘焙 🧘‍♀️🧁 最近還在學塔羅牌，感覺和命理有點像！',
+        '未來規劃': '我希望3年內能開一家自己的咖啡廳，結合命理諮詢的那種 ☕✨ 你覺得這個idea怎麼樣？',
+        '約見面': '好呀！週末有時間嗎？我知道有一家很不錯的咖啡廳，環境很適合聊天～',
+        'default': '這個話題很有趣！可以多說說你的想法嗎？😊'
+    };
+    
+    return replies[userText] || replies['default'];
+}
+
+// 鍵盤事件
+function handleKeyPress(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+// 自動滾動到底部
+window.onload = () => {
+    const messagesContainer = document.getElementById('chatMessages');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>聊天 - FXTI 緣分配對</title>
+    <link rel="stylesheet" href="/static/css/fxti-social-theme.css">
+    <style>
+        /* 聊天頁面特定樣式 */
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            background: var(--divider);
+        }
+        
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: white;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+        
+        .chat-item:hover {
+            background: var(--bg-gradient-start);
+        }
+        
+        .chat-item-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--romance-pink), var(--mint-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .chat-item-avatar.online::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            background: #4ECDC4;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        
+        .chat-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .chat-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .chat-item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .chat-item-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .chat-item-preview {
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-item-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            flex-shrink: 0;
+        }
+        
+        .unread-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--romance-pink);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .match-score-small {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--romance-pink);
+            background: var(--romance-pink-muted);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+        }
+        
+        /* 空狀態 */
+        .empty-chat {
+            text-align: center;
+            padding: var(--space-2xl);
+            color: var(--text-secondary);
+        }
+        
+        .empty-chat-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-lg);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<!-- 頂部導航欄 -->
+<nav class="top-nav" id="topNav">
+    <a href="/" class="brand-logo" title="回到主頁">
+        <div class="logo-mark"></div>
+        <div class="logo-text">
+            <span class="logo-main">FXTI<span>緣分</span></span>
+            <span class="logo-sub">Destiny Match</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="social.html">發現</a>
+        <a href="matches.html">配對</a>
+        <a href="chat.html" class="active">聊天</a>
+        <a href="profile.html">我的</a>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: calc(60px + var(--space-md)); max-width: 600px;">
+    <div class="page-header" style="padding: var(--space-md) 0;">
+        <div class="page-title">💬 聊天</div>
+    </div>
+    
+    <div class="chat-list" id="chatList">
+        <!-- 聊天列表由 JS 生成 -->
+    </div>
+</div>
+
+<!-- 底部導航（移動端） -->
+<nav class="bottom-nav">
+    <a href="social.html" class="bottom-nav-item">
+        <span class="icon">🔍</span>
+        <span class="label">發現</span>
+    </a>
+    <a href="matches.html" class="bottom-nav-item">
+        <span class="icon">💕</span>
+        <span class="label">配對</span>
+    </a>
+    <a href="chat.html" class="bottom-nav-item active">
+        <span class="icon">💬</span>
+        <span class="label">聊天</span>
+    </a>
+    <a href="profile.html" class="bottom-nav-item">
+        <span class="icon">👤</span>
+        <span class="label">我的</span>
+    </a>
+</nav>
+
+<script>
+// 模擬聊天列表數據
+const chatListData = [
+    {
+        id: 1,
+        name: '小玲',
+        avatar: '🐉',
+        lastMessage: '【命理提示】你們今天五行相生，適合深入交流感情話題 💕',
+        time: '2分鐘前',
+        unread: 2,
+        online: true,
+        matchScore: 92,
+        isInsight: true
+    },
+    {
+        id: 2,
+        name: '雅琪',
+        avatar: '🦢',
+        lastMessage: '哈哈，原來我們的八字這麼合！',
+        time: '1小時前',
+        unread: 0,
+        online: false,
+        matchScore: 85,
+        isInsight: false
+    },
+    {
+        id: 3,
+        name: '思涵',
+        avatar: '🐢',
+        lastMessage: '【話題推薦】根據你們的三觀匹配，建議聊聊「未來規劃」🎯',
+        time: '3小時前',
+        unread: 1,
+        online: true,
+        matchScore: 78,
+        isInsight: true
+    },
+    {
+        id: 4,
+        name: '雨萱',
+        avatar: '🔥',
+        lastMessage: '週末有空嗎？想去那家新開的咖啡廳 ☕',
+        time: '昨天',
+        unread: 0,
+        online: false,
+        matchScore: 88,
+        isInsight: false
+    }
+];
+
+// 渲染聊天列表
+function renderChatList() {
+    const list = document.getElementById('chatList');
+    
+    if (chatListData.length === 0) {
+        list.innerHTML = `
+            <div class="empty-chat">
+                <div class="empty-chat-icon">💭</div>
+                <p>還沒有聊天記錄</p>
+                <p style="font-size: 14px; margin-top: 8px;">去「發現」頁面配對新朋友吧！</p>
+            </div>
+        `;
+        return;
+    }
+    
+    list.innerHTML = chatListData.map(chat => `
+        <div class="chat-item" onclick="openChat(${chat.id})">
+            <div class="chat-item-avatar ${chat.online ? 'online' : ''}">${chat.avatar}</div>
+            <div class="chat-item-info">
+                <div class="chat-item-header">
+                    <span class="chat-item-name">${chat.name}</span>
+                    <span class="chat-item-time">${chat.time}</span>
+                </div>
+                <div class="chat-item-preview" style="${chat.isInsight ? 'color: var(--mint-green);' : ''}">
+                    ${chat.lastMessage}
+                </div>
+            </div>
+            <div class="chat-item-meta">
+                <span class="match-score-small">${chat.matchScore}%</span>
+                ${chat.unread > 0 ? `<span class="unread-badge">${chat.unread}</span>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+// 打開聊天
+function openChat(chatId) {
+    window.location.href = `chat-room.html?id=${chatId}`;
+}
+
+// 導航欄滾動效果
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+});
+
+// 初始化
+renderChatList();
+</script>
+</body>
+</html>
