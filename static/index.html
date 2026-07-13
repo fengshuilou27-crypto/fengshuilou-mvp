@@ -64,6 +64,209 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
+
+        /* 分析流程 */
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+            flex-wrap: wrap;
+        }
+        .process-step {
+            text-align: center;
+            max-width: 220px;
+            padding: var(--space-xl);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            transition: all var(--transition-normal);
+        }
+        .process-step:hover {
+            border-color: var(--border-gold);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-gold);
+        }
+        .step-number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--gold-primary);
+            margin-bottom: var(--space-sm);
+            opacity: 0.6;
+        }
+        .process-step h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+        .process-step p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .process-arrow {
+            font-size: 24px;
+            color: var(--gold-primary);
+            opacity: 0.5;
+        }
+
+        /* 報告預覽 */
+        .preview-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-3xl);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .preview-header {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--divider);
+        }
+        .preview-score {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+        .preview-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .preview-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-sm) 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .preview-item span:first-child {
+            min-width: 100px;
+        }
+        .preview-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-elevated);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .preview-bar span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
+            border-radius: 3px;
+        }
+        .preview-note {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: var(--space-md);
+            font-style: italic;
+        }
+
+        /* 信任標誌 */
+        .trust-badges {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+        }
+        .trust-item {
+            text-align: center;
+            padding: var(--space-xl);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            transition: all var(--transition-normal);
+        }
+        .trust-item:hover {
+            border-color: var(--border-gold);
+            transform: translateY(-4px);
+        }
+        .trust-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: var(--space-sm);
+        }
+        .trust-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .trust-item p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* FAQ */
+        .faq-list {
+            margin-bottom: var(--space-3xl);
+        }
+        .faq-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            transition: all var(--transition-normal);
+        }
+        .faq-item:hover {
+            border-color: var(--border-gold);
+        }
+        .faq-item h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+        .faq-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: var(--space-3xl) var(--space-xl);
+            background: linear-gradient(135deg, rgba(201,169,98,0.05) 0%, rgba(139,115,85,0.05) 100%);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: var(--space-3xl);
+        }
+        .cta-section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+        .cta-section p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (max-width: 768px) {
+            .trust-badges {
+                grid-template-columns: 1fr 1fr;
+            }
+            .process-flow {
+                flex-direction: column;
+            }
+            .process-arrow {
+                transform: rotate(90deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -126,8 +329,118 @@
             </div>
             <div class="feature-item">
                 <span class="feature-icon">📊</span>
-                <h4>六維度分析</h4>
+                <h4>八維度分析</h4>
                 <p>雷達圖可視化</p>
+            </div>
+        </div>
+
+        <!-- 分析流程 -->
+        <h2 class="section-title">三步完成風水分析</h2>
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="step-number">01</div>
+                <h3>輸入資料</h3>
+                <p>填寫出生日期、職業、目標與住所資料，系統自動計算八字命盤</p>
+            </div>
+            <div class="process-arrow">→</div>
+            <div class="process-step">
+                <div class="step-number">02</div>
+                <h3>AI 運算</h3>
+                <p>八維度算法綜合飛星、八宅、零正神、煞氣防禦等專業模型</p>
+            </div>
+            <div class="process-arrow">→</div>
+            <div class="process-step">
+                <div class="step-number">03</div>
+                <h3>獲取報告</h3>
+                <p>即時生成風水評分、雷達圖分析與個人化化解建議</p>
+            </div>
+        </div>
+
+        <!-- 案例預覽 -->
+        <h2 class="section-title">分析報告預覽</h2>
+        <div class="preview-card">
+            <div class="preview-header">
+                <span class="preview-score">87.5</span>
+                <span class="preview-label">/ 100 匹配總分</span>
+            </div>
+            <div class="preview-body">
+                <div class="preview-item">
+                    <span>🌟 飛星分析</span>
+                    <span class="preview-bar"><span style="width:85%"></span></span>
+                    <span>85%</span>
+                </div>
+                <div class="preview-item">
+                    <span>🔥 八字匹配</span>
+                    <span class="preview-bar"><span style="width:92%"></span></span>
+                    <span>92%</span>
+                </div>
+                <div class="preview-item">
+                    <span>🏠 八宅吉凶</span>
+                    <span class="preview-bar"><span style="width:78%"></span></span>
+                    <span>78%</span>
+                </div>
+                <div class="preview-item">
+                    <span>💧 零正神</span>
+                    <span class="preview-bar"><span style="width:88%"></span></span>
+                    <span>88%</span>
+                </div>
+            </div>
+            <p class="preview-note">* 以上為演示數據，實際分析結果因個人資料而異</p>
+        </div>
+
+        <!-- 信任標誌 -->
+        <h2 class="section-title">專業背書</h2>
+        <div class="trust-badges">
+            <div class="trust-item">
+                <span class="trust-icon">📜</span>
+                <h4>傳統風水理論</h4>
+                <p>基於玄空飛星、八宅明鏡等經典理論</p>
+            </div>
+            <div class="trust-item">
+                <span class="trust-icon">🤖</span>
+                <h4>AI 算法驅動</h4>
+                <p>多維度加權計算，客觀量化風水評分</p>
+            </div>
+            <div class="trust-item">
+                <span class="trust-icon">🔒</span>
+                <h4>隱私保護</h4>
+                <p>個人資料加密存儲，絕不外洩</p>
+            </div>
+            <div class="trust-item">
+                <span class="trust-icon">👨‍🏫</span>
+                <h4>專業師傅審核</h4>
+                <p>算法結果經持牌風水師驗證校準</p>
+            </div>
+        </div>
+
+        <!-- 常見問題 -->
+        <h2 class="section-title">常見問題</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <h4>🤔 風水樓的評分準確嗎？</h4>
+                <p>我們的算法基於傳統風水理論並經專業師傅校準，但風水學為經驗學問，建議將評分作為參考，重大決策前諮詢專業風水師。</p>
+            </div>
+            <div class="faq-item">
+                <h4>🏢 支持哪些地區的樓盤？</h4>
+                <p>目前主要支持香港地區的屋苑和樓盤分析，包括新界、九龍、港島各區。其他地區功能即將推出。</p>
+            </div>
+            <div class="faq-item">
+                <h4>👨‍👩‍👧 雙人模式如何運作？</h4>
+                <p>輸入同住人的出生資料後，系統會分別計算兩人的風水匹配度，並按選擇的比例（單人100%、二人50/50、家庭60/40）加權平均。</p>
+            </div>
+            <div class="faq-item">
+                <h4>💰 使用風水樓需要付費嗎？</h4>
+                <p>基礎分析功能完全免費。進階功能如詳細化解方案、專業師傅一對一諮詢等將在未來版本推出。</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>準備好尋找您的風水樓了嗎？</h2>
+            <p>只需 3 分鐘，即可獲得專業級風水分析報告</p>
+            <div class="hero-cta-group">
+                <a href="module1.html" class="btn btn-primary">開始自測住所</a>
+                <a href="module2.html" class="btn btn-secondary">配對屋苑</a>
             </div>
         </div>
 

@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # 版本號
-VERSION = "3.8.0"
+VERSION = "3.8.2"
 
 # ===== 安全中間件：API 限流 =====
 class RateLimiter:

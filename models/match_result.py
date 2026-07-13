@@ -171,11 +171,11 @@ def aggregate_match_result(
     property_bonus = min(property_bonus, 10.0)
     property_norm = (property_bonus / 10) * 10  # 物業特徵 10 分
     
-    # === 樓層精確度微調（v3.6.5：提高到2-3分，用戶可感知）===
+    # === 樓層精確度微調（v3.8.2：大幅提高權重至5-8分，用戶可明確感知）===
     floor_tie_breaker = 0.0
     if floor_number and isinstance(floor_number, int) and floor_number > 0:
-        # 基礎分1.5分 + 每層0.05分，最多3分（12層達到2.1分，30層達到3分上限）
-        floor_tie_breaker = min(1.5 + floor_number * 0.05, 3.0)
+        # 基礎分3分 + 每層0.15分，最多8分（10層達到4.5分，33層達到8分上限）
+        floor_tie_breaker = min(3.0 + floor_number * 0.15, 8.0)
     
     # 計算總分（v2.5：正向維度合計 20+18+13+8+13+10+8+7 = 97，再乘元運適配係數）
     base_total = (
