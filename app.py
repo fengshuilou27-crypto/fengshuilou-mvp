@@ -123,6 +123,7 @@ app.include_router(geo_router)
 app.include_router(fxti_v2_router)
 
 # Update version
+VERSION = "4.0.0"
 VERSION = "3.9.0"
 
 

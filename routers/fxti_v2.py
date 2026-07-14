@@ -1,6 +1,7 @@
 """
-FXTI Backend API Module - v3.9.0
+FXTI Backend API Module - v4.0.0
 Real user system, matching, chat, community, expert booking
+Six Dimensions Analysis, Values Quiz, Hepan, Coin System
 Neon Postgres + FastAPI
 """
 
@@ -91,6 +92,56 @@ class BookingCreate(BaseModel):
 class DailyFortuneRequest(BaseModel):
     user_id: int
     fortune_date: Optional[str] = None
+
+
+class SixDimensionRequest(BaseModel):
+    user_a_id: int
+    user_b_id: int
+
+
+class ValuesQuizAnswer(BaseModel):
+    user_id: int
+    answers: Dict[str, int] = Field(..., description="{question_id: score(1-5)}")
+
+
+class ValuesQuizResult(BaseModel):
+    user_id: int
+    partner_id: int
+
+
+# ============ 45 Values Questions Data ============
+VALUES_QUESTIONS = [
+    {"id": "f1", "category": "family", "text": "家庭是我人生中最重要的部分", "weight": 1.0},
+    {"id": "f2", "category": "family", "text": "我願意為家人犧牲個人利益", "weight": 1.0},
+    {"id": "f3", "category": "family", "text": "我希望未來的伴侶重視家庭關係", "weight": 1.2},
+    {"id": "f4", "category": "career", "text": "事業成功對我來說非常重要", "weight": 1.0},
+    {"id": "f5", "category": "career", "text": "我願意為了事業暫時犧牲愛情", "weight": 0.8},
+    {"id": "f6", "category": "career", "text": "我希望伴侶支持我的事業發展", "weight": 1.2},
+    {"id": "f7", "category": "growth", "text": "我渴望不斷學習和成長", "weight": 1.0},
+    {"id": "f8", "category": "growth", "text": "我喜歡嘗試新事物和挑戰", "weight": 1.0},
+    {"id": "f9", "category": "growth", "text": "我希望伴侶能和我一起成長", "weight": 1.2},
+    {"id": "f10", "category": "health", "text": "健康生活方式對我很重要", "weight": 1.0},
+    {"id": "f11", "category": "health", "text": "我注重飲食和運動習慣", "weight": 0.8},
+    {"id": "f12", "category": "health", "text": "我希望伴侶也有健康的生活習慣", "weight": 1.0},
+    {"id": "f13", "category": "freedom", "text": "我重視個人自由和獨立空間", "weight": 1.0},
+    {"id": "f14", "category": "freedom", "text": "我不喜歡被過度約束或控制", "weight": 1.0},
+    {"id": "f15", "category": "freedom", "text": "我認為伴侶之間應該給彼此空間", "weight": 1.2},
+    {"id": "f16", "category": "adventure", "text": "我喜歡冒險和刺激", "weight": 1.0},
+    {"id": "f17", "category": "adventure", "text": "旅行和探索對我很有吸引力", "weight": 1.0},
+    {"id": "f18", "category": "adventure", "text": "我希望伴侶願意和我一起探索世界", "weight": 1.0},
+    {"id": "f19", "category": "stability", "text": "我追求穩定和安全感", "weight": 1.0},
+    {"id": "f20", "category": "stability", "text": "我不喜歡生活中有太多變數", "weight": 0.8},
+    {"id": "f21", "category": "stability", "text": "我希望建立穩定的長期關係", "weight": 1.2},
+    {"id": "f22", "category": "spirituality", "text": "我對命理、風水、玄學有興趣", "weight": 1.0},
+    {"id": "f23", "category": "spirituality", "text": "我相信緣分和命運的安排", "weight": 1.0},
+    {"id": "f24", "category": "spirituality", "text": "我希望伴侶也尊重傳統文化", "weight": 1.0},
+    {"id": "f25", "category": "finance", "text": "我重視財務規劃和儲蓄", "weight": 1.0},
+    {"id": "f26", "category": "finance", "text": "我認為經濟基礎對愛情很重要", "weight": 1.0},
+    {"id": "f27", "category": "finance", "text": "我希望伴侶有理性的消費觀", "weight": 1.0},
+    {"id": "f28", "category": "social", "text": "我喜歡社交和認識新朋友", "weight": 1.0},
+    {"id": "f29", "category": "social", "text": "我認為良好的社交圈對生活很重要", "weight": 0.8},
+    {"id": "f30", "category": "social", "text": "我希望伴侶能融入我的朋友圈", "weight": 1.0},
+]
 
 
 # ============ Router ============
@@ -978,3 +1029,426 @@ def reveal_photos(match_id: int, user_id: int):
     conn.close()
     
     return {"status": "success", "revealed": True}
+
+
+# ============ Six Dimensions Analysis API ============
+
+@router.post("/six-dimensions")
+def analyze_six_dimensions(req: SixDimensionRequest):
+    """Analyze six dimensions compatibility between two users"""
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from data.fxti_six_dimensions import analyze_relationship_full_v3
+    
+    conn = get_db()
+    cur = conn.cursor()
+    
+    # Get user A data
+    cur.execute("""
+        SELECT id, nickname, gender, birth_date, birth_hour, birth_place,
+               fxti_element, fxti_profile_name, fxti_color, fxti_direction,
+               avatar_url, bio, preferred_gender, preferred_age_min, preferred_age_max,
+               is_expert, is_premium, is_verified, total_swipes, total_matches,
+               latitude, longitude, created_at
+        FROM fxti_users WHERE id = %s AND is_active = TRUE
+    """, (req.user_a_id,))
+    user_a = cur.fetchone()
+    
+    # Get user B data
+    cur.execute("""
+        SELECT id, nickname, gender, birth_date, birth_hour, birth_place,
+               fxti_element, fxti_profile_name, fxti_color, fxti_direction,
+               avatar_url, bio, preferred_gender, preferred_age_min, preferred_age_max,
+               is_expert, is_premium, is_verified, total_swipes, total_matches,
+               latitude, longitude, created_at
+        FROM fxti_users WHERE id = %s AND is_active = TRUE
+    """, (req.user_b_id,))
+    user_b = cur.fetchone()
+    
+    conn.close()
+    
+    if not user_a or not user_b:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Parse birth date
+    from datetime import datetime
+    birth_a = user_a['birth_date']
+    birth_b = user_b['birth_date']
+    
+    # Build person data for six dimensions
+    person_a_data = {
+        "birth": {
+            "year": birth_a.year if hasattr(birth_a, 'year') else int(str(birth_a)[:4]),
+            "month": birth_a.month if hasattr(birth_a, 'month') else int(str(birth_a)[5:7]),
+            "day": birth_a.day if hasattr(birth_a, 'day') else int(str(birth_a)[8:10]),
+            "gender": user_a['gender']
+        },
+        "wuxing": {user_a['fxti_element'] or '木': 50, '其他': 10},
+        "profile_id": user_a['fxti_profile_name'] or 'A1',
+        "values_answers": {},
+        "communication_style": "direct",
+        "life_goals": ["事業成就", "家庭美滿"],
+    }
+    
+    person_b_data = {
+        "birth": {
+            "year": birth_b.year if hasattr(birth_b, 'year') else int(str(birth_b)[:4]),
+            "month": birth_b.month if hasattr(birth_b, 'month') else int(str(birth_b)[5:7]),
+            "day": birth_b.day if hasattr(birth_b, 'day') else int(str(birth_b)[8:10]),
+            "gender": user_b['gender']
+        },
+        "wuxing": {user_b['fxti_element'] or '木': 50, '其他': 10},
+        "profile_id": user_b['fxti_profile_name'] or 'A1',
+        "values_answers": {},
+        "communication_style": "empathetic",
+        "life_goals": ["自我成長", "家庭美滿"],
+    }
+    
+    # Run six dimensions analysis
+    result = analyze_relationship_full_v3(person_a_data, person_b_data)
+    
+    return {
+        "status": "success",
+        "user_a": {"id": user_a['id'], "nickname": user_a['nickname'], "avatar_url": user_a['avatar_url']},
+        "user_b": {"id": user_b['id'], "nickname": user_b['nickname'], "avatar_url": user_b['avatar_url']},
+        "analysis": result
+    }
+
+
+# ============ Values Quiz APIs ============
+
+@router.get("/values-quiz/questions")
+def get_values_questions():
+    """Get the 30 values questions for the quiz"""
+    return {
+        "status": "success",
+        "total": len(VALUES_QUESTIONS),
+        "questions": VALUES_QUESTIONS
+    }
+
+
+@router.post("/values-quiz/submit")
+def submit_values_quiz(answer: ValuesQuizAnswer):
+    """Submit user's values quiz answers"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    # Save answers as JSON
+    answers_json = json.dumps(answer.answers)
+    
+    cur.execute("""
+        UPDATE fxti_users 
+        SET values_answers = %s, updated_at = NOW()
+        WHERE id = %s
+        RETURNING id
+    """, (answers_json, answer.user_id))
+    
+    updated = cur.fetchone()
+    conn.commit()
+    conn.close()
+    
+    if not updated:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Calculate values profile
+    profile = _calculate_values_profile(answer.answers)
+    
+    return {
+        "status": "success",
+        "message": "Quiz submitted successfully",
+        "values_profile": profile
+    }
+
+
+def _calculate_values_profile(answers: Dict[str, int]) -> Dict[str, Any]:
+    """Calculate user's values profile from answers"""
+    categories = {
+        "family": [], "career": [], "growth": [], "health": [],
+        "freedom": [], "adventure": [], "stability": [],
+        "spirituality": [], "finance": [], "social": []
+    }
+    
+    for q in VALUES_QUESTIONS:
+        cat = q["category"]
+        score = answers.get(q["id"], 3)
+        categories[cat].append(score * q["weight"])
+    
+    profile = {}
+    for cat, scores in categories.items():
+        if scores:
+            avg = sum(scores) / len(scores)
+            profile[cat] = round(avg, 1)
+        else:
+            profile[cat] = 3.0
+    
+    # Determine top 3 values
+    sorted_values = sorted(profile.items(), key=lambda x: x[1], reverse=True)
+    top_values = [v[0] for v in sorted_values[:3]]
+    
+    return {
+        "scores": profile,
+        "top_values": top_values,
+        "primary_value": top_values[0] if top_values else "family",
+        "secondary_value": top_values[1] if len(top_values) > 1 else "growth",
+        "tertiary_value": top_values[2] if len(top_values) > 2 else "health"
+    }
+
+
+@router.post("/values-quiz/compare")
+def compare_values_quiz(req: ValuesQuizResult):
+    """Compare two users' values quiz results"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    cur.execute("SELECT values_answers FROM fxti_users WHERE id = %s", (req.user_id,))
+    user_a = cur.fetchone()
+    
+    cur.execute("SELECT values_answers FROM fxti_users WHERE id = %s", (req.partner_id,))
+    user_b = cur.fetchone()
+    
+    conn.close()
+    
+    if not user_a or not user_b:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    answers_a = json.loads(user_a['values_answers'] or '{}')
+    answers_b = json.loads(user_b['values_answers'] or '{}')
+    
+    if not answers_a or not answers_b:
+        return {
+            "status": "success",
+            "compatibility_score": 50,
+            "message": "One or both users haven't completed the quiz",
+            "details": {}
+        }
+    
+    # Calculate compatibility
+    from data.fxti_six_dimensions import analyze_values_compatibility
+    result = analyze_values_compatibility(answers_a, answers_b)
+    
+    return {
+        "status": "success",
+        "compatibility_score": result["overall_score"],
+        "details": result
+    }
+
+
+# ============ Hepan (合盤) API ============
+
+@router.post("/hepan")
+def generate_hepan(req: SixDimensionRequest):
+    """Generate 合盤 analysis (Bazi compatibility)"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    cur.execute("SELECT birth_date, birth_hour, gender FROM fxti_users WHERE id = %s", (req.user_a_id,))
+    user_a = cur.fetchone()
+    
+    cur.execute("SELECT birth_date, birth_hour, gender FROM fxti_users WHERE id = %s", (req.user_b_id,))
+    user_b = cur.fetchone()
+    
+    conn.close()
+    
+    if not user_a or not user_b:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Generate hepan analysis
+    hepan = _generate_hepan_analysis(user_a, user_b)
+    
+    return {
+        "status": "success",
+        "hepan": hepan
+    }
+
+
+def _generate_hepan_analysis(a: Dict, b: Dict) -> Dict[str, Any]:
+    """Generate simplified 合盤 analysis"""
+    import hashlib
+    
+    # Create deterministic hash from birth dates
+    seed = f"{a['birth_date']}-{b['birth_date']}"
+    hash_val = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+    
+    # Determine compatibility level
+    levels = ["天作之合", "金玉良緣", "相輔相成", "平淡是真", "需要磨合", "緣分淺薄"]
+    level = levels[hash_val % 6]
+    
+    scores = {
+        "天作之合": 95, "金玉良緣": 88, "相輔相成": 78,
+        "平淡是真": 65, "需要磨合": 52, "緣分淺薄": 38
+    }
+    
+    aspects = [
+        {"name": "日柱合婚", "score": min(100, scores[level] + (hash_val % 10) - 5), "comment": "日干相生，性格互補"},
+        {"name": "五行流通", "score": min(100, scores[level] + (hash_val % 10) - 5), "comment": "五行相生，氣場和諧"},
+        {"name": "大運同步", "score": min(100, scores[level] + (hash_val % 10) - 5), "comment": "大運方向一致"},
+        {"name": "桃花姻緣", "score": min(100, scores[level] + (hash_val % 10) - 5), "comment": "桃花運勢相合"},
+    ]
+    
+    return {
+        "level": level,
+        "overall_score": scores[level],
+        "aspects": aspects,
+        "advice": f"你們的合盤結果為「{level}」。{ '緣分深厚，建議珍惜彼此，共同經營感情。' if scores[level] > 80 else '需要多溝通理解，培養共同興趣。' if scores[level] > 60 else '緣分較淺，需要更多努力維繫關係。'}",
+        "lucky_dates": ["農曆初八", "農曆十五", "農曆廿三"],
+        "avoid_dates": ["農曆初七", "農曆十四"]
+    }
+
+
+# ============ Blurred Photo System ============
+
+@router.get("/users/{user_id}/blurred-photo")
+def get_blurred_photo(user_id: int, viewer_id: int):
+    """Get blurred photo for a user (patent workaround)"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    cur.execute("SELECT avatar_url FROM fxti_users WHERE id = %s", (user_id,))
+    user = cur.fetchone()
+    conn.close()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if already revealed
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT a_revealed_to_b, b_revealed_to_a FROM fxti_matches
+        WHERE (user_a_id = %s AND user_b_id = %s) OR (user_a_id = %s AND user_b_id = %s)
+    """, (user_id, viewer_id, viewer_id, user_id))
+    match = cur.fetchone()
+    conn.close()
+    
+    revealed = False
+    if match:
+        is_a = (user_id == viewer_id) if match else False
+        # Simplified check
+        revealed = match.get('a_revealed_to_b', False) or match.get('b_revealed_to_a', False)
+    
+    return {
+        "status": "success",
+        "original_url": user['avatar_url'] if revealed else None,
+        "blurred_url": user['avatar_url'],  # Frontend applies pixelation
+        "is_revealed": revealed,
+        "reveal_progress": 0 if not revealed else 100,
+        "interaction_needed": 5 if not revealed else 0  # Messages needed to reveal
+    }
+
+
+# ============ Coin / Virtual Currency API ============
+
+@router.get("/users/{user_id}/coins")
+def get_user_coins(user_id: int):
+    """Get user's coin balance"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    cur.execute("SELECT coins, total_coins_earned, total_coins_spent FROM fxti_users WHERE id = %s", (user_id,))
+    user = cur.fetchone()
+    conn.close()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "status": "success",
+        "coins": user['coins'] or 0,
+        "total_earned": user['total_coins_earned'] or 0,
+        "total_spent": user['total_coins_spent'] or 0
+    }
+
+
+@router.post("/users/{user_id}/coins/earn")
+def earn_coins(user_id: int, action: str = "daily_login"):
+    """Earn coins for various actions"""
+    earn_amounts = {
+        "daily_login": 10,
+        "complete_profile": 50,
+        "complete_quiz": 30,
+        "daily_fortune": 5,
+        "send_message": 2,
+        "receive_like": 5,
+        "expert_consultation": 100,
+    }
+    
+    amount = earn_amounts.get(action, 0)
+    if amount == 0:
+        raise HTTPException(status_code=400, detail="Invalid action")
+    
+    conn = get_db()
+    cur = conn.cursor()
+    
+    cur.execute("""
+        UPDATE fxti_users 
+        SET coins = COALESCE(coins, 0) + %s,
+            total_coins_earned = COALESCE(total_coins_earned, 0) + %s
+        WHERE id = %s
+        RETURNING coins
+    """, (amount, amount, user_id))
+    
+    result = cur.fetchone()
+    conn.commit()
+    conn.close()
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "status": "success",
+        "action": action,
+        "coins_earned": amount,
+        "new_balance": result['coins']
+    }
+
+
+@router.post("/users/{user_id}/coins/spend")
+def spend_coins(user_id: int, action: str = "reveal_photo", target_id: int = None):
+    """Spend coins for premium features"""
+    costs = {
+        "reveal_photo": 50,
+        "super_like": 30,
+        "expert_consultation": 200,
+        "premium_match": 100,
+        "hepan_analysis": 150,
+    }
+    
+    cost = costs.get(action, 0)
+    if cost == 0:
+        raise HTTPException(status_code=400, detail="Invalid action")
+    
+    conn = get_db()
+    cur = conn.cursor()
+    
+    # Check balance
+    cur.execute("SELECT coins FROM fxti_users WHERE id = %s", (user_id,))
+    user = cur.fetchone()
+    
+    if not user:
+        conn.close()
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current = user['coins'] or 0
+    if current < cost:
+        conn.close()
+        raise HTTPException(status_code=400, detail=f"Insufficient coins. Need {cost}, have {current}")
+    
+    # Deduct coins
+    cur.execute("""
+        UPDATE fxti_users 
+        SET coins = COALESCE(coins, 0) - %s,
+            total_coins_spent = COALESCE(total_coins_spent, 0) + %s
+        WHERE id = %s
+        RETURNING coins
+    """, (cost, cost, user_id))
+    
+    result = cur.fetchone()
+    conn.commit()
+    conn.close()
+    
+    return {
+        "status": "success",
+        "action": action,
+        "coins_spent": cost,
+        "new_balance": result['coins']
+    }
