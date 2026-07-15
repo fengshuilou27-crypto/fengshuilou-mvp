@@ -1049,7 +1049,7 @@ def analyze_six_dimensions(req: SixDimensionRequest):
                fxti_element, fxti_profile_name, fxti_color, fxti_direction,
                avatar_url, bio, preferred_gender, preferred_age_min, preferred_age_max,
                is_expert, is_premium, is_verified, total_swipes, total_matches,
-               latitude, longitude, created_at
+               latitude, longitude, values_answers, created_at
         FROM fxti_users WHERE id = %s AND is_active = TRUE
     """, (req.user_a_id,))
     user_a = cur.fetchone()
@@ -1060,7 +1060,7 @@ def analyze_six_dimensions(req: SixDimensionRequest):
                fxti_element, fxti_profile_name, fxti_color, fxti_direction,
                avatar_url, bio, preferred_gender, preferred_age_min, preferred_age_max,
                is_expert, is_premium, is_verified, total_swipes, total_matches,
-               latitude, longitude, created_at
+               latitude, longitude, values_answers, created_at
         FROM fxti_users WHERE id = %s AND is_active = TRUE
     """, (req.user_b_id,))
     user_b = cur.fetchone()
@@ -1075,7 +1075,38 @@ def analyze_six_dimensions(req: SixDimensionRequest):
     birth_a = user_a['birth_date']
     birth_b = user_b['birth_date']
     
-    # Build person data for six dimensions
+    # Build person data for six dimensions - USE REAL DB DATA
+    # Get values answers from DB if available
+    values_a = user_a.get('values_answers') or {}
+    values_b = user_b.get('values_answers') or {}
+    
+    # Parse values_answers if stored as JSON string
+    if isinstance(values_a, str):
+        try:
+            values_a = json.loads(values_a)
+        except:
+            values_a = {}
+    if isinstance(values_b, str):
+        try:
+            values_b = json.loads(values_b)
+        except:
+            values_b = {}
+    
+    # Build wuxing dict from real element
+    elem_a = user_a['fxti_element'] or '木'
+    elem_b = user_b['fxti_element'] or '木'
+    
+    # Create balanced wuxing distribution based on element
+    def build_wuxing(element):
+        base = {"金": 10, "木": 10, "水": 10, "火": 10, "土": 10}
+        if element in base:
+            base[element] = 40  # Primary element gets higher weight
+            # Secondary based on generation cycle
+            cycle = {"木": "火", "火": "土", "土": "金", "金": "水", "水": "木"}
+            if element in cycle:
+                base[cycle[element]] = 20
+        return base
+    
     person_a_data = {
         "birth": {
             "year": birth_a.year if hasattr(birth_a, 'year') else int(str(birth_a)[:4]),
@@ -1083,9 +1114,9 @@ def analyze_six_dimensions(req: SixDimensionRequest):
             "day": birth_a.day if hasattr(birth_a, 'day') else int(str(birth_a)[8:10]),
             "gender": user_a['gender']
         },
-        "wuxing": {user_a['fxti_element'] or '木': 50, '其他': 10},
+        "wuxing": build_wuxing(elem_a),
         "profile_id": user_a['fxti_profile_name'] or 'A1',
-        "values_answers": {},
+        "values_answers": values_a,
         "communication_style": "direct",
         "life_goals": ["事業成就", "家庭美滿"],
     }
@@ -1097,9 +1128,9 @@ def analyze_six_dimensions(req: SixDimensionRequest):
             "day": birth_b.day if hasattr(birth_b, 'day') else int(str(birth_b)[8:10]),
             "gender": user_b['gender']
         },
-        "wuxing": {user_b['fxti_element'] or '木': 50, '其他': 10},
+        "wuxing": build_wuxing(elem_b),
         "profile_id": user_b['fxti_profile_name'] or 'A1',
-        "values_answers": {},
+        "values_answers": values_b,
         "communication_style": "empathetic",
         "life_goals": ["自我成長", "家庭美滿"],
     }

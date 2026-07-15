@@ -823,7 +823,63 @@
         @media (min-width: 768px) {
             .main-content { max-width: 480px; }
         }
-    </style>
+            /* 預約彈窗 */
+        .booking-modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(26,26,46,0.95);
+            z-index: 3000;
+            align-items: center; justify-content: center;
+            animation: modalFadeIn 0.3s ease;
+        }
+        .booking-modal.active { display: flex; }
+        
+        .booking-content {
+            width: 90%; max-width: 400px;
+            background: var(--dark-card);
+            border-radius: 24px;
+            border: 1px solid rgba(255,88,100,0.15);
+            overflow: hidden;
+            animation: pageFadeIn 0.3s ease;
+        }
+        
+        .booking-header {
+            padding: 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(255,88,100,0.1);
+        }
+        
+        .booking-form { padding: 20px; }
+        
+        .booking-field { margin-bottom: 16px; }
+        
+        .booking-label {
+            display: block; font-size: 13px; color: var(--text-muted);
+            margin-bottom: 6px; font-weight: 500;
+        }
+        
+        .booking-input {
+            width: 100%; padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text); font-size: 14px;
+        }
+        .booking-input:focus { outline: none; border-color: var(--pink); }
+        .booking-input option { background: var(--dark-card); color: var(--text); }
+        
+        .booking-submit {
+            width: 100%; padding: 14px;
+            background: var(--gradient-pink);
+            border: none; border-radius: 14px;
+            color: white; font-size: 16px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(255,88,100,0.3);
+            margin-top: 8px;
+        }
+        .booking-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255,88,100,0.4); }
+        .booking-submit:active { transform: scale(0.98); }
+
+</style>
 </head>
 <body>
     <!-- 顶部导航 -->
@@ -1564,6 +1620,60 @@
         }
         
         function bookExpert(expertId) {
+            // 顯示預約彈窗
+            const modal = document.getElementById('bookingModal');
+            modal.classList.add('active');
+            modal.dataset.expertId = expertId;
+        }
+        
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+        }
+        
+        async function submitBooking() {
+            const modal = document.getElementById('bookingModal');
+            const expertId = parseInt(modal.dataset.expertId);
+            const date = document.getElementById('bookingDate').value;
+            const time = document.getElementById('bookingTime').value;
+            const topic = document.getElementById('bookingTopic').value;
+            const type = document.getElementById('bookingType').value;
+            const desc = document.getElementById('bookingDesc').value;
+            
+            if (!date || !time || !topic) {
+                alert('請填寫完整預約信息');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        client_id: currentUserId,
+                        expert_id: expertId,
+                        booking_type: type,
+                        booking_date: date,
+                        booking_time: time,
+                        topic: topic,
+                        description: desc
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    alert(`預約成功！\n預約編號: #${data.booking.id}\n費用: $${data.price} HKD`);
+                    closeBookingModal();
+                    // 扣除金幣
+                    loadCoins();
+                } else {
+                    alert('預約失敗: ' + (data.detail || '未知錯誤'));
+                }
+            } catch (e) {
+                alert('預約失敗，請稍後重試');
+                console.error('Booking error:', e);
+            }
+        }
             alert('预约功能开发中，请稍后...');
         }
         
@@ -1595,5 +1705,43 @@
         loadDiscover();
         loadCoins();
     </script>
+    <!-- 預約彈窗 -->
+    <div class="booking-modal" id="bookingModal">
+        <div class="booking-content">
+            <div class="booking-header">
+                <div style="font-size:18px;font-weight:700;">預約諮詢</div>
+                <button class="six-dim-close" onclick="closeBookingModal()">✕</button>
+            </div>
+            <div class="booking-form">
+                <div class="booking-field">
+                    <label class="booking-label">諮詢類型</label>
+                    <select class="booking-input" id="bookingType">
+                        <option value="consultation">一般諮詢</option>
+                        <option value="fengshui_visit">風水上門</option>
+                        <option value="bazi_reading">八字解讀</option>
+                        <option value="hepan_analysis">合盤分析</option>
+                    </select>
+                </div>
+                <div class="booking-field">
+                    <label class="booking-label">預約日期</label>
+                    <input type="date" class="booking-input" id="bookingDate">
+                </div>
+                <div class="booking-field">
+                    <label class="booking-label">預約時間</label>
+                    <input type="time" class="booking-input" id="bookingTime" value="14:00">
+                </div>
+                <div class="booking-field">
+                    <label class="booking-label">諮詢主題</label>
+                    <input type="text" class="booking-input" id="bookingTopic" placeholder="例如：感情運勢分析">
+                </div>
+                <div class="booking-field">
+                    <label class="booking-label">補充說明（選填）</label>
+                    <textarea class="booking-input" id="bookingDesc" rows="3" placeholder="請簡述您的需求..."></textarea>
+                </div>
+                <button class="booking-submit" onclick="submitBooking()">確認預約</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
