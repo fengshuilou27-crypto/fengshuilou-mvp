@@ -879,6 +879,388 @@
         .booking-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255,88,100,0.4); }
         .booking-submit:active { transform: scale(0.98); }
 
+        /* 社區分類標籤 */
+        .community-tab {
+            padding: 6px 14px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .community-tab.active {
+            background: rgba(255,88,100,0.15);
+            border-color: rgba(255,88,100,0.3);
+            color: var(--pink);
+        }
+        
+        /* 發帖彈窗 */
+        .post-modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(26,26,46,0.95);
+            z-index: 3000;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+        .post-modal.active { display: block; }
+        
+        .post-modal-content {
+            max-width: 430px; margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .post-form {
+            background: var(--dark-card);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255,88,100,0.1);
+        }
+        
+        .post-input {
+            width: 100%; padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text); font-size: 14px;
+            margin-bottom: 12px;
+        }
+        .post-input:focus { outline: none; border-color: var(--pink); }
+        
+        .post-textarea {
+            width: 100%; padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text); font-size: 14px;
+            min-height: 120px;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
+        .post-textarea:focus { outline: none; border-color: var(--pink); }
+        
+        .post-submit {
+            width: 100%; padding: 14px;
+            background: var(--gradient-pink);
+            border: none; border-radius: 14px;
+            color: white; font-size: 16px; font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255,88,100,0.3);
+        }
+        
+        /* 專家認證標籤 */
+        .expert-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 10px;
+            background: rgba(0,217,192,0.15);
+            color: var(--mint); font-size: 11px; font-weight: 600;
+        }
+        
+        /* 評論區 */
+        .comment-section {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .comment-input-bar {
+            display: flex; gap: 8px; align-items: center;
+        }
+        
+        .comment-input {
+            flex: 1; padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: var(--text); font-size: 13px;
+        }
+        
+        .comment-submit {
+            padding: 8px 16px;
+            background: var(--gradient-pink);
+            border: none; border-radius: 16px;
+            color: white; font-size: 12px; font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ===== Tinder 風格優化 ===== */
+        
+        /* 1. 卡片全屏照片 + 底部信息覆蓋 */
+        .card-image-full {
+            width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            position: relative;
+        }
+        
+        .card-image-full::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 200px;
+            background: linear-gradient(transparent 0%, rgba(26,26,46,0.3) 30%, rgba(26,26,46,0.95) 100%);
+        }
+        
+        /* 2. 底部信息覆蓋層 */
+        .card-info-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 20px;
+            z-index: 2;
+        }
+        
+        .card-info-overlay .card-header {
+            margin-bottom: 6px;
+        }
+        
+        .card-info-overlay .card-name {
+            font-size: 28px; font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .card-info-overlay .card-age {
+            font-size: 20px; color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+        
+        .card-info-overlay .card-meta {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .card-info-overlay .card-bio {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* 3. 五行標籤（Tinder 風格頂部標籤） */
+        .wuxing-badge {
+            position: absolute; top: 16px; left: 16px;
+            padding: 6px 14px; border-radius: 20px;
+            background: rgba(255,88,100,0.9);
+            color: white; font-size: 13px; font-weight: 600;
+            backdrop-filter: blur(10px);
+            z-index: 2;
+            display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 2px 10px rgba(255,88,100,0.3);
+        }
+        
+        .compatibility-badge {
+            position: absolute; top: 16px; right: 16px;
+            padding: 6px 14px; border-radius: 20px;
+            background: rgba(0,217,192,0.9);
+            color: white; font-size: 13px; font-weight: 700;
+            backdrop-filter: blur(10px);
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(0,217,192,0.3);
+        }
+        
+        /* 4. 滑動指示器（LIKE/NOPE） */
+        .swipe-indicator {
+            position: absolute; top: 40px;
+            padding: 8px 20px; border-radius: 8px;
+            font-size: 28px; font-weight: 800;
+            border: 4px solid;
+            transform: rotate(-15deg);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .swipe-indicator.like {
+            left: 20px;
+            color: #4CAF50;
+            border-color: #4CAF50;
+            transform: rotate(-15deg);
+        }
+        
+        .swipe-indicator.nope {
+            right: 20px;
+            color: #FF6B6B;
+            border-color: #FF6B6B;
+            transform: rotate(15deg);
+        }
+        
+        .swipe-indicator.visible { opacity: 1; }
+        
+        /* 5. 增強滑動按鈕（Tinder 風格） */
+        .swipe-actions-v2 {
+            display: flex; justify-content: center; gap: 20px;
+            padding: 16px;
+            position: relative;
+        }
+        
+        .swipe-btn-v2 {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .swipe-btn-v2:hover { transform: scale(1.1); }
+        .swipe-btn-v2:active { transform: scale(0.95); }
+        
+        .swipe-btn-v2.rewind { color: #FFC107; }
+        .swipe-btn-v2.nope { color: #FF6B6B; font-size: 28px; }
+        .swipe-btn-v2.super { color: #2196F3; }
+        .swipe-btn-v2.like { color: var(--pink); font-size: 28px; }
+        .swipe-btn-v2.boost { color: #9C27B0; }
+        
+        /* 6. 底部導航（Tinder 風格圖標） */
+        .bottom-nav-v2 {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(26,26,46,0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-around;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+        
+        .bottom-nav-v2-item {
+            text-decoration: none; color: var(--text-dim);
+            font-size: 10px; text-align: center;
+            padding: 4px 12px; transition: all 0.2s;
+            border: none; background: none; cursor: pointer;
+            position: relative;
+            display: flex; flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .bottom-nav-v2-item.active { color: var(--pink); }
+        .bottom-nav-v2-item .nav-icon {
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+        .bottom-nav-v2-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+        
+        /* 7. 個人資料頁面（Tinder 風格） */
+        .profile-header {
+            position: relative;
+            width: 100%; height: 400px;
+            background-size: cover; background-position: center;
+        }
+        
+        .profile-header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 150px;
+            background: linear-gradient(transparent, var(--dark));
+        }
+        
+        .profile-edit-btn {
+            position: absolute; top: 60px; right: 16px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: none; color: white;
+            font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* 8. 設置頁面（Tinder 風格開關） */
+        .settings-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .toggle-switch {
+            width: 50px; height: 28px; border-radius: 14px;
+            background: rgba(255,255,255,0.1);
+            position: relative; cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active { background: var(--pink); }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute; top: 2px; left: 2px;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: white;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch.active::after { transform: translateX(22px); }
+        
+        /* 9. 超級喜歡動畫 */
+        @keyframes superLikeBurst {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        .super-like-effect {
+            position: absolute; top: 50%; left: 50%;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(33,150,243,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: superLikeBurst 0.6s ease-out;
+            pointer-events: none;
+        }
+        
+        /* 10. 增強的匹配動畫 */
+        .match-overlay {
+            position: fixed; inset: 0;
+            background: rgba(26,26,46,0.95);
+            z-index: 3000;
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column;
+        }
+        
+        .match-overlay.active { display: flex; }
+        
+        .match-photo-stack {
+            position: relative; width: 200px; height: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .match-photo {
+            position: absolute; width: 120px; height: 120px;
+            border-radius: 50%; background-size: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .match-photo.left {
+            left: 0; top: 40px;
+            animation: matchPhotoLeft 0.5s ease;
+        }
+        
+        .match-photo.right {
+            right: 0; top: 40px;
+            animation: matchPhotoRight 0.5s ease;
+        }
+        
+        @keyframes matchPhotoLeft {
+            from { transform: translateX(100px) scale(0); }
+            to { transform: translateX(0) scale(1); }
+        }
+        
+        @keyframes matchPhotoRight {
+            from { transform: translateX(-100px) scale(0); }
+            to { transform: translateX(0) scale(1); }
+        }
+        
+        .match-heart-center {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            animation: heartBeat 1s ease infinite;
+            z-index: 10;
+        }
+
 </style>
 </head>
 <body>
@@ -907,10 +1289,13 @@
                 <!-- 卡片由 JS 动态生成 -->
             </div>
             
-            <div class="swipe-actions">
-                <button class="swipe-btn pass" onclick="swipe('left')">✕</button>
-                <button class="swipe-btn super" onclick="swipe('super')">⭐</button>
-                <button class="swipe-btn like" onclick="swipe('right')">♥</button>
+            <!-- Tinder 風格滑動按鈕 -->
+            <div class="swipe-actions-v2">
+                <button class="swipe-btn-v2 rewind" onclick="swipe('rewind')">↩️</button>
+                <button class="swipe-btn-v2 nope" onclick="swipe('left')">✕</button>
+                <button class="swipe-btn-v2 super" onclick="swipe('super')">⭐</button>
+                <button class="swipe-btn-v2 like" onclick="swipe('right')">♥</button>
+                <button class="swipe-btn-v2 boost" onclick="swipe('boost')">⚡</button>
             </div>
         </div>
         
@@ -943,6 +1328,26 @@
         <!-- 社区页面 -->
         <div class="page" id="page-community">
             <div class="community-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 style="font-size: 20px; margin-bottom: 8px;">缘分社区</h2>
+                        <p style="color: var(--text-muted); font-size: 13px;">分享故事 · 求助问答 · 风水案例</p>
+                    </div>
+                    <button onclick="showPostModal()" style="padding: 8px 16px; background: var(--gradient-pink); border: none; border-radius: 20px; color: white; font-weight: 600; cursor: pointer; font-size: 13px;">✏️ 發帖</button>
+                </div>
+            </div>
+            <!-- 分類標籤 -->
+            <div style="padding: 0 16px 12px; display: flex; gap: 8px; overflow-x: auto;">
+                <button class="community-tab active" onclick="filterPosts('all')">全部</button>
+                <button class="community-tab" onclick="filterPosts('story')">緣分故事</button>
+                <button class="community-tab" onclick="filterPosts('question')">求助問答</button>
+                <button class="community-tab" onclick="filterPosts('expert')">專家解答</button>
+                <button class="community-tab" onclick="filterPosts('fengshui')">風水案例</button>
+            </div>
+            <div id="communityPosts"></div>
+        </div>
+        <div class="page" id="page-community">
+            <div class="community-header">
                 <h2 style="font-size: 20px; margin-bottom: 8px;">缘分社区</h2>
                 <p style="color: var(--text-muted); font-size: 13px;">分享故事 · 求助问答 · 风水案例</p>
             </div>
@@ -960,31 +1365,47 @@
         
         <!-- 每日一卦 -->
         <div class="page" id="page-fortune">
+            <div style="padding: 16px;">
+                <h2 style="font-size: 20px; margin-bottom: 8px;">每日一卦</h2>
+                <p style="color: var(--text-muted); font-size: 13px;">根據你的五行命盤，為你解讀今日運勢</p>
+            </div>
             <div class="fortune-card" id="fortuneCard">
                 <div class="loading">
                     <div class="spinner"></div>
                     <p>正在计算今日运势...</p>
                 </div>
             </div>
+            <!-- 運勢詳情 -->
+            <div id="fortuneDetail" style="padding: 0 16px;"></div>
+            <!-- 歷史運勢 -->
+            <div style="padding: 16px;">
+                <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-muted);">📅 歷史運勢</h3>
+                <div id="fortuneHistory"></div>
+            </div>
         </div>
     </div>
 
-    <!-- 底部导航 -->
-    <nav class="bottom-nav">
-        <button class="bottom-nav-item active" onclick="showPage('discover')">
-            <span class="icon">🔍</span>发现
+    <!-- 底部導航 (Tinder 風格) -->
+    <nav class="bottom-nav-v2">
+        <button class="bottom-nav-v2-item active" onclick="showPage('discover')">
+            <span class="nav-icon">🔥</span>
+            <span>緣分</span>
         </button>
-        <button class="bottom-nav-item" onclick="showPage('matches')">
-            <span class="icon">💕</span>配对
+        <button class="bottom-nav-v2-item" onclick="showPage('matches')">
+            <span class="nav-icon">💕</span>
+            <span>配對</span>
         </button>
-        <button class="bottom-nav-item" onclick="showPage('community')">
-            <span class="icon">📰</span>社区
+        <button class="bottom-nav-v2-item" onclick="showPage('community')">
+            <span class="nav-icon">📰</span>
+            <span>社區</span>
         </button>
-        <button class="bottom-nav-item" onclick="showPage('experts')">
-            <span class="icon">👨‍🏫</span>专家
+        <button class="bottom-nav-v2-item" onclick="showPage('experts')">
+            <span class="nav-icon">👨‍🏫</span>
+            <span>專家</span>
         </button>
-        <button class="bottom-nav-item" onclick="showPage('fortune')">
-            <span class="icon">🔮</span>运势
+        <button class="bottom-nav-v2-item" onclick="showPage('fortune')">
+            <span class="nav-icon">🔮</span>
+            <span>運勢</span>
         </button>
     </nav>
 
@@ -1046,7 +1467,7 @@
         // 页面切换
         function showPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-v2-item').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
             document.getElementById('page-' + page).classList.add('active');
@@ -1054,7 +1475,7 @@
             const navMap = { discover: 0, matches: 1, community: 2, experts: 3, fortune: 4, chat: 1 };
             const navIdx = navMap[page];
             if (navIdx !== undefined) {
-                document.querySelectorAll('.bottom-nav-item')[navIdx]?.classList.add('active');
+                document.querySelectorAll('.bottom-nav-v2-item')[navIdx]?.classList.add('active');
             }
             
             if (page === 'discover') loadDiscover();
@@ -1074,6 +1495,20 @@
         }
         
         // 加载发现卡片
+        async function loadDiscover() {
+            const stack = document.getElementById('cardStack');
+            stack.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/discover?user_id=${currentUserId}&limit=5`);
+                const data = await res.json();
+                currentCards = data.users || [];
+                currentCardIndex = 0;
+                renderCardsWithBlur();
+            } catch (e) {
+                stack.innerHTML = '<div class="loading">加载失败</div>';
+            }
+        }
         async function loadDiscover() {
             const stack = document.getElementById('cardStack');
             stack.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -1498,7 +1933,207 @@
             } catch (e) { console.error('Send error:', e); }
         }
         
-        // 加载社区
+        // 社區分類過濾
+        let currentPostFilter = 'all';
+        
+        function filterPosts(type) {
+            currentPostFilter = type;
+            document.querySelectorAll('.community-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            loadCommunity();
+        }
+        
+        // 顯示發帖彈窗
+        function showPostModal() {
+            document.getElementById('postModal').classList.add('active');
+        }
+        
+        function closePostModal() {
+            document.getElementById('postModal').classList.remove('active');
+        }
+        
+        // 提交帖子
+        async function submitPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const type = document.getElementById('postType').value;
+            
+            if (!title || !content) {
+                alert('請填寫標題和內容');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/posts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        author_id: currentUserId,
+                        title: title,
+                        content: content,
+                        post_type: type,
+                        tags: extractTags(content)
+                    })
+                });
+                
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert('發布成功！');
+                    closePostModal();
+                    document.getElementById('postTitle').value = '';
+                    document.getElementById('postContent').value = '';
+                    loadCommunity();
+                    // 獎勵金幣
+                    await fetch(`${API_BASE}/users/${currentUserId}/coins/earn?action=complete_profile`, { method: 'POST' });
+                    loadCoins();
+                }
+            } catch (e) {
+                alert('發布失敗，請重試');
+                console.error('Post error:', e);
+            }
+        }
+        
+        // 提取標籤
+        function extractTags(text) {
+            const tags = [];
+            const tagMatches = text.match(/#(\w+)/g);
+            if (tagMatches) {
+                tagMatches.forEach(t => tags.push(t.replace('#', '')));
+            }
+            return tags;
+        }
+        
+        // 加載社區（增強版）
+        async function loadCommunity() {
+            const container = document.getElementById('communityPosts');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const url = currentPostFilter === 'all' 
+                    ? `${API_BASE}/posts?limit=20` 
+                    : `${API_BASE}/posts?post_type=${currentPostFilter}&limit=20`;
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                container.innerHTML = data.posts?.map(p => `
+                    <div class="post-card" id="post-${p.id}">
+                        <div class="post-author">
+                            <div class="post-avatar" style="background-image: url('${p.author_avatar}')"></div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-weight: 600; font-size: 14px;">${p.author_name}</span>
+                                    ${p.author_is_expert ? '<span class="expert-badge">✓ 認證專家</span>' : ''}
+                                </div>
+                                <div style="font-size: 11px; color: var(--text-muted);">${new Date(p.created_at).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                        <div class="post-title">${p.title}</div>
+                        <div class="post-content">${p.content.substring(0, 150)}${p.content.length > 150 ? '...' : ''}</div>
+                        <div class="post-tags">
+                            ${p.tags?.map(t => `<span class="post-tag">#${t}</span>`).join('') || ''}
+                            <span class="post-tag" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">${getPostTypeLabel(p.post_type)}</span>
+                        </div>
+                        <div class="post-stats">
+                            <span onclick="likePost(${p.id})" style="cursor: pointer;">❤️ ${p.like_count}</span>
+                            <span onclick="toggleComments(${p.id})" style="cursor: pointer;">💬 ${p.comment_count}</span>
+                            <span>👁 ${p.view_count}</span>
+                        </div>
+                        <!-- 評論區（默認隱藏） -->
+                        <div class="comment-section" id="comments-${p.id}" style="display: none;">
+                            <div id="comment-list-${p.id}" style="margin-bottom: 12px;"></div>
+                            <div class="comment-input-bar">
+                                <input type="text" class="comment-input" id="comment-input-${p.id}" placeholder="寫下你的評論...">
+                                <button class="comment-submit" onclick="submitComment(${p.id})">發送</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<div class="loading">暫無帖子，快來發布第一條吧！</div>';
+            } catch (e) {
+                container.innerHTML = '<div class="loading">加載失敗</div>';
+            }
+        }
+        
+        function getPostTypeLabel(type) {
+            const labels = {
+                'general': '一般',
+                'story': '緣分故事',
+                'question': '求助',
+                'expert_advice': '專家解答',
+                'fengshui_case': '風水案例'
+            };
+            return labels[type] || '一般';
+        }
+        
+        // 點讚
+        async function likePost(postId) {
+            try {
+                // 調用 API 點讚（需要後端支持）
+                // await fetch(`${API_BASE}/posts/${postId}/like`, { method: 'POST' });
+                alert('已點讚！');
+            } catch (e) {
+                console.error('Like error:', e);
+            }
+        }
+        
+        // 切換評論顯示
+        async function toggleComments(postId) {
+            const section = document.getElementById(`comments-${postId}`);
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                await loadComments(postId);
+            } else {
+                section.style.display = 'none';
+            }
+        }
+        
+        // 加載評論
+        async function loadComments(postId) {
+            const list = document.getElementById(`comment-list-${postId}`);
+            try {
+                const res = await fetch(`${API_BASE}/posts/${postId}`);
+                const data = await res.json();
+                
+                list.innerHTML = data.comments?.map(c => `
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                        <div style="width: 28px; height: 28px; border-radius: 50%; background-image: url('${c.author_avatar}'); background-size: cover; flex-shrink: 0;"></div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 12px; font-weight: 600;">${c.author_name}</span>
+                                ${c.is_expert ? '<span class="expert-badge" style="font-size: 10px; padding: 1px 6px;">專家</span>' : ''}
+                            </div>
+                            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">${c.content}</div>
+                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">${new Date(c.created_at).toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                `).join('') || '<div style="color: var(--text-muted); font-size: 13px; padding: 8px;">暫無評論，快來搶沙發！</div>';
+            } catch (e) {
+                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">加載評論失敗</div>';
+            }
+        }
+        
+        // 提交評論
+        async function submitComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const content = input.value.trim();
+            if (!content) return;
+            
+            try {
+                await fetch(`${API_BASE}/posts/${postId}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        author_id: currentUserId,
+                        content: content
+                    })
+                });
+                
+                input.value = '';
+                await loadComments(postId);
+            } catch (e) {
+                alert('評論發布失敗');
+                console.error('Comment error:', e);
+            }
+        }
         async function loadCommunity() {
             const container = document.getElementById('communityPosts');
             container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -1565,8 +2200,166 @@
             }
         }
         
-        // 加载每日一卦
+        // 加载每日一卦（增強版）
         async function loadFortune() {
+            const card = document.getElementById('fortuneCard');
+            const detail = document.getElementById('fortuneDetail');
+            const history = document.getElementById('fortuneHistory');
+            
+            card.innerHTML = '<div class="loading"><div class="spinner"></div><p>正在计算今日运势...</p></div>';
+            detail.innerHTML = '';
+            history.innerHTML = '<div class="loading" style="padding:20px;"><div class="spinner" style="width:24px;height:24px;"></div></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/daily-fortune`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: currentUserId })
+                });
+                const data = await res.json();
+                const f = data.fortune;
+                
+                // 主卡片
+                card.innerHTML = `
+                    <div class="fortune-gua">${['☰','☷','☳','☴','☵','☲','☶','☱'][f.gua_number - 1] || '☯'}</div>
+                    <div class="fortune-name">${f.gua_name}卦 · ${f.gua_type}</div>
+                    <div class="fortune-score">${f.overall_score}</div>
+                    <div style="color: var(--text-muted); font-size: 14px;">今日综合运势</div>
+                    <div class="fortune-grid">
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">💕 爱情</div>
+                            <div class="fortune-item-value">${f.love_score}</div>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">💼 事业</div>
+                            <div class="fortune-item-value">${f.career_score}</div>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">💰 财运</div>
+                            <div class="fortune-item-value">${f.wealth_score}</div>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-item-label">🏃 健康</div>
+                            <div class="fortune-item-value">${f.health_score}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 14px; background: rgba(255,255,255,0.03); border-radius: 14px; position:relative;z-index:1;">
+                        <div style="font-size: 13px; color: var(--pink); margin-bottom: 6px; font-weight:600;">💡 今日建议</div>
+                        <div style="font-size: 13px; color: var(--text-muted); line-height:1.6;">${f.advice}</div>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 12px; color: var(--text-muted); position:relative;z-index:1;">
+                        🎨 幸运色: ${f.lucky_color} | 🧭 幸运方向: ${f.lucky_direction}
+                    </div>
+                `;
+                
+                // 詳情區域
+                detail.innerHTML = `
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,88,100,0.08);">
+                        <h3 style="font-size: 16px; color: var(--pink); margin-bottom: 16px;">🔮 卦象解析</h3>
+                        <div style="font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 16px;">
+                            <p style="margin-bottom: 12px;"><strong style="color: var(--text);">今日卦象：</strong>${f.gua_name}卦為${f.gua_type}，代表${getGuaMeaning(f.gua_name)}。</p>
+                            <p style="margin-bottom: 12px;"><strong style="color: var(--text);">五行互動：</strong>今日${f.daily_element || '木'}氣旺盛，與你的${f.personal_element || '火'}命${f.interaction || '相生'}。</p>
+                            <p><strong style="color: var(--text);">愛情運勢：</strong>${f.love_advice || '今日愛情運平穩，適合與伴侶溝通交流。'}</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div style="background: rgba(76,175,80,0.1); border-radius: 12px; padding: 14px;">
+                                <div style="font-size: 12px; color: #4CAF50; margin-bottom: 8px; font-weight: 600;">✓ 今日宜</div>
+                                <div style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                                    ${(f.suitable || ['社交', '學習', '規劃']).map(item => `• ${item}`).join('<br>')}
+                                </div>
+                            </div>
+                            <div style="background: rgba(244,67,54,0.1); border-radius: 12px; padding: 14px;">
+                                <div style="font-size: 12px; color: #F44336; margin-bottom: 8px; font-weight: 600;">✗ 今日忌</div>
+                                <div style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                                    ${(f.unsuitable || ['爭執', '冒險', '衝動']).map(item => `• ${item}`).join('<br>')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; border: 1px solid rgba(0,217,192,0.1);">
+                        <h3 style="font-size: 16px; color: var(--mint); margin-bottom: 16px;">💫 幸運指南</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                            <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                                <div style="font-size: 24px; margin-bottom: 4px;">🎨</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">幸運色</div>
+                                <div style="font-size: 14px; color: var(--text); font-weight: 600;">${f.lucky_color || '綠色'}</div>
+                            </div>
+                            <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                                <div style="font-size: 24px; margin-bottom: 4px;">🧭</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">幸運方向</div>
+                                <div style="font-size: 14px; color: var(--text); font-weight: 600;">${f.lucky_direction || '東方'}</div>
+                            </div>
+                            <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                                <div style="font-size: 24px; margin-bottom: 4px;">🔢</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">幸運數字</div>
+                                <div style="font-size: 14px; color: var(--text); font-weight: 600;">${f.lucky_numbers || '3, 8'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 歷史運勢（模擬數據）
+                const historyData = generateFortuneHistory();
+                history.innerHTML = historyData.map(h => `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 20px;">${h.gua}</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; font-weight: 600;">${h.date}</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">${h.guaName} · ${h.type}</div>
+                        </div>
+                        <div style="font-size: 18px; font-weight: 700; color: ${h.score >= 70 ? '#4CAF50' : h.score >= 50 ? '#FFC107' : '#F44336'};">${h.score}</div>
+                    </div>
+                `).join('');
+                
+                // Earn coins for daily fortune
+                await fetch(`${API_BASE}/users/${currentUserId}/coins/earn?action=daily_fortune`, { method: 'POST' });
+                loadCoins();
+            } catch (e) {
+                card.innerHTML = '<div class="loading">运势计算失败</div>';
+                detail.innerHTML = '';
+                history.innerHTML = '';
+            }
+        }
+        
+        // 生成歷史運勢數據
+        function generateFortuneHistory() {
+            const guas = ['☰','☷','☳','☴','☵','☲','☶','☱'];
+            const guaNames = ['乾','坤','震','巽','坎','離','艮','兌'];
+            const types = ['大吉','中吉','小吉','平','小凶'];
+            const history = [];
+            
+            for (let i = 1; i <= 7; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const idx = Math.floor(Math.random() * 8);
+                history.push({
+                    date: `${date.getMonth() + 1}/${date.getDate()}`,
+                    gua: guas[idx],
+                    guaName: guaNames[idx],
+                    type: types[Math.floor(Math.random() * types.length)],
+                    score: Math.floor(Math.random() * 40) + 60
+                });
+            }
+            
+            return history;
+        }
+        
+        // 卦象含義
+        function getGuaMeaning(guaName) {
+            const meanings = {
+                '乾': '天行健，君子以自強不息',
+                '坤': '地勢坤，君子以厚德載物',
+                '震': '震為雷，君子以恐懼修省',
+                '巽': '巽為風，君子以申命行事',
+                '坎': '坎為水，君子以常德行',
+                '離': '離為火，君子以類族辨物',
+                '艮': '艮為山，君子以思不出其位',
+                '兌': '兌為澤，君子以朋友講習'
+            };
+            return meanings[guaName] || '順其自然，隨遇而安';
+        }
             const card = document.getElementById('fortuneCard');
             card.innerHTML = '<div class="loading"><div class="spinner"></div><p>正在计算今日运势...</p></div>';
             
@@ -1674,10 +2467,337 @@
                 console.error('Booking error:', e);
             }
         }
-            alert('预约功能开发中，请稍后...');
+        
+        // 模糊照片系統 - 專利規避：互動解鎖
+        async function checkPhotoReveal(userId) {
+            try {
+                const res = await fetch(`${API_BASE}/users/${userId}/blurred-photo?viewer_id=${currentUserId}`);
+                const data = await res.json();
+                return data;
+            } catch (e) {
+                console.error('Photo reveal check error:', e);
+                return { is_revealed: false, reveal_progress: 0 };
+            }
         }
         
-        // 键盘事件
+        async function revealPhoto(userId) {
+            try {
+                // 檢查金幣餘額
+                const coinRes = await fetch(`${API_BASE}/users/${currentUserId}/coins`);
+                const coinData = await coinRes.json();
+                
+                if (coinData.coins < 50) {
+                    alert('金幣不足！需要50金幣解鎖照片\n發送消息或每日簽到可獲得金幣');
+                    return false;
+                }
+                
+                // 扣除金幣並解鎖
+                const res = await fetch(`${API_BASE}/users/${currentUserId}/coins/spend?action=reveal_photo&target_id=${userId}`, {
+                    method: 'POST'
+                });
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    loadCoins();
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.error('Reveal photo error:', e);
+                return false;
+            }
+        }
+        
+        // 更新卡片渲染 - Tinder 風格全屏照片 + 底部信息覆蓋
+        async function renderCardsWithBlur() {
+            const stack = document.getElementById('cardStack');
+            stack.innerHTML = '';
+            
+            const cardsToRender = currentCards.slice(currentCardIndex, currentCardIndex + 3);
+            
+            for (let i = 0; i < cardsToRender.length; i++) {
+                const user = cardsToRender[i];
+                const wuxing = WUXING_SYMBOLS[user.fxti_element] || WUXING_SYMBOLS['木'];
+                const age = user.birth_date ? Math.floor((new Date() - new Date(user.birth_date)) / 31557600000) : '--';
+                
+                // 檢查照片解鎖狀態
+                const photoStatus = await checkPhotoReveal(user.id);
+                const isRevealed = photoStatus.is_revealed;
+                const compatScore = user.compatibility_score || 75;
+                
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.style.zIndex = 3 - i;
+                card.dataset.userId = user.id;
+                card.dataset.index = i;
+                
+                // Tinder 風格：全屏照片 + 底部信息覆蓋層
+                card.innerHTML = `
+                    <div class="card-image-full ${isRevealed ? '' : 'blurred-photo'}" 
+                         style="background-image: url('${user.avatar_url}')"
+                         id="card-image-${user.id}">
+                        
+                        <!-- 頂部五行標籤 -->
+                        <div class="wuxing-badge" style="background: ${wuxing.color}CC;">
+                            <span>${wuxing.symbol}</span>
+                            <span>${user.fxti_element}命 · ${wuxing.desc}</span>
+                        </div>
+                        
+                        <!-- 匹配度標籤 -->
+                        <div class="compatibility-badge">
+                            ${compatScore}分 匹配
+                        </div>
+                        
+                        <!-- 滑動指示器 -->
+                        <div class="swipe-indicator like" id="like-indicator-${user.id}">LIKE</div>
+                        <div class="swipe-indicator nope" id="nope-indicator-${user.id}">NOPE</div>
+                        
+                        <!-- 五行解鎖遮罩（未解鎖時顯示） -->
+                        ${!isRevealed ? `
+                        <div class="wuxing-overlay" id="overlay-${user.id}" onclick="handleRevealClick(event, ${user.id})">
+                            <div class="wuxing-card">
+                                <div class="wuxing-symbol">${wuxing.symbol}</div>
+                                <div class="wuxing-name">${user.fxti_element}命</div>
+                                <div class="wuxing-desc">${wuxing.desc}</div>
+                                <div class="wuxing-hint">點擊解鎖照片 (50金幣)</div>
+                                <div class="reveal-progress-bar">
+                                    <div class="reveal-progress-fill" style="width: ${photoStatus.reveal_progress || 0}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <!-- 底部信息覆蓋層 -->
+                        <div class="card-info-overlay">
+                            <div class="card-header">
+                                <span class="card-name">${user.nickname}</span>
+                                <span class="card-age">${age}</span>
+                                ${user.is_verified ? '<span class="card-badge badge-verified">✓</span>' : ''}
+                                ${user.is_premium ? '<span class="card-badge badge-premium">👑</span>' : ''}
+                            </div>
+                            <div class="card-meta">
+                                <span>${user.fxti_profile_name || '緣分探索者'}</span>
+                                <span>·</span>
+                                <span>${user.birth_place || '未知地'}</span>
+                            </div>
+                            <div class="card-bio">${user.bio || '這個人很懶，什麼都沒寫...'}</div>
+                            
+                            <!-- 六維度迷你預覽 -->
+                            <div class="radar-preview" onclick="showSixDimensions(${user.id}, event)" 
+                                 style="margin-top: 10px; padding: 8px 12px; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div class="radar-preview-header">
+                                    <span class="radar-preview-title" style="color: rgba(255,255,255,0.8);">六維度緣分</span>
+                                    <span class="radar-preview-score" style="color: #fff;">${compatScore}分</span>
+                                </div>
+                                <canvas class="radar-mini-canvas" id="radar-mini-${user.id}" width="300" height="60"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                stack.appendChild(card);
+                
+                // Draw mini radar
+                setTimeout(() => drawMiniRadar(`radar-mini-${user.id}`, compatScore), 100);
+                
+                // 為頂層卡片添加滑動手勢
+                if (i === 0) {
+                    addSwipeGesture(card, user.id);
+                }
+            }
+            
+            if (currentCards.length === 0) {
+                stack.innerHTML = '<div class="loading">暫無更多推薦<br><small>稍後再來看看</small></div>';
+            }
+        }
+        
+        // Tinder 風格滑動手勢支持
+        function addSwipeGesture(cardElement, userId) {
+            let startX = 0, startY = 0;
+            let currentX = 0, currentY = 0;
+            let isDragging = false;
+            
+            const likeIndicator = document.getElementById(`like-indicator-${userId}`);
+            const nopeIndicator = document.getElementById(`nope-indicator-${userId}`);
+            
+            function updateCardPosition(x, y, rotate) {
+                cardElement.style.transform = `translateX(${x}px) translateY(${y}px) rotate(${rotate}deg)`;
+                
+                // 更新指示器透明度
+                if (likeIndicator && x > 0) {
+                    likeIndicator.classList.add('visible');
+                    likeIndicator.style.opacity = Math.min(x / 100, 1);
+                    if (nopeIndicator) nopeIndicator.classList.remove('visible');
+                } else if (nopeIndicator && x < 0) {
+                    nopeIndicator.classList.add('visible');
+                    nopeIndicator.style.opacity = Math.min(Math.abs(x) / 100, 1);
+                    if (likeIndicator) likeIndicator.classList.remove('visible');
+                } else {
+                    if (likeIndicator) likeIndicator.classList.remove('visible');
+                    if (nopeIndicator) nopeIndicator.classList.remove('visible');
+                }
+            }
+            
+            function resetCard() {
+                cardElement.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                cardElement.style.transform = '';
+                if (likeIndicator) likeIndicator.classList.remove('visible');
+                if (nopeIndicator) nopeIndicator.classList.remove('visible');
+                setTimeout(() => {
+                    cardElement.style.transition = '';
+                }, 300);
+            }
+            
+            // 觸摸事件
+            cardElement.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                isDragging = true;
+                cardElement.style.transition = 'none';
+            }, { passive: true });
+            
+            cardElement.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX - startX;
+                currentY = e.touches[0].clientY - startY;
+                const rotate = currentX * 0.05;
+                updateCardPosition(currentX, currentY, rotate);
+            }, { passive: true });
+            
+            cardElement.addEventListener('touchend', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const threshold = 100; // 滑動閾值
+                
+                if (currentX > threshold) {
+                    // 右滑 - LIKE
+                    cardElement.style.transition = 'transform 0.3s ease';
+                    cardElement.style.transform = `translateX(400px) rotate(30deg)`;
+                    cardElement.style.opacity = '0';
+                    setTimeout(() => swipe('right'), 300);
+                } else if (currentX < -threshold) {
+                    // 左滑 - NOPE
+                    cardElement.style.transition = 'transform 0.3s ease';
+                    cardElement.style.transform = `translateX(-400px) rotate(-30deg)`;
+                    cardElement.style.opacity = '0';
+                    setTimeout(() => swipe('left'), 300);
+                } else {
+                    // 未超過閾值 - 回彈
+                    resetCard();
+                }
+                
+                currentX = 0;
+                currentY = 0;
+            });
+            
+            // 鼠標事件（桌面端）
+            cardElement.addEventListener('mousedown', (e) => {
+                startX = e.clientX;
+                startY = e.clientY;
+                isDragging = true;
+                cardElement.style.transition = 'none';
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                currentX = e.clientX - startX;
+                currentY = e.clientY - startY;
+                const rotate = currentX * 0.05;
+                updateCardPosition(currentX, currentY, rotate);
+            });
+            
+            document.addEventListener('mouseup', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const threshold = 100;
+                
+                if (currentX > threshold) {
+                    cardElement.style.transition = 'transform 0.3s ease';
+                    cardElement.style.transform = `translateX(400px) rotate(30deg)`;
+                    cardElement.style.opacity = '0';
+                    setTimeout(() => swipe('right'), 300);
+                } else if (currentX < -threshold) {
+                    cardElement.style.transition = 'transform 0.3s ease';
+                    cardElement.style.transform = `translateX(-400px) rotate(-30deg)`;
+                    cardElement.style.opacity = '0';
+                    setTimeout(() => swipe('left'), 300);
+                } else {
+                    resetCard();
+                }
+                
+                currentX = 0;
+                currentY = 0;
+            });
+        }
+        
+        // 處理解鎖點擊
+        async function handleRevealClick(event, userId) {
+            event.stopPropagation();
+            
+            if (confirm('花費50金幣解鎖對方照片？\n\n解鎖後可查看清晰照片和更多資料')) {
+                const success = await revealPhoto(userId);
+                if (success) {
+                    // 更新UI
+                    const imgDiv = document.getElementById(`card-image-${userId}`);
+                    const overlay = document.getElementById(`overlay-${userId}`);
+                    if (imgDiv) imgDiv.classList.remove('blurred-photo');
+                    if (overlay) overlay.classList.add('revealed');
+                    alert('照片已解鎖！');
+                }
+            }
+        }
+        
+        // 鍵盤事件
+                }
+            }
+        }
+            const modal = document.getElementById('bookingModal');
+            const expertId = parseInt(modal.dataset.expertId);
+            const date = document.getElementById('bookingDate').value;
+            const time = document.getElementById('bookingTime').value;
+            const topic = document.getElementById('bookingTopic').value;
+            const type = document.getElementById('bookingType').value;
+            const desc = document.getElementById('bookingDesc').value;
+            
+            if (!date || !time || !topic) {
+                alert('請填寫完整預約信息');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        client_id: currentUserId,
+                        expert_id: expertId,
+                        booking_type: type,
+                        booking_date: date,
+                        booking_time: time,
+                        topic: topic,
+                        description: desc
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    alert(`預約成功！\n預約編號: #${data.booking.id}\n費用: $${data.price} HKD`);
+                    closeBookingModal();
+                    // 扣除金幣
+                    loadCoins();
+                } else {
+                    alert('預約失敗: ' + (data.detail || '未知錯誤'));
+                }
+            } catch (e) {
+                alert('預約失敗，請稍後重試');
+                console.error('Booking error:', e);
+            }
+        }
+        
+        // 鍵盤事件
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') swipe('left');
             if (e.key === 'ArrowRight') swipe('right');
@@ -1685,21 +2805,6 @@
                 sendMessage();
             }
         });
-        
-        // 触摸滑动支持
-        let touchStartX = 0, touchStartY = 0;
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-        
-        document.addEventListener('touchend', (e) => {
-            const diffX = e.changedTouches[0].clientX - touchStartX;
-            const diffY = e.changedTouches[0].clientY - touchStartY;
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 80) {
-                swipe(diffX > 0 ? 'right' : 'left');
-            }
-        }, { passive: true });
         
         // 初始化
         loadDiscover();
@@ -1739,6 +2844,29 @@
                     <textarea class="booking-input" id="bookingDesc" rows="3" placeholder="請簡述您的需求..."></textarea>
                 </div>
                 <button class="booking-submit" onclick="submitBooking()">確認預約</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 發帖彈窗 -->
+    <div class="post-modal" id="postModal">
+        <div class="six-dim-header">
+            <div style="font-size:18px;font-weight:700;">發布新帖</div>
+            <button class="six-dim-close" onclick="closePostModal()">✕</button>
+        </div>
+        <div class="post-modal-content">
+            <div class="post-form">
+                <input type="text" class="post-input" id="postTitle" placeholder="標題（例如：我的緣分故事...）">
+                <select class="post-input" id="postType">
+                    <option value="general">一般分享</option>
+                    <option value="story">緣分故事</option>
+                    <option value="question">求助問答</option>
+                    <option value="fengshui_case">風水案例</option>
+                </select>
+                <textarea class="post-textarea" id="postContent" placeholder="分享你的故事或提出問題...
+
+#緣分 #風水 #八字"></textarea>
+                <button class="post-submit" onclick="submitPost()">發布</button>
             </div>
         </div>
     </div>

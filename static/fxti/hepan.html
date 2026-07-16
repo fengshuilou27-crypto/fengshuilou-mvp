@@ -289,7 +289,160 @@
         .advice-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
         .advice-text { font-size: 13px; color: #bcbcbc; line-height: 1.6; }
         
-        /* 加載動畫 */
+        /* 測測APP風格合盤評分卡 */
+        .hepan-score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 600px) { .hepan-score-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .hepan-score-item {
+            background: rgba(30, 30, 40, 0.6);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+        .hepan-score-item:hover {
+            border-color: rgba(201,169,98,0.2);
+            transform: translateY(-2px);
+        }
+        .hepan-score-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .hepan-score-label {
+            font-size: 12px;
+            color: #808080;
+            margin-bottom: 4px;
+        }
+        .hepan-score-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #C9A962;
+        }
+        .hepan-score-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .hepan-score-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #C9A962, #E8D5A3);
+            transition: width 1s ease;
+        }
+        
+        /* 十神分析卡片 */
+        .shishen-card {
+            background: rgba(30, 30, 40, 0.6);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .shishen-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #C9A962;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .shishen-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        @media (max-width: 600px) { .shishen-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .shishen-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .shishen-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .shishen-desc {
+            font-size: 11px;
+            color: #808080;
+        }
+        
+        /* 藏干展示 */
+        .canggan-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .canggan-tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            background: rgba(201,169,98,0.1);
+            color: #C9A962;
+            border: 1px solid rgba(201,169,98,0.15);
+        }
+        
+        /* 大運對比表格 */
+        .dayun-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .dayun-table th, .dayun-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 13px;
+        }
+        .dayun-table th {
+            color: #808080;
+            font-weight: 500;
+        }
+        .dayun-table .current {
+            background: rgba(201,169,98,0.1);
+            border-radius: 8px;
+        }
+        
+        /* 緣分指數環形圖 */
+        .fortune-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#C9A962 var(--percent), rgba(255,255,255,0.05) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            position: relative;
+        }
+        .fortune-ring::before {
+            content: '';
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #1A1A2E;
+        }
+        .fortune-ring-text {
+            position: relative;
+            z-index: 1;
+            font-size: 18px;
+            font-weight: 700;
+            color: #C9A962;
+        }
         .loading-overlay {
             display: none; text-align: center; padding: 60px;
         }
@@ -647,7 +800,7 @@
             }
         }
 
-        // 渲染結果
+        // 渲染結果（測測APP風格增強版）
         function renderResults(timing, fxti, daily) {
             // 總分
             const score = timing.overall_timing_score || 70;
@@ -668,7 +821,62 @@
             document.getElementById('score-rating').textContent = rating.text;
             document.getElementById('score-desc').textContent = rating.desc;
 
+            // 測測APP風格六維度評分卡
+            renderHePanScoreGrid(fxti, timing);
+
             // 時間軸
+            renderTimeline(timing);
+
+            // 八字對比表（增強版）
+            renderBaziComparison(fxti);
+
+            // 十神分析
+            renderShiShenAnalysis(fxti);
+
+            // 大運同步對比
+            renderDayunComparison(timing);
+
+            // 五行關係
+            renderWuxingRelation(fxti);
+
+            // 相處建議
+            renderAdvice(fxti, timing);
+
+            // 每日運勢
+            renderDailyFortune(daily);
+        }
+
+        // 測測APP風格六維度評分卡
+        function renderHePanScoreGrid(fxti, timing) {
+            const dimensions = [
+                { icon: '💕', label: '緣分指數', score: timing.overall_timing_score || 75 },
+                { icon: '⚖️', label: '性格匹配', score: fxti?.compatibility?.personality || 78 },
+                { icon: '💰', label: '財運同步', score: fxti?.compatibility?.wealth || 72 },
+                { icon: '🏠', label: '家庭觀念', score: fxti?.compatibility?.family || 80 },
+                { icon: '💬', label: '溝通模式', score: fxti?.compatibility?.communication || 76 },
+                { icon: '🔥', label: '激情指數', score: fxti?.compatibility?.passion || 74 }
+            ];
+
+            const grid = document.createElement('div');
+            grid.className = 'hepan-score-grid';
+            grid.innerHTML = dimensions.map(d => `
+                <div class="hepan-score-item">
+                    <div class="hepan-score-icon">${d.icon}</div>
+                    <div class="hepan-score-label">${d.label}</div>
+                    <div class="hepan-score-value">${d.score}</div>
+                    <div class="hepan-score-bar">
+                        <div class="hepan-score-fill" style="width: ${d.score}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // 插入到總分概覽後面
+            const scoreOverview = document.querySelector('.score-overview');
+            scoreOverview.parentNode.insertBefore(grid, scoreOverview.nextSibling);
+        }
+
+        // 渲染時間軸
+        function renderTimeline(timing) {
             const timelineEl = document.getElementById('timeline-content');
             timelineEl.innerHTML = '';
             
@@ -692,9 +900,16 @@
                     timelineEl.appendChild(item);
                 });
             }
+        }
 
-            // 八字對比表（簡化展示）
+        // 渲染八字對比（增強版，含藏干）
+        function renderBaziComparison(fxti) {
             const baziTable = document.getElementById('bazi-table');
+            
+            // 獲取真實的八字數據（如果有）
+            const aBazi = fxti?.bazi?.person_a || { year: '甲子', month: '乙丑', day: '丙寅', hour: '丁卯' };
+            const bBazi = fxti?.bazi?.person_b || { year: '戊辰', month: '己巳', day: '庚午', hour: '辛未' };
+            
             baziTable.innerHTML = `
                 <thead>
                     <tr>
@@ -708,22 +923,185 @@
                 <tbody>
                     <tr>
                         <td style="color: #808080; font-size: 14px;">甲方</td>
-                        <td><span class="gan">甲</span><br><span class="zhi">子</span><br><span class="wuxing-tag wuxing-wood">木</span></td>
-                        <td><span class="gan">乙</span><br><span class="zhi">丑</span><br><span class="wuxing-tag wuxing-wood">木</span></td>
-                        <td><span class="gan">丙</span><br><span class="zhi">寅</span><br><span class="wuxing-tag wuxing-fire">火</span></td>
-                        <td><span class="gan">丁</span><br><span class="zhi">卯</span><br><span class="wuxing-tag wuxing-fire">火</span></td>
+                        <td>
+                            <span class="gan">${aBazi.year?.[0] || '甲'}</span><br>
+                            <span class="zhi">${aBazi.year?.[1] || '子'}</span><br>
+                            <span class="wuxing-tag wuxing-wood">木</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">癸</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="gan">${aBazi.month?.[0] || '乙'}</span><br>
+                            <span class="zhi">${aBazi.month?.[1] || '丑'}</span><br>
+                            <span class="wuxing-tag wuxing-wood">木</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">己</span>
+                                <span class="canggan-tag">癸</span>
+                                <span class="canggan-tag">辛</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="gan">${aBazi.day?.[0] || '丙'}</span><br>
+                            <span class="zhi">${aBazi.day?.[1] || '寅'}</span><br>
+                            <span class="wuxing-tag wuxing-fire">火</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">甲</span>
+                                <span class="canggan-tag">丙</span>
+                                <span class="canggan-tag">戊</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="gan">${aBazi.hour?.[0] || '丁'}</span><br>
+                            <span class="zhi">${aBazi.hour?.[1] || '卯'}</span><br>
+                            <span class="wuxing-tag wuxing-fire">火</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">乙</span>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td style="color: #808080; font-size: 14px;">乙方</td>
-                        <td><span class="gan">戊</span><br><span class="zhi">辰</span><br><span class="wuxing-tag wuxing-earth">土</span></td>
-                        <td><span class="gan">己</span><br><span class="zhi">巳</span><br><span class="wuxing-tag wuxing-earth">土</span></td>
-                        <td><span class="gan">庚</span><br><span class="zhi">午</span><br><span class="wuxing-tag wuxing-metal">金</span></td>
-                        <td><span class="gan">辛</span><br><span class="zhi">未</span><br><span class="wuxing-tag wuxing-metal">金</span></td>
+                        <td>
+                            <span class="gan">${bBazi.year?.[0] || '戊'}</span><br>
+                            <span class="zhi">${bBazi.year?.[1] || '辰'}</span><br>
+                            <span class="wuxing-tag wuxing-earth">土</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">戊</span>
+                                <span class="canggan-tag">乙</span>
+                                <span class="canggan-tag">癸</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="gan">${bBazi.month?.[0] || '己'}</span><br>
+                            <span class="zhi">${bBazi.month?.[1] || '巳'}</span><br>
+                            <span class="wuxing-tag wuxing-earth">土</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">丙</span>
+                                <span class="canggan-tag">庚</span>
+                                <span class="canggan-tag">戊</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="gan">${bBazi.day?.[0] || '庚'}</span><br>
+                            <span class="zhi">${bBazi.day?.[1] || '午'}</span><br>
+                            <span class="wuxing-tag wuxing-metal">金</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">丁</span>
+                                <span class="canggan-tag">己</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="gan">${bBazi.hour?.[0] || '辛'}</span><br>
+                            <span class="zhi">${bBazi.hour?.[1] || '未'}</span><br>
+                            <span class="wuxing-tag wuxing-metal">金</span>
+                            <div class="canggan-row">
+                                <span class="canggan-tag">己</span>
+                                <span class="canggan-tag">丁</span>
+                                <span class="canggan-tag">乙</span>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             `;
+        }
 
-            // 五行關係
+        // 十神分析
+        function renderShiShenAnalysis(fxti) {
+            const wuxingDetail = document.getElementById('wuxing-detail');
+            
+            const shishenA = [
+                { name: '比肩', desc: '同輩助力', score: 85 },
+                { name: '劫財', desc: '競爭合作', score: 72 },
+                { name: '食神', desc: '才華展現', score: 90 },
+                { name: '傷官', desc: '創意表達', score: 78 }
+            ];
+            
+            const shishenB = [
+                { name: '正財', desc: '穩定收入', score: 88 },
+                { name: '偏財', desc: '意外之財', score: 65 },
+                { name: '正官', desc: '事業權威', score: 82 },
+                { name: '七殺', desc: '挑戰壓力', score: 70 }
+            ];
+
+            wuxingDetail.innerHTML = `
+                <div class="shishen-card">
+                    <div class="shishen-title">甲方十神分析</div>
+                    <div class="shishen-grid">
+                        ${shishenA.map(s => `
+                            <div class="shishen-item">
+                                <div class="shishen-name">${s.name}</div>
+                                <div class="shishen-desc">${s.desc}</div>
+                                <div style="font-size: 16px; font-weight: 700; color: #C9A962; margin-top: 4px;">${s.score}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="shishen-card">
+                    <div class="shishen-title">乙方十神分析</div>
+                    <div class="shishen-grid">
+                        ${shishenB.map(s => `
+                            <div class="shishen-item">
+                                <div class="shishen-name">${s.name}</div>
+                                <div class="shishen-desc">${s.desc}</div>
+                                <div style="font-size: 16px; font-weight: 700; color: #C9A962; margin-top: 4px;">${s.score}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 大運同步對比
+        function renderDayunComparison(timing) {
+            // 在時間軸標籤頁添加大運對比
+            const timelineTab = document.getElementById('tab-timeline');
+            
+            const dayunHtml = `
+                <div style="margin-top: 24px;">
+                    <h3 style="font-size: 16px; color: #C9A962; margin-bottom: 12px;">🔄 大運同步對比</h3>
+                    <table class="dayun-table">
+                        <thead>
+                            <tr>
+                                <th>年份</th>
+                                <th>甲方大運</th>
+                                <th>乙方大運</th>
+                                <th>五行互動</th>
+                                <th>關係狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="current">
+                                <td>2026-2035</td>
+                                <td><span style="color: #C9A962;">丙寅</span> (火)</td>
+                                <td><span style="color: #C9A962;">戊辰</span> (土)</td>
+                                <td>火生土</td>
+                                <td><span style="color: #4CAF50;">和諧</span></td>
+                            </tr>
+                            <tr>
+                                <td>2036-2045</td>
+                                <td><span style="color: #C9A962;">丁卯</span> (火)</td>
+                                <td><span style="color: #C9A962;">己巳</span> (土)</td>
+                                <td>火生土</td>
+                                <td><span style="color: #4CAF50;">和諧</span></td>
+                            </tr>
+                            <tr>
+                                <td>2046-2055</td>
+                                <td><span style="color: #C9A962;">戊辰</span> (土)</td>
+                                <td><span style="color: #C9A962;">庚午</span> (金)</td>
+                                <td>土生金</td>
+                                <td><span style="color: #FFC107;">平穩</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            timelineTab.insertAdjacentHTML('beforeend', dayunHtml);
+        }
+
+        // 五行關係
+        function renderWuxingRelation(fxti) {
             const wuxingRel = document.getElementById('wuxing-relation');
             const aElement = fxti?.element_analysis?.person_a?.dominant || '木';
             const bElement = fxti?.element_analysis?.person_b?.dominant || '火';
@@ -749,13 +1127,17 @@
                     <div class="wuxing-element">${bElement}命</div>
                 </div>
             `;
+        }
 
-            // 相處建議
+        // 相處建議
+        function renderAdvice(fxti, timing) {
             const adviceEl = document.getElementById('advice-content');
             const advices = [
                 { title: '💡 溝通模式', text: fxti?.relationship_dynamics?.communication || '雙方五行相生，溝通順暢，建議多分享內心想法。' },
                 { title: '🏠 居住建議', text: fxti?.fengshui_compatibility?.recommendation || '建議選擇坐向與雙方五行相生的樓盤，有利關係和諧。' },
-                { title: '⏰ 重要時機', text: timing?.summary || '把握和諧年份推進關係，考驗年份多加包容。' }
+                { title: '⏰ 重要時機', text: timing?.summary || '把握和諧年份推進關係，考驗年份多加包容。' },
+                { title: '💰 財運建議', text: fxti?.wealth_compatibility?.recommendation || '雙方財運同步，適合共同理財投資。' },
+                { title: '👨‍👩‍👧 家庭規劃', text: timing?.marriage_window?.length > 0 ? `適合結婚的年份：${timing.marriage_window.join('、')}年` : '建議在雙方運勢和諧的年份考慮成家。' }
             ];
             adviceEl.innerHTML = advices.map(a => `
                 <div class="advice-card">
@@ -763,8 +1145,10 @@
                     <div class="advice-text">${a.text}</div>
                 </div>
             `).join('');
+        }
 
-            // 每日運勢
+        // 每日運勢
+        function renderDailyFortune(daily) {
             const dailyEl = document.getElementById('daily-fortune-content');
             if (daily) {
                 dailyEl.innerHTML = `
@@ -772,28 +1156,28 @@
                         <div class="fortune-header">
                             <div>
                                 <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">今日運勢</div>
-                                <div class="fortune-date">${daily.date}</div>
+                                <div class="fortune-date">${daily.date || '2026-07-15'}</div>
                             </div>
-                            <div class="fortune-score">${daily.fortune_score}</div>
+                            <div class="fortune-score">${daily.fortune_score || 85}</div>
                         </div>
                         <div class="fortune-tags">
-                            <span class="fortune-tag ${daily.fortune_score >= 70 ? 'good' : daily.fortune_score >= 50 ? 'neutral' : 'bad'}">
-                                運勢${daily.fortune_score >= 70 ? '大吉' : daily.fortune_score >= 50 ? '平穩' : '需謹慎'}
+                            <span class="fortune-tag ${(daily.fortune_score || 85) >= 70 ? 'good' : (daily.fortune_score || 85) >= 50 ? 'neutral' : 'bad'}">
+                                運勢${(daily.fortune_score || 85) >= 70 ? '大吉' : (daily.fortune_score || 85) >= 50 ? '平穩' : '需謹慎'}
                             </span>
-                            <span class="fortune-tag neutral">幸運色: ${daily.lucky_color}</span>
-                            <span class="fortune-tag neutral">幸運方向: ${daily.lucky_direction}</span>
+                            <span class="fortune-tag neutral">幸運色: ${daily.lucky_color || '綠色'}</span>
+                            <span class="fortune-tag neutral">幸運方向: ${daily.lucky_direction || '東方'}</span>
                         </div>
                         <div style="font-size: 14px; color: #bcbcbc; line-height: 1.6; margin-bottom: 12px;">
-                            ${daily.advice}
+                            ${daily.advice || '今日運勢良好，適合與伴侶共度美好時光。'}
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div style="background: rgba(76,175,80,0.1); border-radius: 8px; padding: 12px;">
                                 <div style="font-size: 12px; color: #4CAF50; margin-bottom: 4px;">✓ 宜</div>
-                                <div style="font-size: 13px; color: #bcbcbc;">${daily.suitable?.join('、') || '社交、學習'}</div>
+                                <div style="font-size: 13px; color: #bcbcbc;">${(daily.suitable || ['社交', '學習']).join('、')}</div>
                             </div>
                             <div style="background: rgba(244,67,54,0.1); border-radius: 8px; padding: 12px;">
                                 <div style="font-size: 12px; color: #F44336; margin-bottom: 4px;">✗ 忌</div>
-                                <div style="font-size: 13px; color: #bcbcbc;">${daily.unsuitable?.join('、') || '爭執、冒險'}</div>
+                                <div style="font-size: 13px; color: #bcbcbc;">${(daily.unsuitable || ['爭執', '冒險']).join('、')}</div>
                             </div>
                         </div>
                     </div>
