@@ -1,30 +1,17 @@
-FROM python:3.12-slim
+FROM node:20-slim
 
 WORKDIR /app
 
-# Install system dependencies for Python packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    g++ \
-    libgeos-dev \
-    && rm -rf /var/lib/apt/lists/*
+# 依赖
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# 源码与构建
+COPY . .
+RUN npm run build
 
-# Copy application code
-COPY app.py runner.py ./
-COPY data/ ./data/
-COPY models/ ./models/
-COPY routers/ ./routers/
-COPY fxti/ ./fxti/
-COPY static/ ./static/
-COPY test_results/ ./test_results/
-COPY README.md ./
+ENV NODE_ENV=production
+ENV PORT=3000
+EXPOSE 3000
 
-# Expose port
-EXPOSE 8000
-
-# Run with uvicorn
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD ["npm", "start"]

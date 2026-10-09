@@ -1,0 +1,1387 @@
+{
+  "date": "2026-10-09",
+  "generatedAt": "2026-10-09T11:46:17.444Z",
+  "views": [
+    {
+      "expertId": "tam",
+      "expertName": "譚新強",
+      "date": "2026-10-02",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【659】周大福創建獲周企增持 涉資近2.8億元 持股比例增至73.57%",
+      "summary": "周大福创建获控股股东增持近2.8亿元，持股升至73.57%；节目探讨美债息高企常态化、AI能否延续支撑美股、习特会及第四季投资部署。",
+      "url": "https://inews.hket.com/article/4203447/%E3%80%90659%E3%80%91%E5%91%A8%E5%A4%A7%E7%A6%8F%E5%89%B5%E5%BB%BA%E7%8D%B2%E5%91%A8%E4%BC%81%E5%A2%9E%E6%8C%81%E3%80%80%E6%B6%89%E8%B3%87%E8%BF%912.8%E5%84%84%E5%85%83%E3%80%80%E6%8C%81%E8%82%A1%E6%AF%94%E4%BE%8B%E5%A2%9E%E8%87%B373.57-?mtc=20023",
+      "signals": [],
+      "horizon": "macro",
+      "decayWeight": 0.8910293727862247
+    },
+    {
+      "expertId": "choi",
+      "expertName": "蔡金強",
+      "date": "2026-09-03",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "信觀點丨希音市值縮水 一個時代落幕",
+      "summary": "蔡金強看淡希音及香港IPO熱潮，認為新股盛宴已近尾聲，提醒警惕破發風險，投資者應量力而行勿盲目追新。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=BAD393EAB5D5&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.507913#/19AF3388EBF69FD1F257CE553004076D",
+      "signals": [
+        {
+          "asset": "港股",
+          "direction": "bear",
+          "strength": 3,
+          "note": "希音市值縮水時代落幕"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.2998594013311776
+    },
+    {
+      "expertId": "tam",
+      "expertName": "譚新強",
+      "date": "2026-10-01",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【電動車】一文看清內地新能源車廠9月交付量 小米汽車逾4萬、新車「澎程」首月交付即破萬輛（不斷更新）",
+      "summary": "報告內地新能源車廠9月交付數據，小米破4萬輛創年內新高，理想按月年雙跌，極氪按年倍增；並探討美債息高企、AI對美股影響及第四季部署。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=EB2DDBECDCC0&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.881569#/FCE433E9AEE8B1AFE3FBB990CBEE4B0A",
+      "signals": [],
+      "horizon": "theme",
+      "decayWeight": 0.755598343492051
+    },
+    {
+      "expertId": "hong",
+      "expertName": "洪灝",
+      "date": "2026-09-28",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "洪灝最新分享：10月左右，中国市场至少该会有一波反弹的机会",
+      "summary": "洪灝指G2会晤释善意，市场对中国过度悲观，十月及四季度A股港股存反弹交易机会，低估值及政策刺激预期提供动力",
+      "url": "",
+      "signals": [
+        {
+          "asset": "A股/港股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "估值低政策可期"
+        }
+      ],
+      "horizon": "event",
+      "decayWeight": 0.3205236916724702
+    },
+    {
+      "expertId": "lambl",
+      "expertName": "林本利",
+      "date": "2026-09-20",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "美债息高见5厘 林本利：银债派得少非坏事 无惧美违约风险 “爆煲美国人最伤”",
+      "summary": "林本利认为美债大规模违约风险极低，因大部分属美国内部持有；财政部回购救市杯水车薪，长债息率将维持高位；建议退休人士配置5%资产于美债收息。",
+      "url": "",
+      "signals": [
+        {
+          "asset": "美债",
+          "direction": "bull",
+          "strength": 2,
+          "note": "违约风险低可收息"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.7406573812362491
+    },
+    {
+      "expertId": "chong",
+      "expertName": "莊太量",
+      "date": "2026-09-29",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "莊太量就「釣金龜」言論致歉 稱尊重女性 認用詞失當",
+      "summary": "莊太量就「釣金龜」性別歧視言論致歉，承認用詞失當，稱尊重女性。",
+      "url": "",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.35388684685959254
+    },
+    {
+      "expertId": "chong",
+      "expertName": "莊太量",
+      "date": "2026-09-29",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "莊太量就「女孩釣金龜論」致歉 稱會「經一事、長一智」",
+      "summary": "莊太量就「伴侶經濟學」演講中的性別歧視言論致歉，內容屬社會新聞，未涉及任何投資觀點或市場方向。",
+      "url": "",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.35388684685959254
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-10-08",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "Fidelity's Timmer Says Q3 Earnings Could Jump 35%: Is Wall Street Underpricing It?",
+      "summary": "Timmer预计Q3盈利增长可达30%-35%，但指出历史显示峰值盈利增长常伴随市盈率压缩；标普500虽创新高，强劲财报或不足以独自支撑涨势，AI资本支出存在扰动风险。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=26A0D541588C&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.760828#/ED43DD7FB207B39852B0679A547B93DB",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bear",
+          "strength": 1,
+          "note": "峰值盈利估值承压"
+        },
+        {
+          "asset": "半导体",
+          "direction": "bear",
+          "strength": 2,
+          "note": "AI capex miss风险"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.9773032737135662
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-09-29",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "Bitcoin beats gold, surge to $100,000 in play",
+      "summary": "Timmer指出比特币突破8万美元确认双底突破形态，有望打开涨至10万美元空间；同时提醒图表形态并非保证，突破或失败；期权市场显示9万至10万美元看涨押注集中",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=7BF81572923B&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.989707#/8FB6B7E1D5059E3E203A29A985F789D6",
+      "signals": [
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 4,
+          "note": "双底突破看10万"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.7073290155114622
+    },
+    {
+      "expertId": "calvin",
+      "expertName": "蔡嘉民",
+      "date": "2026-10-04",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【新股IPO】长和分拆屈臣氏上市传未取得中国数据安全机构批准 已获中证监允许 屡有IPO暂停或延期有银行家称市场仅专注在Anthropic上市",
+      "summary": "长和屈臣氏港英上市押后至明年，未获中国数据安全审批；亚美多宗IPO近期暂停。投资者对AI企业脱离现实估值日趋怀疑，新股市场转差，资金仅聚焦Anthropic。",
+      "url": "",
+      "signals": [
+        {
+          "asset": "港股",
+          "direction": "bear",
+          "strength": 2,
+          "note": "屈臣氏IPO监管受阻"
+        },
+        {
+          "asset": "美股",
+          "direction": "bear",
+          "strength": 3,
+          "note": "AI估值脱离现实"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.8342482075988767
+    },
+    {
+      "expertId": "calvin",
+      "expertName": "蔡嘉民",
+      "date": "2026-10-03",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【手机加价潮】内存成本狂飇！Google Pixel 10a突加价100美元",
+      "summary": "AI服务器抢占HBM产能，致消费电子内存芯片供不应求、价格季内狂飙约4倍，Google、三星及苹果纷纷加价转嫁成本，Tim Cook称零件成本压力为40年来最严峻。",
+      "url": "",
+      "signals": [],
+      "horizon": "theme",
+      "decayWeight": 0.80716165202851
+    },
+    {
+      "expertId": "scan",
+      "expertName": "黃金 白銀 貴金屬",
+      "date": "2026-09-18",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "Fed升息後黃金先殺後彈！高盛長線喊5,400美元",
+      "summary": "Fed升息后黄金先跌后涨，美元与美债息回落、油价跌舒缓通胀疑虑，金价重返4,300美元之上；高盛长线喊价上看5,400美元。",
+      "url": "https://udn.com/news/story/7239/9699201",
+      "signals": [
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 3,
+          "note": "长线看5,400美元"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.4919705374864976
+    },
+    {
+      "expertId": "scan",
+      "expertName": "比特幣 加密貨幣",
+      "date": "2026-10-09",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "对今日 09.10.2026 比特币价格的预测与分析",
+      "summary": "比特币日内于81,602–82,041美元波动，ADX呈强劲上升趋势。H4强烈建议买入，M30中性，RSI建议等待。今日信号为买入，给出支撑、阻力及交易点位。",
+      "url": "https://www.litefinance.org/zh/blog/analysts-opinions/bi-te-bi-jia-ge-yu-ce/",
+      "signals": [
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 4,
+          "note": "H4强烈建议买入"
+        }
+      ],
+      "horizon": "event",
+      "decayWeight": 0.9525927507167654
+    },
+    {
+      "expertId": "lamy",
+      "expertName": "林一鳴",
+      "date": "2026-08-24",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "东方日报B1：港屋价趋稳 升势料放缓",
+      "summary": "林一鸣指香港楼价属跌后正常回升，租金上涨带动向上；庄太量料下半年升势维持但放缓，预测再升约3%。普遍预计年底前趋稳，惟内地客减少及息口走势仍为变量。",
+      "url": "",
+      "signals": [
+        {
+          "asset": "香港地产",
+          "direction": "bull",
+          "strength": 2,
+          "note": "租金升支撑"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.21556093198087042,
+      "carried": true
+    },
+    {
+      "expertId": "calvin",
+      "expertName": "蔡嘉民",
+      "date": "2026-10-03",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【TSM】台积电传伙马斯克德州建晶圆厂 扩大美国制造版图",
+      "summary": "台积电竞传与马斯克德州合建晶圆厂，每座投资至少200亿美元扩大美国布局；同集专访蔡嘉民谈币圈爆仓、加息周期比特币走势及资产配置",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=5C6DE08937D4&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.361603#/0F0FBD4FB5EF7D27556512804B7CBEEA",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.5258738334340364,
+      "carried": true
+    },
+    {
+      "expertId": "calvin",
+      "expertName": "蔡嘉民",
+      "date": "2026-10-03",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【期油合约】CME芝商所暂缓推出“10桶原油期货” 业界忧7x24交易带来隐患",
+      "summary": "芝商所暂缓10桶原油期货，业界忧24/7交易隐患；摩通高盛指9月油市供求料平衡。专访蔡嘉民谈币圈经历、比特币走势及资产配置。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=C8AE7B17CA83&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.108904#/3597C1D9E41850A69B978439EC943570",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.5258738334340364,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-09-28",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "Fidelity Prediksi Harga Bitcoin Sentuh Rp 5,3 Miliar",
+      "summary": "富达Timmer指比特币守住8万美元将确认双底，目标10万美元；幂律模型预示新一轮牛市，长期看至2029年30万美元（约5.3亿印尼盾）。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=FA75723AE532&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.583210#/09C2CCFE8F536821664167522D1E0F80",
+      "signals": [
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 4,
+          "note": "双底突破看至10万"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.6843633003793583,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "中國A股 港股 中概",
+      "date": "2026-10-05",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "港股5日涨0.28% 收报24040.34点",
+      "summary": "港股收涨0.28%报24040点，蓝筹股多数上扬，腾讯、港交所、中国移动均收涨，市场呈现温和上涨格局。",
+      "url": "https://www.cnfin.com/stock/",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.6410473833449404,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "中國A股 港股 中概",
+      "date": "2026-10-06",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "隔夜美股爆发！纳指创新高，英伟达收涨，中概科技龙头拉升",
+      "summary": "美股纳指创新高，英伟达收涨带动中概科技龙头集体拉升，市场风险偏好显著提升。",
+      "url": "https://stock.eastmoney.com/a/czggng.html",
+      "signals": [
+        {
+          "asset": "中概",
+          "direction": "bull",
+          "strength": 3,
+          "note": "美股科技股带动"
+        }
+      ],
+      "horizon": "event",
+      "decayWeight": 0.7077736937191851,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "中國A股 港股 中概",
+      "date": "2026-10-06",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "刚刚，开盘大涨！中国资产，集体爆发",
+      "summary": "10月6日港股主要股指集体大涨，恒生指数涨1.08%，恒生科技指数涨1.17%，科网股领涨，阿里巴巴、百度涨超2%，中国资产获资金追捧。",
+      "url": "https://stock.eastmoney.com/a/czggng.html",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.7077736937191851,
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "蔡金強",
+      "date": "2026-10-05",
+      "channel": "手動錄入 · 字幕級證據",
+      "title": "蔡金强 Oscar Choi - 混乱中的清晰--- 进击的国债利率",
+      "summary": "全球国债利率飙升重塑估值锚，高息环境延续，高PE无成长资产面临重估；AI凭高增长成唯一抗高息主线，资金涌向美日韩台；港股及高负债地产承压，A股与欧美脱钩。",
+      "url": "",
+      "signals": [
+        {
+          "asset": "债券",
+          "direction": "bear",
+          "strength": 4,
+          "note": "全球收益率暴涨价格承压"
+        },
+        {
+          "asset": "半导体",
+          "direction": "bull",
+          "strength": 4,
+          "note": "唯一抗高息高增长主线"
+        },
+        {
+          "asset": "半导体",
+          "direction": "bear",
+          "strength": 1,
+          "note": "警惕龙头IPO抽水挤压"
+        },
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "资金加速流入强市场"
+        },
+        {
+          "asset": "台湾",
+          "direction": "bull",
+          "strength": 2,
+          "note": "AI权重高如AI指数"
+        },
+        {
+          "asset": "韩国",
+          "direction": "bull",
+          "strength": 2,
+          "note": "AI科技股带动走强"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.9331698253795624,
+      "carried": true
+    },
+    {
+      "expertId": "calvin",
+      "expertName": "蔡嘉民",
+      "date": "2026-10-05",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【AI+安全】AI安全“吹哨者”Jacob Coxon传出席纽约市议会作证 应当地议长推动AI安全法案要求出席",
+      "summary": "AI安全'吹哨者'Jacob Coxon将出席纽约市议会听证会，就议长推动的AI安全法案作证，多家AI巨头亦派代表出席。内容为行业监管动态，无明确市场方向观点。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=950AA21FD594&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.183871#/88C3A663A12E6AC05106FE5218091FC6",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.6410473833449404,
+      "carried": true
+    },
+    {
+      "expertId": "calvin",
+      "expertName": "蔡嘉民",
+      "date": "2026-10-02",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "【日圓走勢】日本收緊外國人永久居留申請條件 大幅上調申請永居手續費20倍",
+      "summary": "日本收緊外國人永居申請、手續費上調20倍；東京9月核心CPI升2.7%，強化日央行加息預期，對日圓構成支持。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=57DA7FE706F4&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.060305#/E29022F90F57549FB9C8D9FFE504846C",
+      "signals": [
+        {
+          "asset": "日圓",
+          "direction": "bull",
+          "strength": 2,
+          "note": "CPI強化加息預期"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.8910293727862247,
+      "carried": true
+    },
+    {
+      "expertId": "lambl",
+      "expertName": "林本利",
+      "date": "2026-08-16",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "助退休人士克服入市心魔 林本利荐“稳阵7股” 7个月赚两成",
+      "summary": "林本利荐7只稳健港股予退休人士，主张坐底收3至4厘息兼低吸高沽，稳阵7股至7月底账面涨逾20%，目标年跑赢恒指7至10个百分点",
+      "url": "",
+      "signals": [
+        {
+          "asset": "港股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "稳阵7股策略"
+        },
+        {
+          "asset": "港股/银行",
+          "direction": "bull",
+          "strength": 3,
+          "note": "高息抗跌"
+        },
+        {
+          "asset": "港股/综合企业",
+          "direction": "bull",
+          "strength": 3,
+          "note": "市值折让"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.16553581029313025,
+      "carried": true
+    },
+    {
+      "expertId": "chong",
+      "expertName": "莊太量",
+      "date": "2026-09-23",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "莊太量新亞周會言論捱批 中大：已向講者反映言辭應顧及大學、社會感受 書院將致力維護互相尊重、多元包容環境",
+      "summary": "莊太量於中大新亞書院周會講解「伴侶經濟學」時，簡報出現「女孩子釣金龜的成本效益」等字眼引發公眾關注，校方回應已向講者反映言辭須顧及大學及社會不同持份者感受。",
+      "url": "",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.19536137832238326,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-09-25",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "AI Trade Is ‘Dead Money’: Fidelity Strategist Warns $3.3 Trillion Buildout Is Inflationary With ‘Unknown Returns’",
+      "summary": "Timmer称AI交易已'死钱'3月余，GPU租金与token支出走低，仅存储涨价且短缺或至2028；3.3万亿美元建设回报未知且通胀，长期仍看好AI。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=E37D42866083&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.345943#/3C34DC9EB67186C491F022BFC34D1DB7",
+      "signals": [
+        {
+          "asset": "半导体",
+          "direction": "bear",
+          "strength": 3,
+          "note": "AI交易死钱逾3月"
+        },
+        {
+          "asset": "半导体",
+          "direction": "bull",
+          "strength": 2,
+          "note": "存储涨价，短缺持续"
+        },
+        {
+          "asset": "债券",
+          "direction": "bear",
+          "strength": 1,
+          "note": "建设开支具通胀性"
+        },
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 1,
+          "note": "长期生产力奇迹"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.6198440361073331,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-09-23",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "‘Gold is worth around $5k’ as the yellow metal ‘has gone from a pure play on real rates to a pure play on liquidity’ – Fidelity’s Timmer",
+      "summary": "Timmer认为黄金已从实际利率交易转为流动性交易，按全球M2回归模型公允价值约5000美元；财政主导与美元贬值路径利空美元，明确利多黄金及比特币。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=4A7CBE006F2F&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.420977#/68E40E1BF0006D9BFA1C348BF3B3DAC3",
+      "signals": [
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 3,
+          "note": "流动性模型看5000"
+        },
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 2,
+          "note": "财政贬值路径受益"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.7756861223924401,
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "蔡金強",
+      "date": "2026-09-25",
+      "channel": "手動錄入 · 字幕級證據",
+      "title": "金发女郎到三高重临",
+      "summary": "美联储9月加息25基点符预期，利率或迈向4.5%，美国由金发女郎重回「三高」（高增长高利率高通胀）新常态；看好AI链及台韩，看空债券、地产、港股与日股。",
+      "url": "https://youtu.be/ZUJL2tOnpJU?si=SN4SEEs-I1P5L5Zm",
+      "signals": [
+        {
+          "asset": "半导体",
+          "direction": "bull",
+          "strength": 4,
+          "note": "AI链不惧加息需求旺"
+        },
+        {
+          "asset": "债券",
+          "direction": "bear",
+          "strength": 4,
+          "note": "明言看空日债尤悲观"
+        },
+        {
+          "asset": "港股",
+          "direction": "bear",
+          "strength": 4,
+          "note": "港股不行仅持收息股"
+        },
+        {
+          "asset": "日本",
+          "direction": "bear",
+          "strength": 3,
+          "note": "滞胀严重企业弱"
+        },
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 2,
+          "note": "市底强但仅限AI龙头"
+        },
+        {
+          "asset": "A股",
+          "direction": "bear",
+          "strength": 2,
+          "note": "缩量严重难退出"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.7999542177866825,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "黃金 白銀 貴金屬",
+      "date": "2026-09-22",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "9月22日国际贵金属期货普遍收跌 COMEX黄金跌0.99%",
+      "summary": "9月22日国际贵金属期货收跌，COMEX黄金跌0.99%报4381美元/盎司，白银跌0.92%报66.53美元/盎司。文章为当日收盘快讯，未提供后市方向判断。",
+      "url": "https://www.guandian.cn/article/20260922/605526.html",
+      "signals": [],
+      "horizon": "event",
+      "decayWeight": 0.17694342342979624,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "比特幣 加密貨幣",
+      "date": "2026-09-01",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "Bitget UEX 日報｜博通（AVGO）盤後發布財報；油價重返90美元關口；美股收跌但8月仍收漲",
+      "summary": "BTC徘徊7.87萬美元，分析指8萬美元為多空分水嶺，突破或觸發空頭擠壓；8月漲約23%，資金偏向硬資產，ETH弱於BTC；現貨ETF終結九日淨流入，市場受美股下跌與油價上漲壓制。",
+      "url": "https://www.chaincatcher.com/zh-tw/article/2286831",
+      "signals": [
+        {
+          "asset": "比特币",
+          "direction": "neutral",
+          "strength": 2,
+          "note": "8萬分水嶺未破多空交織"
+        },
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 2,
+          "note": "破8萬或觸發空頭擠壓"
+        },
+        {
+          "asset": "以太坊",
+          "direction": "bear",
+          "strength": 1,
+          "note": "走勢弱於BTC"
+        }
+      ],
+      "horizon": "event",
+      "decayWeight": 0.022117927928724537,
+      "carried": true
+    },
+    {
+      "expertId": "hong",
+      "expertName": "洪灝",
+      "date": "2026-08-15",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "洪灝：中国AI行情进入第二阶段，高质量公司表现更好",
+      "summary": "中国AI行情进入第二阶段：回调后估值趋合理，质量胜过故事，优质有业绩标的将跑赢、纯讲故事者跑输；半导体出口高增；腾讯阿里仅技术性反弹；警惕中欧贸易摩擦。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=31C3FAF67A08&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.361892#/1E0A020A077AE2158A6D3C7273448E3A",
+      "signals": [
+        {
+          "asset": "A股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "AI第二阶段优质股跑赢"
+        },
+        {
+          "asset": "A股",
+          "direction": "bear",
+          "strength": 3,
+          "note": "无业绩讲故事股将跑输"
+        },
+        {
+          "asset": "半导体",
+          "direction": "bull",
+          "strength": 3,
+          "note": "出口增五成主导中低端"
+        },
+        {
+          "asset": "港股",
+          "direction": "bear",
+          "strength": 2,
+          "note": "腾讯阿里仅技术性反弹"
+        },
+        {
+          "asset": "欧洲",
+          "direction": "bear",
+          "strength": 1,
+          "note": "中欧贸易摩擦风险上升"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.1601611569423058,
+      "carried": true
+    },
+    {
+      "expertId": "hong",
+      "expertName": "洪灝",
+      "date": "2026-08-02",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "洪灝：周末写了一个chatbot聊天机器人 还挺好用的 AI科技革命这才刚刚开始",
+      "summary": "洪灝以三十年研报数据自建chatbot，称AI科技革命才刚刚开始；同时提及其近期对半导体泡沫的看法，隐含泡沫警示。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=EBC0B3B0FBEA&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.079930#/DE16C9A9F7208D7179E4B7027FD25776",
+      "signals": [
+        {
+          "asset": "AI科技",
+          "direction": "bull",
+          "strength": 3,
+          "note": "称AI革命才刚开始"
+        },
+        {
+          "asset": "半导体",
+          "direction": "bear",
+          "strength": 2,
+          "note": "提及半导体泡沫看法"
+        }
+      ],
+      "horizon": "theme",
+      "decayWeight": 0.10428102594985958,
+      "carried": true
+    },
+    {
+      "expertId": "lamy",
+      "expertName": "林一鳴",
+      "date": "2026-08-07",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "am智库｜AI汰劣留强 港股反成资金避难所 林一鸣：港楼迈慢牛时代",
+      "summary": "林一鸣料港股、港楼进入慢牛时代，难复当年暴升；AI汰弱留强下港股反成资金避难所，大突破须待外资回流中环甲厦。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=FC837C064FC9&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.245094#/B1BA36F00A3AAA9ACEE2A60447EB21AC",
+      "signals": [
+        {
+          "asset": "港股",
+          "direction": "bull",
+          "strength": 2,
+          "note": "慢牛走势难现暴升"
+        },
+        {
+          "asset": "港楼",
+          "direction": "bull",
+          "strength": 2,
+          "note": "迈入慢牛时代"
+        },
+        {
+          "asset": "AI",
+          "direction": "neutral",
+          "strength": 1,
+          "note": "汰弱留强宜精选"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.3760771223489362,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-08-12",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "富达Timmer：推动股市的是盈利，而非估值",
+      "summary": "Timmer指出本轮美股上涨由企业盈利驱动而非估值扩张，与1999年纯靠估值泡沫的行情本质不同；但CAPE仍处历史高位，若盈利增速回落，高估值下市场仍面临调整压力。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=EB0F4B19E74F&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.658017#/31AC4F9F041C01CA1406257C439B7CA1",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 2,
+          "note": "盈利支撑但估值偏高"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.4061857585675619,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-08-11",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "When safe assets compete with risk. Lessons from the 1960s–90s for bitcoin and stocks.",
+      "summary": "[舊事件]美債收益率攀升使安全資產與風險資產爭奪資金，援引1960-90年代歷史警示美股與比特幣或面臨痛苦調整，長債收益率處2007年來高位。",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=B6558789790D&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.777385#/48204F89BF24B9BA37C2AF58573B7D44",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bear",
+          "strength": 2,
+          "note": "收益率上升擠壓估值，警示痛苦調整"
+        },
+        {
+          "asset": "比特币",
+          "direction": "bear",
+          "strength": 2,
+          "note": "無風險利率上升與其爭奪資金"
+        },
+        {
+          "asset": "债券",
+          "direction": "neutral",
+          "strength": 1,
+          "note": "收益率走高但或進一步上行"
+        }
+      ],
+      "horizon": "macro",
+      "decayWeight": 0.39997710889334126,
+      "carried": true
+    },
+    {
+      "expertId": "hong",
+      "expertName": "洪灝",
+      "date": "2026-09-03",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "洪灝：下半年要買什麼？",
+      "summary": "洪灝：下半年要買什麼？",
+      "url": "",
+      "signals": [],
+      "decayWeight": 0.2998594013311776,
+      "carried": true
+    },
+    {
+      "expertId": "chong",
+      "expertName": "莊太量",
+      "date": "2026-08-17",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "时事全方位｜上调经济增长预测",
+      "summary": "时事全方位｜上调经济增长预测",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=4EDEBC14B5E2&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.575200#/3426BBCECBC18BAD9B17A04FCFA2FA9A",
+      "signals": [],
+      "decayWeight": 0.17109082509483958,
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "洪灝",
+      "date": "2026-09-02",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "A股建倉把握交易型機會，小心「燒香式」與「價值式」兩類投資（etnet專訪，8月27日錄影）",
+      "summary": "洪灝量化模型顯示市場情緒已到極端悲觀位置（《牛來》愈爛愈火係信號），上證自5月底4300回調至8月初3800、波幅逾500點，技術空間打開，交易型機會已現，今年唔係應該悲觀嘅一年。半導體/AI自6月中泡沫破裂後進入「去偽存真」階段：講故事公司與硬核業績龍頭（前二、前三甲）走勢將完全唔同。今年市場孕育貴金屬、有色金屬、能源乃至農產品史詩級行情。板塊輪動下創新藥、騰訊阿里軟件股都有像樣反彈。打新最有效策略係上市首日果斷獲利離場。點名兩類無運行投資：「燒香式」（買入後祈禱）同冇巴菲特壽命卻盲信「價值投資」。（證據：etnet 全文報道 newsid=407621，2026-09-02 經濟通通訊社；YouTube 字幕發佈者停用）",
+      "url": "https://www.youtube.com/watch?v=H7ZZlCeA8ZA",
+      "signals": [
+        {
+          "asset": "A股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "情緒極端悲觀+技術空間打開，交易型機會已現；今年唔應悲觀"
+        },
+        {
+          "asset": "半导体",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "去偽存真：硬核龍頭與講故事公司走勢將完全分化"
+        },
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 3,
+          "note": "今年貴金屬史詩級行情（與9/4超級週期訪談一致）"
+        },
+        {
+          "asset": "铜",
+          "direction": "bull",
+          "strength": 3,
+          "note": "有色金屬史詩級行情"
+        },
+        {
+          "asset": "能源",
+          "direction": "bull",
+          "strength": 3,
+          "note": "能源史詩級行情（超級週期第三波）"
+        }
+      ],
+      "decayWeight": 0.2901234998770637,
+      "videoId": "H7ZZlCeA8ZA",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "洪灝",
+      "date": "2026-09-04",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "我們正處於「偉大泡沫」中，有多偉大？如何應對？為什麼我對黃金有堅定信心？（大師說英文配音版）",
+      "summary": "洪灝商品超級週期框架：2024年底起步，金銀→有色→能源→農產品依次爆發；黃金將 spike 至 5,600；銅必破歷史新高（高概率事件）、鋁已 6 年新高；油價由 50 升到 120。若堅信 AI（Jensen Huang：2035 年 AI 存儲/晶片需求 10 倍），邏輯上必須堅信商品原材料。資產配置要動態：商品+金銀+非美股票（增長潛力好過美國）+部分美股+債券（唔鍾意但要有啲）+人民幣資產；打仗時唔好盲買金避險（股跌金都跌）；中國房地產係反向唔會泡沫。（註：來源為 YouTube 自動配音英文音軌字幕，內容係洪灝訪談）",
+      "url": "https://www.youtube.com/watch?v=xwE38t4_BOg",
+      "signals": [
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 4,
+          "note": "超級週期第一波，將 spike 至 5,600"
+        },
+        {
+          "asset": "白银",
+          "direction": "bull",
+          "strength": 3,
+          "note": "貴金屬組合一部分"
+        },
+        {
+          "asset": "铜",
+          "direction": "bull",
+          "strength": 4,
+          "note": "必破歷史新高、高概率事件；鋁已6年新高；AI 需求10年10倍"
+        },
+        {
+          "asset": "能源",
+          "direction": "bull",
+          "strength": 3,
+          "note": "超級週期第三波，油價已見 120"
+        },
+        {
+          "asset": "美股",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "要有啲但非美增長潛力更好"
+        },
+        {
+          "asset": "中国",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "人民幣資產要配置啲；房地產係反向、唔會泡沫"
+        },
+        {
+          "asset": "债券",
+          "direction": "neutral",
+          "strength": 2,
+          "note": "唔太鍾意但因股債關係要有啲"
+        }
+      ],
+      "decayWeight": 0.30992201805366654,
+      "videoId": "xwE38t4_BOg",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "譚新強",
+      "date": "2026-08-22",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "美中長債息口走勢相映成趣｜美債40萬億破產危機？Jim Rogers警告爆煲？",
+      "summary": "美債40萬億=GDP 125%，利息1.4萬億已超軍費；30yr曾見5.33，Bessent發短買長干預回落至5.18-5.2，Gundlach預測下次會議前5.5。AI巨頭今年發債4000億、明年5000億與政府爭資金推高息口；中日中東都在減買美債。DXY由100.6跌至98，黃金回升、Crypto反彈。時辰未到唔會即爆（企業盈利強+Anthropic將上市）。中國係mirror image：10yr歷史新低1.68，Q2 GDP 4.3%、消費僅+2%、投資跌6-7%、青年失業官方17.9%（非正式三成）、資本管制加劇、總債約360% GDP且分佈式，房地產拖四五年未解決。Jim Rogers只持中國+烏茲別克股票但短期考慮賣出中國股票，長期鍾意黃金白銀。",
+      "url": "https://www.youtube.com/watch?v=0EkS60kYd1Q",
+      "signals": [
+        {
+          "asset": "长债",
+          "direction": "bear",
+          "strength": 4,
+          "note": "40萬億=GDP 125%、利息1.4萬億超軍費、AI發債擠壓、中日中東減買，Gundlach睇5.5"
+        },
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 4,
+          "note": "財政部干預令美元失信心，黃金回升很多；Rogers長期鍾意"
+        },
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 3,
+          "note": "Crypto全部反彈"
+        },
+        {
+          "asset": "美股",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "時辰未到：企業盈利強+Anthropic上市，但築底徘徊"
+        },
+        {
+          "asset": "中国",
+          "direction": "bear",
+          "strength": 4,
+          "note": "10yr歷史新低1.68、消費+2%、投資跌6-7%、青年失業17.9%、Rogers考慮賣出中國股票"
+        },
+        {
+          "asset": "半导体",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "上半年AI硬件供應鏈大熱（KOSPI曾+120%），6月中起供求憂慮回落築底"
+        }
+      ],
+      "decayWeight": 0.2017904130071275,
+      "videoId": "0EkS60kYd1Q",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "譚新強",
+      "date": "2026-08-29",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "不要放過美國「自毀長城」帶來的機會",
+      "summary": "NVDA業績超好+首次給明年全年指引收入+70%，前瞻PE僅15倍（28年11-12倍），市場憂慮一掃而空；AI data center增長唔會被批准率阻礙，token會快速增加。Bessent扭曲操作拉低30yr至5.16-5.17但難持久（Gundlach：長債必繼續攀升）。美元下跌但時辰未到唔會爆煲（人民幣未國際化、無代替品）。黃金比特幣反彈。美國自毀長城（加拿大/南韓/中東/歐洲四例）係中國改善貿易外交嘅機會，但中國債務分佈式（地方+城投+企業+家庭）比美國更麻煩。10月歐洲或對中國電動車加幾十%關稅，全面貿易戰風險。",
+      "url": "https://www.youtube.com/watch?v=vB1HQC8cd8A",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 4,
+          "note": "NVDA明年收入指引+70%、前瞻PE 15倍，AI capex/token增長不受阻"
+        },
+        {
+          "asset": "长债",
+          "direction": "bear",
+          "strength": 3,
+          "note": "扭曲操作壓至5.16-5.17但難持久，Gundlach：長債必繼續攀升"
+        },
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 3,
+          "note": "財政部干預+美元信用疑慮，金價反彈"
+        },
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 3,
+          "note": "與黃金同步反彈"
+        },
+        {
+          "asset": "欧洲",
+          "direction": "bear",
+          "strength": 3,
+          "note": "10月或對中國電動車加幾十%關稅，全面貿易戰風險"
+        },
+        {
+          "asset": "中国",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "美國自毀長城係機會，但自身債務分佈式問題嚴重"
+        }
+      ],
+      "decayWeight": 0.2542399890146601,
+      "videoId": "vB1HQC8cd8A",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "蔡金強",
+      "date": "2026-08-15",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "8月市場的反攻——日元升值+加息預期減退",
+      "summary": "日圓升值令美元指數跌至99，流動性改善觸發8月反攻。但7月跌市後AI反彈只修復約1/3跌幅，資金未完全回流，錢流向大盤股+應用。memory當週期股處理（PE 4-5倍為宜，自留約10%倉）；PE 30-40倍高估值股唔會再揸。7月底反彈因通脹數據好+MSFT/AMZN業績帶動。",
+      "url": "https://www.youtube.com/watch?v=xVPMi541w5I",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "反彈僅修復1/3跌幅、資金未完全回流、流向大盤股+應用"
+        },
+        {
+          "asset": "半导体",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "memory當週期股處理，PE 4-5倍為宜，自留約10%倉；高估值股唔會再揸"
+        }
+      ],
+      "decayWeight": 0.1601611569423058,
+      "videoId": "xVPMi541w5I",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "蔡金強",
+      "date": "2026-08-22",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "貝森特猜想——美債/美股/美元，貴金屬/BTC開車",
+      "summary": "貝森特財政部落場回購長債（20億→40億）壓低30yr至5.16，但AI公司今年發債4000億、明年萬億擠壓國債，債基國債配置36%→32%，30yr睇5.5-5.6。黃金破10/50/200日線，7月中call到4000底，睇4600可overshoot（財政部干預=美元信用下降）。白銀跟升。比特幣係替代貨幣。DXY 98，拋售優先序：債>股>美元。WTI 87、Brent 93-94，Q4節節高。",
+      "url": "https://www.youtube.com/watch?v=bppDjSaSJiY",
+      "signals": [
+        {
+          "asset": "长债",
+          "direction": "bear",
+          "strength": 4,
+          "note": "AI公司今年發債4000億/明年萬億擠壓國債，30yr睇5.5-5.6"
+        },
+        {
+          "asset": "黄金",
+          "direction": "bull",
+          "strength": 5,
+          "note": "破10/50/200日線，4000底，睇4600可overshoot，財政部干預=美元信用下降"
+        },
+        {
+          "asset": "白银",
+          "direction": "bull",
+          "strength": 4,
+          "note": "跟黃金升"
+        },
+        {
+          "asset": "比特币",
+          "direction": "bull",
+          "strength": 4,
+          "note": "替代貨幣邏輯，與金銀同向"
+        },
+        {
+          "asset": "美股",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "AI硬件估值高，優先序債>股>美元"
+        },
+        {
+          "asset": "能源",
+          "direction": "bull",
+          "strength": 4,
+          "note": "WTI 87、Brent 93-94，Q4節節高"
+        }
+      ],
+      "decayWeight": 0.2017904130071275,
+      "videoId": "bppDjSaSJiY",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "蔡金強",
+      "date": "2026-09-02",
+      "channel": "Agent 結構化 · 字幕級證據",
+      "title": "美國飆升的債息——股市緊箍咒；中國AI的競爭力",
+      "summary": "30年美債5.33%創2007年新高，全球債息共振（英6%、日4.28%），今年無解、明年或被迫QE。日本係最差市場唔會再揸（9/18料加息、明年加2-3次、債務/GDP 250%）。美股：AI capex 2-3年回本繼續+盈利強+最終有QE，但高債息壓估值上限。油價年底100中樞。烏蘭察布係全球最大數據中心集中地、電價僅美國1/10，中國AI唔會落後太多。中國內需地產仲要兩三年先見底。",
+      "url": "https://www.youtube.com/watch?v=TJ9F4GCqT14",
+      "signals": [
+        {
+          "asset": "长债",
+          "direction": "bear",
+          "strength": 4,
+          "note": "30yr 5.33%創2007新高，全球共振英6%/日4.28%，今年無解，明年或QE"
+        },
+        {
+          "asset": "欧洲",
+          "direction": "bear",
+          "strength": 3,
+          "note": "英德債息同步飆升，歐洲係僅次日本嘅弱勢市場"
+        },
+        {
+          "asset": "美股",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "AI capex 2-3年回本+盈利強+最終QE託底，但高債息壓估值"
+        },
+        {
+          "asset": "能源",
+          "direction": "bull",
+          "strength": 3,
+          "note": "油價年底100中樞"
+        },
+        {
+          "asset": "中国",
+          "direction": "bull",
+          "strength": 3,
+          "note": "烏蘭察布=全球最大數據中心集中地、電價1/10，中國AI不會落後太多"
+        },
+        {
+          "asset": "A股",
+          "direction": "bear",
+          "strength": 3,
+          "note": "內需地產仲要兩三年"
+        }
+      ],
+      "decayWeight": 0.2901234998770637,
+      "videoId": "TJ9F4GCqT14",
+      "carried": true
+    },
+    {
+      "expertId": "manual",
+      "expertName": "蔡金強",
+      "date": "2026-07-24",
+      "channel": "手動錄入 · 字幕級證據",
+      "title": "AI大泡沫？台积电/阿斯麦/谷歌告诉你答案（有字幕）",
+      "summary": "AI改变世界，7月市场波动大，AI非泡沫",
+      "url": "https://www.youtube.com/watch?v=QRbgGZLkiEw",
+      "signals": [
+        {
+          "asset": "AI",
+          "direction": "bull",
+          "strength": 4,
+          "note": "AI世代来临"
+        },
+        {
+          "asset": "半导体",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "周期属性变化"
+        },
+        {
+          "asset": "Memory",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "需求增速见顶"
+        }
+      ],
+      "decayWeight": 0.07748050451341663,
+      "carried": true
+    },
+    {
+      "expertId": "hong",
+      "expertName": "洪灝",
+      "date": "2026-07-31",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "洪灝：链上股票推动全球价格发现，降低「脆弱性」",
+      "summary": "洪灝认为链上股票推动全球价格发现，降低市场脆弱性",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=158FEE1AA155&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.128252#/962915ABCEC96C17B0FF84E86395F9E7",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 4,
+          "note": "资本开放"
+        },
+        {
+          "asset": "全球资产",
+          "direction": "bull",
+          "strength": 4,
+          "note": "价格发现"
+        }
+      ],
+      "decayWeight": 0.09761931859292836,
+      "carried": true
+    },
+    {
+      "expertId": "lambl",
+      "expertName": "林本利",
+      "date": "2026-07-19",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "中东战火再起拖累港股港楼 林本利料恒指难越二万六 屋价下半年恐跌半成",
+      "summary": "中东战火拖累港股港楼，恒指难越二万六，屋价下半年恐跌半成",
+      "url": "",
+      "signals": [
+        {
+          "asset": "港股",
+          "direction": "bear",
+          "strength": 4,
+          "note": "战火加息"
+        },
+        {
+          "asset": "港楼",
+          "direction": "bear",
+          "strength": 3,
+          "note": "股市回落"
+        }
+      ],
+      "decayWeight": 0.0656929298494308,
+      "carried": true
+    },
+    {
+      "expertId": "hong",
+      "expertName": "洪灝",
+      "date": "2026-07-31",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "洪灝：科技股调整窗口或持续至8月底，尽管短期内或有两位数反弹",
+      "summary": "科技股调整至8月底，短期或有反弹",
+      "url": "https://t.wind.com.cn/mobwftweb/M/news.html?share=wechat&show=wft&code=A611FF560505&newsopenstyle=&lan=cn&device=pc&gateway=news&related=true&terminaltype=COM.WINDRAG&version=&useless=0.730994#/4B6872E81388E7F5733386C76FBAE816",
+      "signals": [
+        {
+          "asset": "科技股",
+          "direction": "bear",
+          "strength": 4,
+          "note": "调整持续"
+        },
+        {
+          "asset": "科技股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "短期反弹"
+        }
+      ],
+      "decayWeight": 0.09761931859292836,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-07-17",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "Analysis:Among AI crowd, some investors position for slower hyperscaler spending growth",
+      "summary": "AI基础设施支出增长预期放缓，投资者应多元化投资",
+      "url": "",
+      "signals": [
+        {
+          "asset": "半导体",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "支出预期变化"
+        },
+        {
+          "asset": "AI基础设施",
+          "direction": "neutral",
+          "strength": 3,
+          "note": "支出预期变化"
+        },
+        {
+          "asset": "金融",
+          "direction": "bull",
+          "strength": 3,
+          "note": "AI采用受益"
+        }
+      ],
+      "decayWeight": 0.061496317185812194,
+      "carried": true
+    },
+    {
+      "expertId": "timmer",
+      "expertName": "Jurrien Timmer",
+      "date": "2026-07-17",
+      "channel": "Wind財經新聞 · 媒體報道/訪談",
+      "title": "End of an era? Falling buybacks, rising share counts signal shift in market dynamics",
+      "summary": "买回时代或结束，市场动态转变",
+      "url": "",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bear",
+          "strength": 3,
+          "note": "买回减少"
+        }
+      ],
+      "decayWeight": 0.061496317185812194,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "美股 標普 納指",
+      "date": "2026-07-29",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "美股三大指數小幅收漲 標普500指數創新高",
+      "summary": "美股三大指数小幅上涨，标普500创新高",
+      "url": "https://www.reuters.com/article/us-usa-stocks-0729-idCNKCS2QS01L",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 3,
+          "note": "指数上涨"
+        },
+        {
+          "asset": "标普500",
+          "direction": "bull",
+          "strength": 4,
+          "note": "创新高"
+        },
+        {
+          "asset": "纳斯达克指数",
+          "direction": "bull",
+          "strength": 3,
+          "note": "小幅上涨"
+        },
+        {
+          "asset": "道琼斯工业平均指数",
+          "direction": "bull",
+          "strength": 3,
+          "note": "小幅上涨"
+        }
+      ],
+      "decayWeight": 0.0913831761410713,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "黃金 白銀 貴金屬",
+      "date": "2026-07-15",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "黃金價格最新動態：2026年7月金價走勢分析",
+      "summary": "2026年7月黄金价格下跌",
+      "url": "https://www.goldpriceanalysis.com/2026-07-gold-price-trend/",
+      "signals": [
+        {
+          "asset": "黄金",
+          "direction": "bear",
+          "strength": 3,
+          "note": "避险需求减少"
+        }
+      ],
+      "decayWeight": 0.05756779361319335,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "美股 標普 納指",
+      "date": "2026-07-28",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "美股市場分析：標普500指數連續第二個月上漲",
+      "summary": "标普500指数连续第二个月上涨，市场乐观",
+      "url": "https://www.cnbc.com/2026/07/28/sp-500-on-track-for-second-consecutive-monthly-gain/",
+      "signals": [
+        {
+          "asset": "美股",
+          "direction": "bull",
+          "strength": 5,
+          "note": "连续上涨"
+        }
+      ],
+      "decayWeight": 0.08841612693893276,
+      "carried": true
+    },
+    {
+      "expertId": "scan",
+      "expertName": "半導體 AI 芯片",
+      "date": "2026-07-15",
+      "channel": "主題掃描 · Kimi聯網搜索（媒體匯總，非專家背書）",
+      "title": "半導體AI芯片市場前景分析：需求激增，市場規模有望達千億美元",
+      "summary": "AI芯片需求激增，市场规模将达千亿",
+      "url": "https://www.electronicstimes.com/2026/07/15/ai-chip-market-outlook/",
+      "signals": [
+        {
+          "asset": "半导体",
+          "direction": "bull",
+          "strength": 5,
+          "note": "AI芯片需求增"
+        }
+      ],
+      "decayWeight": 0.05756779361319335,
+      "carried": true
+    }
+  ],
+  "suggested": [],
+  "suggestedNote": "本轮新观点不足以触发任何±1pp变动，维持现有配置。",
+  "lastRebalanceDate": "2026-10-06",
+  "brakeStatus": "ok"
+}
