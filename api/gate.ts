@@ -50,7 +50,9 @@ export async function gateMiddleware(c: Context, next: Next) {
   if (c.req.path.startsWith("/api/auth/")) return next();
   if (safeEq(getCookie(c, COOKIE_NAME) ?? "", expectedToken())) return next();
   const accept = c.req.header("accept") ?? "";
-  const isPage = (!c.req.path.startsWith("/api/") && !c.req.path.includes(".")) || accept.includes("text/html");
+  // /index.html 係 SPA 入口——部分瀏覽器/內嵌 webview 唔帶 Accept: text/html，
+  // 唔好當佢係資產 401（2026-10-10 用戶內嵌瀏覽器事故）
+  const isPage = (!c.req.path.startsWith("/api/") && !c.req.path.includes(".")) || c.req.path === "/index.html" || accept.includes("text/html");
   if (isPage && c.req.method === "GET") return c.html(LOGIN_HTML);
   return c.json({ error: "access required" }, 401);
 }

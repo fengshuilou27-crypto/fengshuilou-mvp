@@ -18,7 +18,7 @@ function gatePlugin(): Plugin {
         if (url.startsWith("/api/auth/")) return next();
         if (cookieAuthed(req.headers.cookie)) return next();
         const isApi = url.startsWith("/api/");
-        const isPage = !isApi && !url.includes(".");
+        const isPage = (!isApi && !url.includes(".")) || url === "/index.html";
         if (isPage && req.method === "GET") {
           res.statusCode = 200;
           res.setHeader("Content-Type", "text/html; charset=utf-8");
