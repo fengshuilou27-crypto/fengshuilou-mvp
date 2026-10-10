@@ -1497,6 +1497,7 @@ function Review() {
     <div className="space-y-4">
     <SignalBacktestCard />
     <LearningCard />
+    <ExpertRankingCard />
     {/* Phase 13 誠實文案：後端冇「按命中率自動降權」機制——復盤係人工校準動態權重；真實機制係冷卻期避免重複計算 */}
     <Card title="观点复盘：是否仍匹配当前市场" sub="对照市场快照逐条人工验证；复盘结论用于人工校准各专家动态权重（见方法论，非自动）；量化引擎另设 S10 冷却机制，共识信号设冷却期，避免重复计算同一观点">
       <div className="space-y-3">
@@ -1626,6 +1627,59 @@ function LearningCard() {
       )}
       <p className="text-[10px] text-slate-600 mt-3">{d.note}</p>
       {changed.length > 0 && <p className="text-[10px] text-teal-400/80 mt-1">本輪有 {changed.length} 位因子調整已寫入學習快照（append-only 留賬，可審計）。</p>}
+    </Card>
+  )
+}
+
+// ---- 專家排名榜（2026-10-10）：由真實信號回測命中率驅動，唔係寫死數字 ----
+// 設計參考 TipRanks 專家計分牌；數據源：signalBacktest byExpert（15 交易日窗 ACWI 超額命中）+ 學習環現行因子
+function ExpertRankingCard() {
+  const bt = trpc.pipeline.signalBacktest.useQuery(undefined, { staleTime: 3600_000, retry: 1 })
+  const lr = trpc.learning.report.useQuery(undefined, { staleTime: 3600_000, retry: 1 })
+  if (bt.isLoading) return <Card title="專家排名榜（真實命中率驅動）" sub="計算中…"><p className="text-xs text-slate-500">載入中…</p></Card>
+  if (!bt.data) return null
+  const known = new Map(EXPERTS.map(e => [e.name, e]))
+  const rows = bt.data.byExpert
+    .filter(e => known.has(e.expert))
+    .map(e => {
+      const meta = known.get(e.expert)!
+      return {
+        ...e, id: meta.id, role: meta.role,
+        factor: lr.data?.activeFactors?.[meta.id] ?? null,
+      }
+    })
+    .sort((a, b) => (b.hitRate ?? -1) - (a.hitRate ?? -1))
+  if (!rows.length) return null
+  const rateCls = (r: number | null) => r == null ? 'text-slate-500' : r >= 55 ? 'text-emerald-400' : r >= 45 ? 'text-amber-300' : 'text-rose-400'
+  const AVATAR = ['bg-rose-500/20 text-rose-300', 'bg-violet-500/20 text-violet-300', 'bg-sky-500/20 text-sky-300', 'bg-emerald-500/20 text-emerald-300', 'bg-amber-500/20 text-amber-300', 'bg-teal-500/20 text-teal-300']
+  return (
+    <Card title="專家排名榜（真實信號命中率驅動）"
+      sub="口徑：每條信號發布後 15 個交易日嘅 ACWI 超額收益命中（剔除大市順風）；排名只按已到期信號計——樣本 &lt;3 誠實標「樣本不足」。因子 = 學習環現行 M4 權重（靜態表起步，每週按命中率微調）。">
+      <div className="space-y-2">
+        {rows.map((e, i) => (
+          <div key={e.expert} className="flex items-center gap-3 rounded-lg bg-slate-800/40 px-3.5 py-2.5">
+            <span className="text-xs text-slate-500 w-5">#{i + 1}</span>
+            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${AVATAR[i % AVATAR.length]}`}>{e.expert.slice(0, 1)}</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm text-slate-100 font-medium truncate">{e.expert}</p>
+              <p className="text-[10px] text-slate-500 truncate">{e.role}</p>
+            </div>
+            <div className="text-right shrink-0">
+              <p className={`text-lg font-bold tabular-nums ${rateCls(e.hitRate)}`}>{e.hitRate == null ? '—' : `${e.hitRate}%`}</p>
+              <p className="text-[10px] text-slate-500">命中率（{e.hits}/{e.decided}）</p>
+            </div>
+            <div className="text-right shrink-0 w-20">
+              <p className={`text-xs tabular-nums ${e.avgExcessDirPct != null && e.avgExcessDirPct > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{e.avgExcessDirPct == null ? '—' : `${e.avgExcessDirPct >= 0 ? '+' : ''}${e.avgExcessDirPct}pp`}</p>
+              <p className="text-[10px] text-slate-500">平均超額</p>
+            </div>
+            <div className="text-right shrink-0 w-14">
+              <p className="text-xs tabular-nums text-teal-300">{e.factor != null ? `×${e.factor.toFixed(2)}` : '—'}</p>
+              <p className="text-[10px] text-slate-500">M4 因子</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="text-[10px] text-slate-600 mt-3">註：非專家條目（主題掃描/新聞聚合）唔入榜；命中率低唔等于踢走——學習環只會逐步收細佢哋嘅信號權重（夾 0.5-1.5），極端情況先人工檢討。</p>
     </Card>
   )
 }
