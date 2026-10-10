@@ -480,6 +480,36 @@ export async function getTranscript(videoId: string): Promise<{ text: string | n
 // Phase 19：kome.ai 已死（Vercel Security Checkpoint + HTTP 429 付費牆）——
 // 舊版唔識別 checkpoint HTML，靜靜雞 return null，用戶只見籠統「字幕不可用」。
 // 而家逐種死因回人話 reason，caller 彙總俾用戶可執行嘅下一步指引。（export 俾測試用）
+// ---- 字幕通道 C：Supadata API（2026-10-10 新增；Render 雲端 IP 被 YouTube 全站封鎖後嘅伺服器主力）----
+// 免費層 100 次/月；失敗誠實回 reason（transcript-unavailable = 作者冇字幕，唔係故障）
+export async function getTranscriptViaSupadata(videoId: string): Promise<{ text: string | null; reason?: string }> {
+  const key = process.env.SUPADATA_API_KEY ?? "";
+  if (!key) return { text: null, reason: "未配置 SUPADATA_API_KEY" };
+  let r: Response;
+  try {
+    r = await tfetch(`https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent("https://www.youtube.com/watch?v=" + videoId)}`, {
+      headers: { "x-api-key": key },
+    }, 45000);
+  } catch (e: any) {
+    return { text: null, reason: `Supadata 連接失敗：${String(e?.message ?? e).slice(0, 100)}` };
+  }
+  if (r.status === 429) return { text: null, reason: "Supadata 免費額度用完（HTTP 429，100 次/月）" };
+  if (!r.ok) {
+    const body = await r.text().catch(() => "");
+    if (/transcript-unavailable/i.test(body)) return { text: null, reason: "該視頻無字幕（Supadata 確認）" };
+    return { text: null, reason: `Supadata HTTP ${r.status}` };
+  }
+  try {
+    const j: any = await r.json();
+    const segs: any[] = j?.content ?? [];
+    const text = segs.map(x => String(x?.text ?? "")).filter(Boolean).join(" ");
+    if (text.length <= 200) return { text: null, reason: "Supadata 字幕過短" };
+    return { text: text.slice(0, 12000) };
+  } catch {
+    return { text: null, reason: "Supadata 回應格式異常" };
+  }
+}
+
 export async function getTranscriptViaKome(videoId: string): Promise<{ text: string | null; reason?: string }> {
   const fail = (reason: string) => ({ text: null, reason });
   let r: Response;
@@ -603,10 +633,11 @@ export async function fetchVideoTranscript(url: string): Promise<{
   } catch { /* 非致命——metadata 只係加分項 */ }
   // 受限網絡走代理；開放網絡（自部署）先試直連字幕軌，代理兜底
   const direct = await getTranscript(videoId);
-  const viaKome = direct.text ? null : await getTranscriptViaKome(videoId);
-  const text = direct.text ?? viaKome?.text ?? null;
+  const viaSupa = direct.text ? null : await getTranscriptViaSupadata(videoId);
+  const viaKome = (direct.text ?? viaSupa?.text) ? null : await getTranscriptViaKome(videoId);
+  const text = direct.text ?? viaSupa?.text ?? viaKome?.text ?? null;
   if (!text) {
-    const reasons = [direct.reason, viaKome?.reason].filter(Boolean).map((r, i) => `${["①", "②"][i]} ${r}`).join("；");
+    const reasons = [direct.reason, viaSupa?.reason, viaKome?.reason].filter(Boolean).map((r, i) => `${["①", "②", "③"][i]} ${r}`).join("；");
     return {
       ok: false, videoId, ...(meta ? { meta } : {}),
       error: `自動抓字幕失敗：${reasons}。👉 請改用：YouTube App/網頁「顯示文字記錄」全選複製貼到下方文本框，或截圖用 OCR 上傳。`,
@@ -1087,15 +1118,16 @@ async function runPipelineInner(): Promise<{ ok: boolean; log: string }> {
             say(`  ${v.videoId}: 標題命中追蹤專家 ${expertName}`);
           }
           let summary = v.title, signals: SnapshotSignal[] = [], horizon: "macro" | "theme" | "event" = "theme";
-          // 优先字幕级解读：直连字幕轨 → kome 代理兜底，都抓不到才退回官方简介
+          // 优先字幕级解读：Innertube 直連 → Supadata（伺服器主力）→ kome 代理兜底，都抓不到才退回官方简介
           const tDirect = await getTranscript(v.videoId);
-          const tKome = tDirect.text ? null : await getTranscriptViaKome(v.videoId);
-          const transcript = tDirect.text ?? tKome?.text ?? null;
+          const tSupa = tDirect.text ? null : await getTranscriptViaSupadata(v.videoId);
+          const tKome = (tDirect.text ?? tSupa?.text) ? null : await getTranscriptViaKome(v.videoId);
+          const transcript = tDirect.text ?? tSupa?.text ?? tKome?.text ?? null;
           const content = transcript ?? v.description.slice(0, 3000);
           const contentType = transcript ? "完整字幕" : "官方简介";
           if (transcript) say(`  ${v.videoId}: 字幕 ${transcript.length} 字`);
-          // Phase 13 P1-5 + Phase 19：字幕攞唔到要記低逐路死因（直連 / kome 代理），唔准靜默降級
-          else if (v.description) say(`  ${v.videoId}: ⚠ 字幕不可用（① ${tDirect.reason ?? "?"}；② ${tKome?.reason ?? "未嘗試"}）——降級用官方簡介（${Math.min(v.description.length, 3000)} 字）`);
+          // Phase 13 P1-5 + Phase 19：字幕攞唔到要記低逐路死因（直連 / Supadata / kome 代理），唔准靜默降級
+          else if (v.description) say(`  ${v.videoId}: ⚠ 字幕不可用（① ${tDirect.reason ?? "?"}；② ${tSupa?.reason ?? "未嘗試"}；③ ${tKome?.reason ?? "未嘗試"}）——降級用官方簡介（${Math.min(v.description.length, 3000)} 字）`);
           else { say(`  ${v.videoId}: ⚠ 字幕不可用且 RSS 無官方簡介——無字幕級證據，跳過`); continue; }
           if (KIMI_KEY) {
             try {
@@ -2292,7 +2324,7 @@ async function probeKome(): Promise<{ ok: boolean; detail: string }> {
 }
 
 export async function netCheck(): Promise<{
-  googleapis: boolean; youtube: boolean; brave: boolean; moonshot: boolean; moonshotDetail: string; agentGw: boolean; kome: boolean; komeDetail: string; checkedAt: string;
+  googleapis: boolean; youtube: boolean; brave: boolean; moonshot: boolean; moonshotDetail: string; agentGw: boolean; kome: boolean; komeDetail: string; supadata: boolean; supadataDetail: string; checkedAt: string;
 }> {
   const [googleapis, youtube, brave, agentGw, komeProbe] = await Promise.all([
     probeHost("https://www.googleapis.com/"),
@@ -2353,5 +2385,6 @@ export async function netCheck(): Promise<{
       }
     } catch (e: any) { moonshotDetail = `網絡不可達：${e.message?.slice(0, 80) ?? "timeout"}`; }
   }
-  return { googleapis, youtube, brave, moonshot, moonshotDetail, agentGw, kome, komeDetail, checkedAt: new Date().toISOString() };
+  const supadataDetail = process.env.SUPADATA_API_KEY ? "已配置（伺服器字幕主力）" : "未配置 SUPADATA_API_KEY";
+  return { googleapis, youtube, brave, moonshot, moonshotDetail, agentGw, kome, komeDetail, supadata: !!process.env.SUPADATA_API_KEY, supadataDetail, checkedAt: new Date().toISOString() };
 }
