@@ -408,39 +408,70 @@ async function latestVideos(playlistId: string): Promise<{ videoId: string; titl
 
 // 抓取 YouTube 视频字幕（无需OAuth：解析播放页 captionTracks → timedtext）
 // Phase 19：誠實化——失敗唔再靜靜雞 return null，逐種失敗回人話 reason（export 俾測試用）
+// 2026-10-10：三通道兜底。YouTube 會封雲端 IP 嘅 /watch 頁（Render 實測中招），
+// 但 Innertube player API（/youtubei/v1/player）同 oEmbed 通常仍通——改用「Innertube → /watch → Piped」鏈。
+async function fetchCaptionXml(baseUrl: string): Promise<string | null> {
+  const xml = await (await tfetch(baseUrl)).text();
+  // 兩種格式：舊 srv3 用 <text>…</text>；現行 timedtext format=3 用 <p t d>…</p>（2026-10 實測 ANDROID client 全係呢種）
+  const unesc = (s: string) => s.replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\n/g, " ");
+  let texts = [...xml.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)].map(x => unesc(x[1])).filter(Boolean);
+  if (!texts.length) texts = [...xml.matchAll(/<p\s[^>]*\bt="\d+"[^>]*>([\s\S]*?)<\/p>/g)].map(x => unesc(x[1])).filter(Boolean);
+  const joined = texts.join(" ");
+  return joined.length > 200 ? joined.slice(0, 12000) : null; // 截断控制token
+}
+
+function pickTrack(tracks: any[]): any {
+  return tracks.find(t => /zh-(Hant|HK|TW)/i.test(t.languageCode)) ??
+    tracks.find(t => /zh/i.test(t.languageCode)) ??
+    tracks.find(t => /en/i.test(t.languageCode)) ??
+    tracks[0];
+}
+
 export async function getTranscript(videoId: string): Promise<{ text: string | null; reason?: string }> {
   const fail = (reason: string) => ({ text: null, reason });
+  // 通道 A：Innertube player API（Android client——雲端 IP 友好度最高）
+  try {
+    const r = await tfetch("https://www.youtube.com/youtubei/v1/player?prettyPrint=false", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "User-Agent": "com.google.android.youtube/20.10.38 (Linux; U; Android 15) gzip" },
+      body: JSON.stringify({ context: { client: { clientName: "ANDROID", clientVersion: "20.10.38", androidSdkVersion: 35, hl: "zh-HK" } }, videoId }),
+    });
+    if (r.ok) {
+      const j: any = await r.json();
+      const tracks = j?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+      if (Array.isArray(tracks) && tracks.length) {
+        const pick = pickTrack(tracks);
+        if (pick?.baseUrl) {
+          const text = await fetchCaptionXml(pick.baseUrl);
+          if (text) return { text };
+        }
+      }
+    }
+  } catch { /* 落下一通道 */ }
+  // 通道 B：/watch 頁面解析 captionTracks
   let page: Response;
   try {
     page = await tfetch(`https://www.youtube.com/watch?v=${videoId}`, {
       headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36", "Accept-Language": "zh-HK,zh;q=0.9,en;q=0.8" },
     });
   } catch (e: any) {
-    return fail("YouTube 直連不可達（出口封鎖）");
+    page = undefined as unknown as Response;
   }
   try {
-    if (!page.ok) return fail("YouTube 直連不可達（出口封鎖）");
-    const html = await page.text();
-    const m = html.match(/"captionTracks":(\[.*?\])/);
-    if (!m) return fail("該視頻無字幕軌");
-    const tracks: any[] = JSON.parse(m[1]);
-    // 优先中文（含自动字幕），其次英文，再次任意
-    const pick =
-      tracks.find(t => /zh-(Hant|HK|TW)/i.test(t.languageCode)) ??
-      tracks.find(t => /zh/i.test(t.languageCode)) ??
-      tracks.find(t => /en/i.test(t.languageCode)) ??
-      tracks[0];
-    if (!pick?.baseUrl) return fail("該視頻無字幕軌");
-    const xml = await (await tfetch(pick.baseUrl)).text();
-    const texts = [...xml.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)]
-      .map(x => x[1].replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\n/g, " "))
-      .filter(Boolean);
-    const joined = texts.join(" ");
-    if (joined.length <= 200) return fail("字幕過短");
-    return { text: joined.slice(0, 12000) }; // 截断控制token
-  } catch (e: any) {
-    return fail(`YouTube 直連字幕軌讀取失敗：${String(e?.message ?? e).slice(0, 80)}`);
-  }
+    if (page?.ok) {
+      const html = await page.text();
+      const m = html.match(/"captionTracks":(\[.*?\])/);
+      if (m) {
+        const tracks: any[] = JSON.parse(m[1]);
+        const pick = pickTrack(tracks);
+        if (pick?.baseUrl) {
+          const text = await fetchCaptionXml(pick.baseUrl);
+          if (text) return { text };
+        }
+      }
+    }
+  } catch { /* 落下一通道 */ }
+  return fail("YouTube 直連不可達（出口封鎖）");
 }
 
 // ---- 字幕代理通道（kome.ai，受限網絡實測可達，免 key）----
